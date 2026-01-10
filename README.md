@@ -56,6 +56,10 @@ based on RS485
     - [3d step model](https://forum.beagleboard.org/t/pocketbeagle-2-3d-step-file/43415)
     - [analog & pin-current](https://forum.beagleboard.org/t/pin-currents-and-analog-in/43370)
     - [blinka / CircuitPython support](https://forum.beagleboard.org/t/pocket-beagle-2-python-libraries/42840)
+    - PRU
+        - https://github.com/boxysean/beaglebone-DMX/blob/master/src/dmx.p
+        - https://boxysean.com/blog/2012/08/12/first-steps-with-the-beaglebone-pru/
+        - https://github.com/VedantParanjape/simpPRU/issues/57
 - OSC
     - https://github.com/todbot/CircuitPython_MicroOSC/blob/main/examples/microosc_simplesend.py    
 - [Adafruit ADS7830 8-Channel 8-Bit ADC with I2C](https://www.adafruit.com/product/5836) ([8€](https://eckstein-shop.de/Adafruit-ADS7830-8-Channel-8-Bit-ADC-with-I2C-STEMMA-QT-Qwiic)) [learn guide](https://learn.adafruit.com/adafruit-ads7830-8-channel-8-bit-adc/circuitpython-and-python)
