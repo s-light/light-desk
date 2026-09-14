@@ -30,4 +30,4 @@ sudo chmod 440 "$SUDOERS_FILE"
 echo "==> validating sudoers syntax"
 sudo visudo -c
 
-echo "==> done. verify with: sudo -n systemctl status olad.service"
+echo "==> done. verify with: sudo -n systemctl restart olad.service"

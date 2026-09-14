@@ -2,8 +2,8 @@
 # One-shot setup: install this project's olad config on the board.
 #
 # Leaves only 3 plugins active:
-#   e131    - sACN input   (6 universes, see ola-config/ola-e131.conf)
-#   uartdmx - DMX output over UART (6 devices, see ola-config/ola-uartdmx.conf)
+#   e131    - sACN input   (5 universes, see ola-config/ola-e131.conf)
+#   uartdmx - DMX output over UART (5 devices, see ola-config/ola-uartdmx.conf)
 #   dummy   - a virtual universe, handy for testing (e.g. via the olad web
 #             UI) before any real sACN source or DMX fixture is wired up
 #
@@ -70,6 +70,19 @@ if id olad >/dev/null 2>&1; then
     chown -R olad:olad "$CONFIG_DIR" 2>/dev/null || true
 fi
 
+# olad's default HTTP UI port (9090) collides with Cockpit on the stock
+# BeagleBoard Debian image - and olad 0.10.9 (the current apt package)
+# treats a failed HTTP bind as fatal, silently killing the whole daemon
+# even though its LSB init script still reports "active". Move it out
+# of the way. /etc/default/ola is read by /etc/init.d/olad; harmless if
+# a from-source olad.service ends up managing the daemon instead, since
+# that unit sets its own args independently.
+if [ -f /etc/default/ola ] || [ -x /etc/init.d/olad ]; then
+    echo "==> setting olad HTTP UI port to 9091 (9090 is Cockpit) via /etc/default/ola"
+    printf 'DAEMON_ARGS="--syslog --log-level 3 --config-dir %s --http-port 9091"\n' "$CONFIG_DIR" \
+        > /etc/default/ola
+fi
+
 if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files olad.service >/dev/null 2>&1; then
     echo "==> restarting olad.service"
     systemctl restart olad.service
@@ -80,7 +93,7 @@ else
     exit 0
 fi
 
-echo "==> patching sACN universes 1-6 through to their UART outputs"
+echo "==> patching sACN universes 1-5 through to their UART outputs"
 if ! "$SCRIPT_DIR/ola-config/patch-sacn-to-uart.sh"; then
     echo "!! patching failed - check the device aliases with 'ola_dev_info' and" >&2
     echo "   adjust E131_DEVICE/UARTDMX_DEVICE in ola-config/patch-sacn-to-uart.sh" >&2

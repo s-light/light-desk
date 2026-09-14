@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * light-desk: pin-mux uart1, uart3, uart4 and uart5 for DMX output via
+ * olad's uartdmx plugin.
+ *
+ * Together with uart0 (already "okay" in the stock base DTS, no overlay
+ * needed - pins P1.30/P1.32) that gives 5 UARTs usable for DMX. uart6
+ * (ttyS2) is deliberately left alone - it's the console/debug-probe UART.
+ * uart2 has no pin-mux entry anywhere in this board's device tree at all,
+ * so it can't be routed to a header pin - 5 is the ceiling here, not 6.
+ *
+ * RX/TX only, no RTS/CTS (uartdmx doesn't use flow control). Pin data
+ * copied from the stock k3-am62-pocketbeagle2-ardupilot-cape.dtso overlay
+ * (same board repo, /opt/source/dtb-*.x/src/arm64/overlays/ on-board) -
+ * a known-working precedent for muxing exactly these UARTs on this board.
+ * Checked against no conflict with the ADS7830 ADC's I2C1 (P1.33/P1.36,
+ * see setup.md).
+ *
+ * ttyS mapping (see /dev/serial* aliases in the base dts):
+ *   uart1 -> ttyS1   RXD P1.06   TXD P1.08
+ *   uart3 -> ttyS3   RXD P2.06   TXD P2.08
+ *   uart4 -> ttyS4   RXD P2.20   TXD P1.20
+ *   uart5 -> ttyS5   RXD P2.24   TXD P2.33
+ */
+
+#include "ti/k3-pinctrl.h"
+
+/dts-v1/;
+/plugin/;
+
+&{/chosen} {
+	overlays {
+		k3-am62-pocketbeagle2-light-desk-uart-dmx.kernel = __TIMESTAMP__;
+	};
+};
+
+&main_pmx0 {
+	main_uart1_pins_default: main-uart1-default-pins {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x01ac, PIN_INPUT, 2)  /* P1.06 UART1_RXD */
+			AM62X_IOPAD(0x01b0, PIN_OUTPUT, 2) /* P1.08 UART1_TXD */
+		>;
+	};
+
+	main_uart3_pins_default: main-uart3-default-pins {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00c0, PIN_INPUT, 4)  /* P2.06 UART3_RXD */
+			AM62X_IOPAD(0x00c4, PIN_OUTPUT, 4) /* P2.08 UART3_TXD */
+		>;
+	};
+
+	main_uart4_pins_default: main-uart4-default-pins {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00c8, PIN_INPUT, 4)  /* P2.20 UART4_RXD */
+			AM62X_IOPAD(0x00cc, PIN_OUTPUT, 4) /* P1.20 UART4_TXD */
+		>;
+	};
+
+	main_uart5_pins_default: main-uart5-default-pins {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00d0, PIN_INPUT, 4)  /* P2.24 UART5_RXD */
+			AM62X_IOPAD(0x00d4, PIN_OUTPUT, 4) /* P2.33 UART5_TXD */
+		>;
+	};
+};
+
+&main_uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&main_uart1_pins_default>;
+	status = "okay";
+};
+
+&main_uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&main_uart3_pins_default>;
+	status = "okay";
+};
+
+&main_uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&main_uart4_pins_default>;
+	status = "okay";
+};
+
+&main_uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&main_uart5_pins_default>;
+	status = "okay";
+};

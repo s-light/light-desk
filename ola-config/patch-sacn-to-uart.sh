@@ -1,6 +1,6 @@
 #!/bin/sh
-# Patch the 6 sACN (E1.31) input ports to universes 1-6, and the 6
-# uartdmx output ports to the same universes 1-6, so each incoming
+# Patch the 5 sACN (E1.31) input ports to universes 1-5, and the 5
+# uartdmx output ports to the same universes 1-5, so each incoming
 # sACN universe comes straight back out on its own UART/DMX line.
 #
 # olad's port "patching" (which port belongs to which universe) is
@@ -27,10 +27,10 @@
 
 set -e
 
-E131_DEVICE=2     # alias of the E1.31 device (has our 6 input ports)
-UARTDMX_DEVICE=3  # alias of the uartdmx device (has our 6 output ports)
+E131_DEVICE=2     # alias of the E1.31 device (has our 5 input ports)
+UARTDMX_DEVICE=3  # alias of the uartdmx device (has our 5 output ports)
 
-for i in 0 1 2 3 4 5; do
+for i in 0 1 2 3 4; do
     universe=$((i + 1))
     ola_patch -d "$E131_DEVICE" -p "$i" -i -u "$universe"
     ola_patch -d "$UARTDMX_DEVICE" -p "$i" -u "$universe"
