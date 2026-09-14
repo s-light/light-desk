@@ -5,8 +5,8 @@ over the USB network interface, using NetworkManager instead of manual
 `iptables`/`sysctl` commands.
 
 - Host interface: `enx0447072dc71a` (USB network device, name will vary by MAC)
-- Host IP: `192.168.7.1`
-- Board IP: `192.168.7.2` (static, `/30` subnet)
+- Host IP: `192.168.17.1`
+- Board IP: `192.168.17.2` (static, `/30` subnet)
 - Board OS network manager: `systemd-networkd`
 
 ---
@@ -18,15 +18,14 @@ Replace `"pocketBeagle"` with your connection name and `enx0447072dc71a` with
 your actual interface name (`nmcli device status` to check).
 
 ```bash
-# Create or modify the connection
-nmcli connection modify "pb_LichtPult" \
+nmcli connection modify "pb_6ch-light-desk" \
   ipv4.method shared \
-  ipv4.addresses 192.168.7.1/24
-
-# Bring it up (or unplug/replug the board)
-nmcli connection down "pb_LichtPult"
-nmcli connection up "pb_LichtPult"
+  ipv4.addresses 192.168.17.1/24
+nmcli connection down "pb_6ch-light-desk"
+nmcli connection up "pb_6ch-light-desk"
+nmcli connection show "pb_6ch-light-desk"
 ```
+
 
 This makes NetworkManager automatically:
 - enable `net.ipv4.ip_forward=1`
@@ -37,7 +36,7 @@ This makes NetworkManager automatically:
 ### Verify on the host
 
 ```bash
-ip addr show enx0447072dc71a          # should show 192.168.7.1/24
+ip addr show enx0447072dc71a          # should show 192.168.17.1/24
 cat /proc/sys/net/ipv4/ip_forward     # should be 1
 sudo iptables -t nat -L POSTROUTING -n -v   # should show a MASQUERADE rule
 ```
@@ -62,7 +61,7 @@ Name=usb0
 RequiredForOnline=no
 
 [Network]
-Address=192.168.7.2/30
+Address=192.168.17.2/30
 DHCP=no
 DHCPServer=true
 DNS=9.9.9.9
@@ -76,32 +75,25 @@ EmitTimezone=no
 PersistLeases=runtime
 
 [Route]
-Gateway=192.168.7.1
+Gateway=192.168.17.1
 ```
 
 Apply the changes:
 
 ```bash
 sudo systemctl restart systemd-networkd
-ip route        # should show: default via 192.168.7.1 dev usb0
+ip route        # should show: default via 192.168.17.1 dev usb0
 ```
 
 ### DNS on the board
 
-If `/etc/resolv.conf` is a **plain file** (not a symlink):
-
-```bash
-echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
-```
-
-If it's a **symlink** (e.g. to systemd-resolved's stub), check with:
+If `/etc/resolv.conf` is a  symlink - check with 
 
 ```bash
 ls -l /etc/resolv.conf
 ```
 
-In that case, DNS is already handled via `DNS=8.8.8.8` in the
-`usb0.network` file above — just restart networkd (already done) and
+DNS is already handled via `DNS=9.9.9.9` in the `usb0.network` file above 
 `/etc/resolv.conf` should update automatically.
 
 ---
@@ -109,8 +101,8 @@ In that case, DNS is already handled via `DNS=8.8.8.8` in the
 ## 3. Test from the board
 
 ```bash
-ping -c3 192.168.7.1      # link to host
-ping -c3 8.8.8.8           # routing + NAT
+ping -c3 192.168.17.1      # link to host
+ping -c3 9.9.9.9           # routing + NAT
 ping -c3 google.com        # DNS
 ```
 

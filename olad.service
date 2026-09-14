@@ -1,0 +1,41 @@
+# systemd unit for olad (Open Lighting Architecture daemon)
+#
+# based on the upstream packaging file:
+# https://github.com/OpenLightingProject/ola/blob/master/debian/ola.olad.service
+# (adjusted here for a from-source build per ola.md, where `make install`
+# puts olad in /usr/local/bin instead of /usr/bin from the apt package)
+#
+# install:
+#   sudo useradd --system --no-create-home --group olad || true
+#   sudo mkdir -p /etc/ola && sudo chown olad:olad /etc/ola
+#   sudo cp olad.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now olad.service
+#
+# (skip the useradd/chown steps and change User= below if you'd rather
+# run olad as your normal login user)
+#
+# check status / logs:
+#   sudo systemctl status olad.service
+#   sudo journalctl -u olad.service -f
+#
+# disable / remove:
+#   sudo systemctl disable --now olad.service
+#   sudo rm /etc/systemd/system/olad.service
+
+[Unit]
+Description=Open Lighting Architecture daemon
+Documentation=man:olad(1)
+After=network.target remote-fs.target network-online.target
+Wants=network-online.target
+
+[Service]
+User=olad
+Environment=LOG_LEVEL=3
+Environment=CONFIG_DIR=/etc/ola
+Environment=OLAD_OPTS=
+ExecStart=/usr/local/bin/olad --log-level $LOG_LEVEL --config-dir $CONFIG_DIR $OLAD_OPTS
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
