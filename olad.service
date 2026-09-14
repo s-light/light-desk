@@ -6,14 +6,16 @@
 # puts olad in /usr/local/bin instead of /usr/bin from the apt package)
 #
 # install:
-#   sudo useradd --system --no-create-home --group olad || true
-#   sudo mkdir -p /etc/ola && sudo chown olad:olad /etc/ola
+#   sudo useradd --system --no-create-home --group olad --groups dialout || true
 #   sudo cp olad.service /etc/systemd/system/
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable --now olad.service
+#   sudo systemctl enable olad.service
+#   sudo ./apply-ola-config.sh   # installs plugin configs + patches ports
 #
 # (skip the useradd/chown steps and change User= below if you'd rather
-# run olad as your normal login user)
+# run olad as your normal login user - it just needs to be in a group
+# with access to the /dev/ttyS* devices used by ola-uartdmx.conf, e.g.
+# "dialout")
 #
 # check status / logs:
 #   sudo systemctl status olad.service

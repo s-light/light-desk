@@ -21,7 +21,8 @@ this repository should contain scripts and documentation for the setup process.
 -   ola install
     -   test on pb2
     -   write script
-- python 
+-   python
+    -   ADS7830 -> OSC: `scripts/ads7830_to_osc.py` (needs testing on pb2)
 
 ## system overview
 - main controller: [pocketbeagle 2](https://www.beagleboard.org/boards/pocketbeagle-2)
@@ -34,20 +35,20 @@ this repository should contain scripts and documentation for the setup process.
 
 ### DMX
 
-https://de.wikipedia.org/wiki/DMX_(Lichttechnik)
+https://en.wikipedia.org/wiki/DMX512
 
 based on RS485
 
 | function                   | XLR 5p. | XLR 3p. | RJ45 | T-568A            | RJ45 T-568B \*    |
 | :------------------------- | ------: | ------: | ---: | ----------------- | ----------------- |
-| Masse (Abschirmung)        |       1 |       1 | 7, 8 | weiß/braun; braun | weiß/braun; braun |
-| Signal inv. (DMX−, „Cold“) |       2 |       2 |    2 | grün              | orange            |
-| Signal (DMX+, „Hot“)       |       3 |       3 |    1 | weiß/grün         | weiß/orange       |
-| optional Data 2 -          |       4 |         |    3 | weiß/orange       | grün              |
-| optional Data 2 +          |       5 |         |    6 | orange            | weiß/grün         |
-|                            |         |         |      |                   |                   |
+| Ground (shield)            |       1 |       1 | 7, 8 | white/brown; brown | white/brown; brown |
+| Signal inv. (DMX−, "Cold") |       2 |       2 |    2 | green              | orange             |
+| Signal (DMX+, "Hot")       |       3 |       3 |    1 | white/green        | white/orange       |
+| optional Data 2 -          |       4 |         |    3 | white/orange       | green              |
+| optional Data 2 +          |       5 |         |    6 | orange             | white/green        |
+|                            |         |         |      |                    |                    |
 
-\* in Deutschland gebräuchlich
+\* common in Germany
 
 ## HW
 

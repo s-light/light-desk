@@ -1,9 +1,8 @@
 # light-desk
 
 DIY light-desk controller for QLC+ (or similar), based on the PocketBeagle 2.
-Repo is currently **documentation-only** (Markdown notes) — no application
-code yet. Concept: sACN -> DMX via OLA, DMX out over UART; physical faders
-(ADS7830 ADC) exposed as OSC via Python/CircuitPython/Blinka.
+Concept: sACN -> DMX via OLA, DMX out over UART; physical faders (ADS7830
+ADC) exposed as OSC via Python/CircuitPython/Blinka.
 
 ## Repo map
 - `README.md` — project overview, system/HW list, DMX pinout
@@ -13,6 +12,21 @@ code yet. Concept: sACN -> DMX via OLA, DMX out over UART; physical faders
   OLA master for the board (native on-device build is impractical: 512MB RAM)
 - `olad.service` — systemd unit for olad, adapted from upstream
   `debian/ola.olad.service`, for a from-source build (`/usr/local/bin/olad`)
+- `scripts/ads7830_to_osc.py` — reads the ADS7830 fader ADC via Blinka, sends
+  each channel as OSC float `/fader/N` (N=1-8) to QLC+; see
+  `scripts/requirements.txt` for the Python deps (`adafruit-blinka`,
+  `adafruit-circuitpython-ads7830`, `python-osc`)
+- `apply-ola-config.sh` — one-shot board setup: disables every olad plugin
+  except e131/uartdmx/dummy, installs the configs below, restarts olad,
+  runs the port patching. Run this on the board after `olad.service` is
+  installed.
+- `ola-config/` — olad plugin configs + patch script implementing the
+  README's "6 sACN in -> 6 UART out" bridge: `ola-e131.conf` (6 sACN input
+  ports), `ola-uartdmx.conf` (6 UART output devices, **placeholder
+  `/dev/ttyS1..6` paths need verifying against actual PB2 overlays**),
+  `patch-sacn-to-uart.sh` (one-time `ola_patch` call mapping universes 1-6
+  straight through input->output; device aliases assumed there are only
+  correct when `apply-ola-config.sh`'s reduced plugin set is active)
 - `pb1_internet_share.md`, `pocketbeagle2-internet-sharing.md` — near-duplicate
   guides for sharing host internet to the board over USB (NetworkManager +
   systemd-networkd); differ only in IP subnet / board identity — check which
@@ -29,5 +43,4 @@ code yet. Concept: sACN -> DMX via OLA, DMX out over UART; physical faders
   asked.
 - No `gh` CLI available in this environment; use WebSearch/WebFetch for
   GitHub content (issues, gists, raw files) instead.
-- Docs mix English (technical) with occasional German (e.g. DMX pinout table)
-  — match whichever language a given doc already uses.
+- Docs are English-only — translate any German that creeps back in.
