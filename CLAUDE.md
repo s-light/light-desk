@@ -15,7 +15,15 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
 - `scripts/ads7830_to_osc.py` — reads the ADS7830 fader ADC via Blinka, sends
   each channel as OSC float `/fader/N` (N=1-8) to QLC+; see
   `scripts/requirements.txt` for the Python deps (`adafruit-blinka`,
-  `adafruit-circuitpython-ads7830`, `python-osc`)
+  `adafruit-extended-bus`, `adafruit-circuitpython-ads7830`, `python-osc`).
+  Uses `adafruit_extended_bus.ExtendedI2C` instead of `board.I2C()` — Blinka
+  has no PocketBeagle 2 board support yet, see setup.md "known issues"
+- `setup.md` — board bring-up steps: clone, install/configure ola, ADS7830
+  HW wiring, and the Blinka/PocketBeagle 2 "known issues" workaround
+- `setup.sh` — run once per board, first: installs a scoped
+  `/etc/sudoers.d/light-desk-ola` NOPASSWD rule (systemctl/journalctl for
+  olad, plus running `apply-ola-config.sh`) so the rest of setup doesn't
+  need an interactive sudo password each time
 - `apply-ola-config.sh` — one-shot board setup: disables every olad plugin
   except e131/uartdmx/dummy, installs the configs below, restarts olad,
   runs the port patching. Run this on the board after `olad.service` is
