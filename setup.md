@@ -110,3 +110,16 @@ newly-available UARTs.
     I2C-like object, not `board` itself. `scripts/ads7830_to_osc.py` already
     uses this approach (`--i2c-bus`, default `1` - **not yet confirmed
     against real PB2 hardware**, verify with `i2cdetect -l` on the board).
+
+## run the fader -> OSC bridge as a service
+
+```bash
+./setup-i2c.sh
+```
+
+Sets up everything `scripts/ads7830_to_osc.py` needs and installs it as
+`ads7830-to-osc.service`: an `i2c` group + udev rule (so the script doesn't
+need to run as root to reach `/dev/i2c-*`), a venv in `scripts/.venv` with
+`scripts/requirements.txt` installed, and the enabled+running systemd
+service itself. See `ads7830-to-osc.service` for how to check status/logs
+or override the OSC host/port/I2C bus afterwards. Safe to re-run.

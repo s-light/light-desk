@@ -34,8 +34,17 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   `adafruit-extended-bus`, `adafruit-circuitpython-ads7830`, `python-osc`).
   Uses `adafruit_extended_bus.ExtendedI2C` instead of `board.I2C()` — Blinka
   has no PocketBeagle 2 board support yet, see setup.md "known issues"
+- `ads7830-to-osc.service` — systemd unit template for the script above
+  (placeholders filled in by `setup-i2c.sh`, not meant to be copied by hand)
+- `setup-i2c.sh` — one-shot board setup for the fader->OSC bridge: i2c group
+  + udev rule so `/dev/i2c-*` doesn't need root, a venv in `scripts/.venv`
+  with `scripts/requirements.txt` installed into it (Debian 13's system
+  Python is PEP-668-locked), then installs+enables
+  `ads7830-to-osc.service`. Mirrors `setup.sh`/`apply-ola-config.sh`'s
+  style (POSIX sh, idempotent, run as normal user - it calls sudo itself)
 - `setup.md` — board bring-up steps: clone, install/configure ola, ADS7830
-  HW wiring, and the Blinka/PocketBeagle 2 "known issues" workaround
+  HW wiring, the Blinka/PocketBeagle 2 "known issues" workaround, and
+  running `setup-i2c.sh`
 - `setup.sh` — run once per board, first: installs a scoped
   `/etc/sudoers.d/light-desk-ola` NOPASSWD rule (systemctl/journalctl for
   olad, plus running `apply-ola-config.sh`) so the rest of setup doesn't

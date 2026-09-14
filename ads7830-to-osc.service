@@ -1,0 +1,45 @@
+# systemd unit for scripts/ads7830_to_osc.py (fader ADC -> OSC bridge)
+#
+# This file is a template - the placeholders below (__USER__, __REPO_DIR__,
+# __VENV_DIR__) get filled in by setup-i2c.sh, which also creates the
+# Python venv, adds the current user to the i2c group, and installs this
+# unit. Prefer running that script over copying this file by hand.
+#
+# manual install (if you're not using setup-i2c.sh):
+#   sed -e "s|__USER__|$(id -un)|" \
+#       -e "s|__REPO_DIR__|$(pwd)|" \
+#       -e "s|__VENV_DIR__|$(pwd)/scripts/.venv|" \
+#       ads7830-to-osc.service | sudo tee /etc/systemd/system/ads7830-to-osc.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now ads7830-to-osc.service
+#
+# check status / logs:
+#   sudo systemctl status ads7830-to-osc.service
+#   sudo journalctl -u ads7830-to-osc.service -f
+#
+# override OSC target / I2C bus without editing this file:
+#   sudo systemctl edit ads7830-to-osc.service
+#   # add under [Service]: Environment=OSC_HOST=... / OSC_PORT=... / I2C_BUS=...
+#
+# disable / remove:
+#   sudo systemctl disable --now ads7830-to-osc.service
+#   sudo rm /etc/systemd/system/ads7830-to-osc.service
+
+[Unit]
+Description=ADS7830 fader ADC -> OSC bridge for QLC+
+Documentation=file:scripts/ads7830_to_osc.py
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__REPO_DIR__
+Environment=OSC_HOST=192.168.7.1
+Environment=OSC_PORT=7700
+Environment=I2C_BUS=1
+ExecStart=__VENV_DIR__/bin/python3 __REPO_DIR__/scripts/ads7830_to_osc.py --host $OSC_HOST --port $OSC_PORT --i2c-bus $I2C_BUS
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

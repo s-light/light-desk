@@ -1,3 +1,4 @@
 adafruit-blinka
+adafruit-extended-bus
 adafruit-circuitpython-ads7830
 python-osc
