@@ -96,7 +96,7 @@ fi
 echo "==> patching sACN universes 1-5 through to their UART outputs"
 if ! "$SCRIPT_DIR/ola-config/patch-sacn-to-uart.sh"; then
     echo "!! patching failed - check the device aliases with 'ola_dev_info' and" >&2
-    echo "   adjust E131_DEVICE/UARTDMX_DEVICE in ola-config/patch-sacn-to-uart.sh" >&2
+    echo "   adjust E131_DEVICE/UARTDMX_DEVICE_START in ola-config/patch-sacn-to-uart.sh" >&2
     exit 1
 fi
 
