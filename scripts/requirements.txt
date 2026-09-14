@@ -1,0 +1,3 @@
+adafruit-blinka
+adafruit-circuitpython-ads7830
+python-osc
