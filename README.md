@@ -31,6 +31,15 @@ this repository should contain scripts and documentation for the setup process.
         - P1.33 (GPIO1_29) I2C1_SDA
         - P1.36A (GPIO1_28) I2C1_SCL
 - fader [100mm slide-potentiometer](https://tech.alpsalpine.com/e/products/detail/RSA0N1219A03/) ([~5€](https://www.reichelt.de/de/de/shop/produkt/schiebepotentiometer_stereo_10_kohm_linear-73873))
+- 7x momentary buttons -> plain GPIO, read via `libgpiod` (`gpioget`/`gpiomon`
+  with `--bias=pull-up`, button to GND) - no device-tree overlay needed,
+  these pins are free by default (unlike I2C1/UART which needed
+  overlays/*.dtso, see below)
+    - P2.27, P2.28, P2.29, P2.30, P2.31, P2.32 - six in a row on the P2
+      header
+    - P2.34 - seventh button; P2.33 sits between this and the row above
+      but is already committed to DMX universe 5 (UART5 TXD), so it can't
+      be reused - this is the closest 7th free pin to the P2.27-32 group
 
 
 ### DMX

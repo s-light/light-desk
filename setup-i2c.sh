@@ -4,6 +4,18 @@
 #
 #   - creates/enables an "i2c" group with a udev rule so /dev/i2c-* is
 #     group-accessible (not just root), and adds the current user to it
+#   - adds a udev rule making the board-id EEPROM's nvmem sysfs node
+#     group-readable too - adafruit-blinka (recent versions) can correctly
+#     detect the PocketBeagle 2 by reading it, but it's root-only (0600) by
+#     default, so board detection silently dies with PermissionError
+#     otherwise (setup.md's "Blinka doesn't support PB2" note predates
+#     this - detection works now, this permission was the actual blocker)
+#   - installs swig/python3-dev/build-essential, then builds+installs the
+#     lgpio C library from source - adafruit-blinka depends on the lgpio
+#     Python bindings on generic Linux boards like this one, and those
+#     bindings link against a system liblgpio.so that pip can't build for
+#     you (neither Debian nor PyPI ship it - see
+#     https://github.com/joan2937/lg)
 #   - creates a Python venv in scripts/.venv and installs
 #     scripts/requirements.txt into it (Debian 13's system Python refuses
 #     plain `pip install` - PEP 668 "externally managed environment")
@@ -39,11 +51,40 @@ getent group "$GROUP_NAME" >/dev/null || sudo groupadd --system "$GROUP_NAME"
 
 echo "==> installing udev rule: $UDEV_RULE"
 printf 'SUBSYSTEM=="i2c-dev", GROUP="%s", MODE="0660"\n' "$GROUP_NAME" | sudo tee "$UDEV_RULE" >/dev/null
+
+EEPROM_UDEV_RULE=/etc/udev/rules.d/60-light-desk-eeprom.rules
+echo "==> installing udev rule: $EEPROM_UDEV_RULE"
+# the EEPROM's "nvmem" file is a bare sysfs attribute, not a /dev node - so
+# GROUP=/MODE= (which only chmod device nodes udev itself creates under
+# /dev) do nothing here; RUN+= actively chmod/chgrp the sysfs file itself
+# when the device is added. (avoiding printf/sed here - "%p" is udev's own
+# devpath substitution syntax, not something to run through a format
+# string that also treats % specially)
+sudo tee "$EEPROM_UDEV_RULE" >/dev/null <<EOF
+SUBSYSTEM=="nvmem", KERNEL=="0-0050*", RUN+="/bin/chgrp $GROUP_NAME /sys%p/nvmem", RUN+="/bin/chmod g+r /sys%p/nvmem"
+EOF
+
 sudo udevadm control --reload-rules
-sudo udevadm trigger --subsystem-match=i2c-dev
+sudo udevadm trigger --action=add --subsystem-match=i2c-dev
+sudo udevadm trigger --action=add --subsystem-match=nvmem
 
 echo "==> adding $USER_NAME to '$GROUP_NAME'"
 sudo usermod -aG "$GROUP_NAME" "$USER_NAME"
+
+echo "==> installing build deps for adafruit-blinka's lgpio (needs swig to build from source)"
+sudo apt-get install -y swig python3-dev build-essential
+
+if [ -f /usr/local/lib/liblgpio.so ]; then
+    echo "==> liblgpio.so already installed, skipping lgpio C library build"
+else
+    echo "==> building+installing the lgpio C library from source"
+    LGPIO_BUILD_DIR="$(mktemp -d)"
+    git clone --depth 1 https://github.com/joan2937/lg.git "$LGPIO_BUILD_DIR"
+    make -C "$LGPIO_BUILD_DIR"
+    sudo make -C "$LGPIO_BUILD_DIR" install
+    sudo ldconfig
+    sudo rm -rf "$LGPIO_BUILD_DIR"
+fi
 
 echo "==> creating venv: $VENV_DIR"
 python3 -m venv "$VENV_DIR"

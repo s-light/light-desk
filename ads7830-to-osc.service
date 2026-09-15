@@ -27,7 +27,7 @@
 
 [Unit]
 Description=ADS7830 fader ADC -> OSC bridge for QLC+
-Documentation=file:scripts/ads7830_to_osc.py
+Documentation=file:__REPO_DIR__/scripts/ads7830_to_osc.py
 After=network.target network-online.target
 Wants=network-online.target
 

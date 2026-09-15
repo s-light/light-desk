@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * light-desk: pin-mux I2C1 (P1.33 SDA / P1.36 SCL) for the ADS7830 fader
+ * ADC. Needed because the stock base DTS sets `&main_i2c1 { status =
+ * "okay"; }` (see k3-am62-pocketbeagle2-pinmux.dtsi) but never assigns
+ * pinctrl-0 - the controller is enabled but its pins are never routed to
+ * the header, so /dev/i2c-1 exists yet nothing ever answers on it
+ * (confirmed via /sys/kernel/debug/pinctrl/pinctrl-maps: i2c0/i2c2/i2c3
+ * all have a mux group there, i2c1 has none). Same class of gap as the
+ * UART overlay in this repo.
+ *
+ * Pin mux value/flags (mode 0, PIN_INPUT_PULLUP) copied from other AM62
+ * family boards that route these same SoC pads (IOPAD 0x01e8/0x01ec) to
+ * I2C1, e.g. k3-am625-beagleplay.dts and k3-am67a-beagley-ai.dts
+ * (/opt/source/dtb-*.x/src/arm64/ti/ on-board) - no such I2C1 pin group
+ * exists anywhere in the pocketbeagle2 pinmux dtsi to copy from directly.
+ */
+
+#include "ti/k3-pinctrl.h"
+
+/dts-v1/;
+/plugin/;
+
+&{/chosen} {
+	overlays {
+		k3-am62-pocketbeagle2-light-desk-i2c1-adc.kernel = __TIMESTAMP__;
+	};
+};
+
+&main_pmx0 {
+	main_i2c1_pins_default: main-i2c1-default-pins {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x01e8, PIN_INPUT_PULLUP, 0) /* (B17) I2C1_SCL, P1.36 */
+			AM62X_IOPAD(0x01ec, PIN_INPUT_PULLUP, 0) /* (A17) I2C1_SDA, P1.33 */
+		>;
+	};
+};
+
+&main_i2c1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&main_i2c1_pins_default>;
+	status = "okay";
+};

@@ -124,23 +124,44 @@ newly-available UARTs.
 
 ## known issues
 
-- **Blinka does not support the PocketBeagle 2 yet.** Its AM625x SoC is
-  recognized by Blinka's chip detector but has no implemented board/pin
-  mapping, so plain `board.I2C()` (and anything else importing `board`)
-  fails. See
-  [Adafruit_Blinka#1031](https://github.com/adafruit/Adafruit_Blinka/issues/1031),
-  the [Adafruit forum thread](https://forums.adafruit.com/viewtopic.php?t=223870),
-  and the [BeagleBoard forum thread](https://forum.beagleboard.org/t/pocket-beagle-2-python-libraries/42840).
-  - **Workaround**: skip `board`/per-board detection entirely and open the
-    I2C bus directly by Linux bus number with
-    [`adafruit_extended_bus.ExtendedI2C(N)`](https://github.com/adafruit/Adafruit_Python_Extended_Bus)
-    (`N` = the number in `/dev/i2c-N`, find it with `i2cdetect -l`). It talks
-    straight to `/dev/i2c-N` via the generic Linux driver, so it doesn't
-    depend on Blinka's PB2 board support at all - and CircuitPython device
-    drivers like `adafruit_ads7830` work unchanged, since they only need an
-    I2C-like object, not `board` itself. `scripts/ads7830_to_osc.py` already
-    uses this approach (`--i2c-bus`, default `1` - **not yet confirmed
-    against real PB2 hardware**, verify with `i2cdetect -l` on the board).
+- **I2C1 (P1.33/P1.36, the ADS7830's bus) needs a pin-mux overlay.** The
+  stock base DTS sets `&main_i2c1 { status = "okay"; }` but never assigns
+  it `pinctrl-0`, so `/dev/i2c-1` exists but its pins are never actually
+  routed to the header - confirmed via
+  `/sys/kernel/debug/pinctrl/pinctrl-maps` (i2c0/i2c2/i2c3 each have a mux
+  group there, i2c1 has none) and a full `i2cdetect` scan finding nothing
+  on that bus. Same class of gap as the UART overlay above.
+  - **Fix**: `./install-i2c-overlay.sh` builds and installs
+    `overlays/k3-am62-pocketbeagle2-light-desk-i2c1-adc.dtso`, same
+    pattern as `install-uart-overlay.sh`. Needs a reboot to take effect;
+    verify with `i2cdetect -y 1` (look for the ADS7830 at 0x48-0x4b) -
+    **confirmed working on real PB2 hardware** (both the bus and live
+    fader reads via `scripts/ads7830_debug_print.py`).
+  - **`i2cdetect`'s summary table can lie**: on this board's OMAP I2C
+    driver, `i2cdetect -y N` silently drops the whole `0x40-0x4f` row
+    (blank, not even `--`) instead of showing a normal probe result. That
+    made the ADS7830 (0x48) look absent even once the overlay above had
+    it working. Always double check a suspiciously-blank row with
+    `i2cget -y N 0x48` directly before concluding a device isn't there.
+  - **Blinka *does* support the PocketBeagle 2** in current versions
+    (`adafruit-platformdetect` reads the board EEPROM and correctly
+    returns `BEAGLEBONE_POCKETBEAGLE_2`) - the older "Blinka doesn't know
+    about PB2" issues
+    ([Adafruit_Blinka#1031](https://github.com/adafruit/Adafruit_Blinka/issues/1031))
+    are stale. What actually breaks board detection here is that the
+    EEPROM's `nvmem` sysfs node is root-only (`0600`) by default, so
+    *any* import of `busio` (even via `adafruit_extended_bus.ExtendedI2C`,
+    which never touches `board.I2C()`) crashes with `PermissionError`
+    trying to read it - `busio` unconditionally runs board detection at
+    import time. `setup-i2c.sh` installs a udev rule
+    (`RUN+=` chmod/chgrp, since this is a bare sysfs attribute with no
+    `/dev` node for `GROUP=`/`MODE=` to apply to) making it group-readable.
+  - Building `scripts/requirements.txt` into the venv also needs `swig`
+    and a system `liblgpio.so` (`adafruit-blinka` depends on the `lgpio`
+    Python bindings on generic Linux boards, and those link against a C
+    library that neither Debian nor PyPI ship prebuilt - see
+    [joan2937/lg](https://github.com/joan2937/lg)). `setup-i2c.sh` builds
+    and installs it from source before the pip install.
 
 ## run the fader -> OSC bridge as a service
 
