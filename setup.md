@@ -22,12 +22,12 @@ copy these config files to the correct places.
 
 Fader ADC (Adafruit ADS7830, I2C) to the PocketBeagle 2 P1 header:
 
-| ADS7830 pin | PB2 P1 pin | signal          |
-| :---------- | :--------- | :-------------- |
-| VIN         | P1.14      | VDD_3V3         |
-| GND         | P1.22      | GND             |
-| SDA         | P1.33      | I2C1_SDA        |
-| SCL         | P1.36A     | I2C1_SCL        |
+| ADS7830 pin | Qwick Kabel | PB2 P1 pin | signal   |
+| :---------- | :---------- | :--------- | :------- |
+| VIN         | red         | P1.14      | VDD_3V3  |
+| GND         | black       | P1.22      | GND      |
+| SDA         | blue        | P1.33      | I2C1_SDA |
+| SCL         | yellow      | P1.36A     | I2C1_SCL |
 
 > [!WARNING]
 > Double-check pin numbers against the official PocketBeagle 2 pinout /
@@ -52,11 +52,11 @@ header pin at all; `uart0` is already enabled by the stock base DTS.
 
 | universe | ttyS  | UART  | PB2 TXD pin | PB2 RXD pin | needs the overlay? |
 | :------- | :---- | :---- | :---------- | :---------- | :------------------ |
-| 1        | ttyS1 | uart1 | P1.08       | P1.06       | yes                  |
-| 2        | ttyS3 | uart3 | P2.08       | P2.06       | yes                  |
-| 3        | ttyS4 | uart4 | P1.20       | P2.20       | yes                  |
-| 4        | ttyS5 | uart5 | P2.33       | P2.24       | yes                  |
-| 5        | ttyS7 | uart0 | P1.30       | P1.32       | no (already enabled) |
+| 1        | ttyS1 | UART1 | P1.08       | P1.06       | yes                  |
+| 2        | ttyS3 | UART3 | P2.08       | P2.06       | yes                  |
+| 3        | ttyS4 | UART4 | P1.20       | P2.20       | yes                  |
+| 4        | ttyS5 | UART5 | P2.33       | P2.24       | yes                  |
+| 5        | ttyS7 | UART0 | P1.30       | P1.32       | no (already enabled) |
 
 > [!WARNING]
 > These are 3.3V TTL UART pins, not the RS485 differential signal DMX
@@ -64,6 +64,37 @@ header pin at all; `uart0` is already enabled by the stock base DTS.
 > SN75176) between the PB2 pin and the DMX XLR, wired per the pinout in
 > `README.md`'s DMX section. uartdmx only transmits, so RXD only matters
 > if you want to test the line or add RDM later.
+
+#### RS485 level shifting (verified working)
+
+Confirmed on real hardware with one channel: old DIY opto-isolated
+RS485 boards (no schematic available - designed years ago) built around
+a `MAX485E` driver, a `6N137` optocoupler on the unused RX/receive side,
+and a dual `HCPL-2631` optocoupler carrying TX and the combined `DE`/`RE`
+enable line ("EN"). Both optos' LED inputs were sized for 5V logic, so
+driving them straight from a PB2 UART's 3.3V TX needs a level shift up
+first - the opto LED still gets *some* current at 3.3V, just not enough
+to guarantee the fast, clean switching DMX's 250kbaud timing wants.
+
+- **TX**: PB2 UART TX (3.3V) -> `TXB0108` (3.3V side to 5V side) -> opto
+  input. TXB0108/TXB0104-family auto-direction-sensing shifters have a
+  reputation for being finicky, but that's mainly on genuinely
+  bidirectional lines (e.g. I2C) where the sensing logic has to guess
+  direction on every transition; a UART TX line only ever drives one
+  way, which sidesteps that failure mode.
+- **EN** (`DE`+`/RE` tied together on the isolated board, active-high =
+  permanent transmit / receiver disabled): doesn't need to toggle at
+  all, so instead of routing it through the shifter it's tied directly
+  to the isolated board's own 5V rail on the input side. Cheaper than it
+  sounds like it should be to get right - without a schematic, the
+  opto stage's polarity (does driving the input high actually produce
+  the intended high, or does an open-collector-with-pull-up output stage
+  invert it) had to be confirmed by testing rather than assumed.
+- **RX**: the `6N137` side is unused - this setup is transmit-only, no
+  RDM.
+
+Same approach should carry over to the other 4 channels; TXB0108 has
+8 channels, so one chip covers all 5 PB2 TX lines.
 
 `uart6` (ttyS2) is deliberately left alone - it's the Linux console
 (`console=ttyS2` in `extlinux.conf`) and doubles as a reliable
