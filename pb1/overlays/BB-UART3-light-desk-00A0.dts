@@ -1,0 +1,35 @@
+/dts-v1/;
+/plugin/;
+
+/*
+ * light-desk: pin-mux uart3 (TXD only, P2.29) for DMX output via olad's
+ * uartdmx plugin.
+ *
+ * No stock BB-UART3-00A0.dtbo ships in bb.org-overlays - unlike uart1/
+ * uart2/uart4/uart5, uart3 has no RXD pin broken out anywhere on the P1/P2
+ * headers at all (confirmed against the full PocketBeagle P1/P2 pinmux
+ * tables), so the standard cape-overlays project skips it. That's fine
+ * for this project: uartdmx only transmits, DMX doesn't need RXD, and
+ * P2.29's default silkscreen function (SPI1_CLK) already confirms this is
+ * the same physical pad as pinmux-spi1-pins' first entry in the base
+ * am335x-pocketbeagle.dtb (offset 0x164) - cross-checked against the
+ * mode table (P2.29 mode1 = uart3_txd, mode4 = spi1_sclk) so the offset
+ * below is verified, not guessed.
+ *
+ * Flags byte 0x08 (pull disabled, RXACTIVE off) matches the TXD entry of
+ * the stock BB-UART1-00A0.dtbo exactly - same convention, output-only pin.
+ */
+
+&am33xx_pinmux {
+	bb_uart3_pins: pinmux_bb_uart3_pins {
+		pinctrl-single,pins = <
+			0x164 0x08 0x01 /* P2.29 uart3_txd, mode1, output */
+		>;
+	};
+};
+
+&uart3 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&bb_uart3_pins>;
+};
