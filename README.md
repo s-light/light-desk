@@ -26,6 +26,8 @@ this repository should contain scripts and documentation for the setup process.
     -   buttons -> OSC: added to `scripts/ads7830_to_osc.py` (needs testing
         on pb2 - Blinka pin names for P2.27-P2.32 unverified on real
         hardware)
+    -   buttons wiring check: `scripts/buttons_debug_print.py` (needs
+        testing on pb2)
 
 ## system overview
 - main controller: [pocketbeagle 2](https://www.beagleboard.org/boards/pocketbeagle-2)
