@@ -60,8 +60,11 @@ usermod -aG sudo,dialout,i2c,gpio '$NEW_USER'
 NEW_HOME=\"\$(getent passwd '$NEW_USER' | cut -d: -f6)\"
 mkdir -p \"\$NEW_HOME/.ssh\"
 chmod 700 \"\$NEW_HOME/.ssh\"
-if [ -f '/home/$INVOKING_USER/.ssh/authorized_keys' ]; then
-    cp '/home/$INVOKING_USER/.ssh/authorized_keys' \"\$NEW_HOME/.ssh/authorized_keys\"
+SRC_KEYS='/home/$INVOKING_USER/.ssh/authorized_keys'
+if [ \"\$SRC_KEYS\" = \"\$NEW_HOME/.ssh/authorized_keys\" ]; then
+    echo \"invoking user is already '$NEW_USER' - authorized_keys already in place, skipping copy\"
+elif [ -f \"\$SRC_KEYS\" ]; then
+    cp \"\$SRC_KEYS\" \"\$NEW_HOME/.ssh/authorized_keys\"
     chmod 600 \"\$NEW_HOME/.ssh/authorized_keys\"
 else
     echo 'no authorized_keys found for $INVOKING_USER - add one yourself later' >&2

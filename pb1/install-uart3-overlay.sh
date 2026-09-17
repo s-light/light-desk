@@ -32,12 +32,14 @@ if [ ! -d "$OVERLAY_DIR" ]; then
     exit 1
 fi
 
+TMP_DTBO="$(mktemp --suffix=.dtbo)"
+trap 'rm -f "$TMP_DTBO"' EXIT
+
 echo "==> compiling $OVERLAY_NAME.dts"
-dtc -@ -O dtb -o "/tmp/$OVERLAY_NAME.dtbo" -b 0 "$SCRIPT_DIR/overlays/$OVERLAY_NAME.dts"
+dtc -@ -O dtb -o "$TMP_DTBO" -b 0 "$SCRIPT_DIR/overlays/$OVERLAY_NAME.dts"
 
 echo "==> installing to $OVERLAY_DIR/"
-cp "/tmp/$OVERLAY_NAME.dtbo" "$OVERLAY_DIR/$OVERLAY_NAME.dtbo"
-rm -f "/tmp/$OVERLAY_NAME.dtbo"
+cp "$TMP_DTBO" "$OVERLAY_DIR/$OVERLAY_NAME.dtbo"
 
 echo "==> done: $OVERLAY_DIR/$OVERLAY_NAME.dtbo"
 echo "    next: sudo ./apply-uenv-overlays.sh, then reboot"
