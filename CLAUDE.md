@@ -45,6 +45,11 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
 - `setup.md` — board bring-up steps: clone, install/configure ola, ADS7830
   HW wiring, the Blinka/PocketBeagle 2 "known issues" workaround, and
   running `setup-i2c.sh`
+- `setup-readonly-root.sh` — final board-lockdown step, run once
+  everything else is stable: disables the stock image's unused
+  docker/containerd, points journald at volatile storage, and makes root
+  read-only via `/etc/fstab` (not `overlayroot` - see the script header
+  for why that doesn't work on this board's U-Boot/extlinux setup)
 - `setup.sh` — run once per board, first: installs a scoped
   `/etc/sudoers.d/light-desk-ola` NOPASSWD rule (systemctl/journalctl for
   olad, plus running `apply-ola-config.sh`) so the rest of setup doesn't
@@ -79,6 +84,20 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
 - The board (hostname `lightdeskniilo`) is reachable as `ssh pb_lightdesk`;
   login user `light` needs a password for `sudo` unless `setup.sh` has
   been run.
+- **This board's U-Boot/extlinux setup cannot load an initrd correctly.**
+  Enabling `initrd /initrd.img` on any extlinux.conf label (confirmed on
+  the "microSD (default)" label) causes a kernel panic on boot -
+  `Failed to execute /init (error -2)` - even though the initrd file
+  itself is intact on disk (verified by checksum). This is why every
+  stock label ships with `initrd` commented out, and why `overlayroot`
+  (which needs an initrd) doesn't work here; `setup-readonly-root.sh`
+  uses a plain fstab-based read-only root instead. If this ever needs
+  revisiting, it means debugging U-Boot's initrd loading at the actual
+  U-Boot prompt (serial console, before extlinux even runs) - do that
+  deliberately, with a full SD card image backup first, not as a
+  follow-on to something else; a bad extlinux.conf label previously left
+  the board needing serial-console recovery to the "microSD (failsafe)"
+  label.
 
 ## Target hardware
 - PocketBeagle 2 (AM6254, quad-core A53, **512MB RAM** — this is why native
