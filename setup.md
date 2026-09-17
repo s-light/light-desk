@@ -40,6 +40,33 @@ terminals go to the ADS7830's own supply rails (VIN and GND, so the divider
 tracks the ADC's reference), and the wiper goes to one ADS7830 input channel
 (IN0-IN7, one fader per channel).
 
+### Buttons (GPIO)
+
+6 momentary buttons -> plain GPIO on the P2 header, no device-tree overlay
+needed (see README.md's "7x momentary buttons" note - only the first 6 of
+those 7 pins are wired/used so far):
+
+| button | PB2 P2 pin |
+| :----- | :--------- |
+| 1      | P2.27      |
+| 2      | P2.28      |
+| 3      | P2.29      |
+| 4      | P2.30      |
+| 5      | P2.31      |
+| 6      | P2.32      |
+
+Each button wires one leg to the pin, the other leg to GND; read with an
+internal pull-up so an unpressed button reads high and a press pulls the
+pin low. `scripts/ads7830_to_osc.py` reads them via Blinka's
+`board`/`digitalio` (same stack as the ADC) and sends each as OSC
+`/button/N`, 1.0 on press / 0.0 on release - see that script's docstring
+for the `--button-pins`/`--button-debounce` options.
+
+> [!WARNING]
+> The Blinka pin names for PocketBeagle 2 (`board.P2_27` etc.) are
+> unverified on real hardware - confirm they exist and match the physical
+> pin before relying on this (`python3 -c "import board; print(board.P2_27)"`).
+
 ### DMX outputs (UART)
 
 5 of the PocketBeagle 2's UARTs are usable as DMX outputs via olad's
