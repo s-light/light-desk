@@ -50,6 +50,11 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   docker/containerd, points journald at volatile storage, and makes root
   read-only via `/etc/fstab` (not `overlayroot` - see the script header
   for why that doesn't work on this board's U-Boot/extlinux setup)
+- `readwrite.sh`, `readonly.sh` — after `setup-readonly-root.sh`, root is
+  read-only, so any on-board file change (git pull, deploying a script)
+  needs `./readwrite.sh` first and `./readonly.sh` after - both are one
+  `mount -o remount` call each, kept as separate scripts so nobody has to
+  remember the exact `mount` invocation under pressure
 - `setup.sh` — run once per board, first: installs a scoped
   `/etc/sudoers.d/light-desk-ola` NOPASSWD rule (systemctl/journalctl for
   olad, plus running `apply-ola-config.sh`) so the rest of setup doesn't

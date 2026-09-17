@@ -77,6 +77,10 @@ fi
 echo "==> removing overlayroot (doesn't work on this board, see script header)"
 if dpkg -s overlayroot >/dev/null 2>&1; then
     sudo apt-get remove -y overlayroot
+    # overlayroot pulls in cryptsetup for its (unused here) encrypted
+    # backing-device option; clean that orphan up too rather than leaving
+    # it stranded on what should end up a lean, stock-plus-project image.
+    sudo apt-get autoremove -y
 else
     echo "    not installed, skipping"
 fi
