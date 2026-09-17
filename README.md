@@ -23,11 +23,18 @@ this repository should contain scripts and documentation for the setup process.
     -   write script
 -   python
     -   ADS7830 -> OSC: `scripts/ads7830_to_osc.py` (needs testing on pb2)
-    -   buttons -> OSC: added to `scripts/ads7830_to_osc.py` (needs testing
-        on pb2 - Blinka pin names for P2.27-P2.32 unverified on real
-        hardware)
-    -   buttons wiring check: `scripts/buttons_debug_print.py` (needs
-        testing on pb2)
+    -   buttons -> OSC: `scripts/ads7830_to_osc.py` reads them via
+        libgpiod (not Blinka's `board`/`digitalio` - `board.P2_27` etc.
+        don't actually exist, Blinka has no `board` module support for
+        `BEAGLEBONE_POCKETBEAGLE_2` even though platformdetect correctly
+        identifies the board id), confirmed running as a service on real
+        pb2 hardware; the P2.29/P2.31 pin ambiguity noted in the script's
+        docstring still needs a physical button press to resolve
+    -   buttons wiring check: `scripts/buttons_debug_print.py` - reads
+        the buttons directly via libgpiod (bypassing Blinka's `board`
+        module entirely), confirmed running on real pb2 hardware; still
+        needs a physical button press to confirm the P2.27-P2.32 wiring
+        and pull-up polarity
 
 ## system overview
 - main controller: [pocketbeagle 2](https://www.beagleboard.org/boards/pocketbeagle-2)

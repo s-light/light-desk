@@ -57,15 +57,25 @@ those 7 pins are wired/used so far):
 
 Each button wires one leg to the pin, the other leg to GND; read with an
 internal pull-up so an unpressed button reads high and a press pulls the
-pin low. `scripts/ads7830_to_osc.py` reads them via Blinka's
-`board`/`digitalio` (same stack as the ADC) and sends each as OSC
+pin low. `scripts/ads7830_to_osc.py` intends to read them via Blinka's
+`board`/`digitalio` (same stack as the ADC) and send each as OSC
 `/button/N`, 1.0 on press / 0.0 on release - see that script's docstring
 for the `--button-pins`/`--button-debounce` options.
 
 > [!WARNING]
-> The Blinka pin names for PocketBeagle 2 (`board.P2_27` etc.) are
-> unverified on real hardware - confirm they exist and match the physical
-> pin before relying on this (`python3 -c "import board; print(board.P2_27)"`).
+> Confirmed broken on real hardware: `board.P2_27` etc. don't exist.
+> `import board` raises `NotImplementedError: Board not supported
+> BEAGLEBONE_POCKETBEAGLE_2.` - `adafruit-platformdetect` correctly
+> identifies the board id, but Blinka's `board` module (9.2.0) has no
+> `board_imports.json` entry mapping that id to a pin-name module, so the
+> whole `board`/`digitalio` approach is a dead end here regardless of pin
+> names. `scripts/buttons_debug_print.py` reads the buttons directly via
+> `libgpiod` (the `python3-libgpiod` system package, run with the system
+> `python3` - the venv doesn't see it) instead, resolving each `P2.NN`
+> name against the kernel's named gpio lines (see `gpioinfo`); confirmed
+> running on real hardware, though the actual wiring/pull-up polarity
+> still needs a physical button press to confirm. `ads7830_to_osc.py`'s
+> button code needs the same fix before it'll work.
 
 ### DMX outputs (UART)
 

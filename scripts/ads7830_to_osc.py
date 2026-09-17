@@ -30,22 +30,35 @@ controller but never routes its pins to the header), and the board's ID
 EEPROM needs a udev permission fix for Blinka's board auto-detection
 (triggered just by importing this module, regardless of --i2c-bus).
 
-The buttons are read via Blinka's `board`/`digitalio` (same stack as the
-ADC, no libgpiod dependency needed) with an internal pull-up, so a button
-reads False while pressed. --button-pins names the board module attributes
-to use and defaults to P2.27-P2.32 per README.md; override if Blinka's
-PocketBeagle 2 pin names differ on your image. Unverified on real
-hardware - confirm the pin names exist (`python3 -c "import board;
-print(board.P2_27)"`) and that press/release is reported correctly before
-relying on it.
+The buttons are read via `libgpiod` (the PyPI `gpiod` package, v2 API),
+NOT Blinka's `board`/`digitalio` - `board.P2_27` etc. don't actually
+exist: `import board` unconditionally raises `NotImplementedError: Board
+not supported BEAGLEBONE_POCKETBEAGLE_2` on this board (confirmed on
+real hardware; Blinka's `board` module has no `board_imports.json` entry
+for this board id even though `adafruit-platformdetect` identifies it
+correctly), which crashed this whole script - faders included, since the
+failed import happened at module load. --button-pins takes either a
+`P2.NN`-style header pin name (matched against the kernel's named gpio
+lines, see `gpioinfo`) or an explicit `gpiochipN:offset` pair, and
+defaults to P2.27-P2.32 per README.md.
+
+A `P2.NN` name can resolve to lines on more than one gpiochip (seen for
+P2.29 and P2.31 on real hardware) - likely alternate pinmux routes the
+device tree exposes as GPIO capability regardless of which is actually
+muxed in. Since which one is electrically real can only be confirmed by
+pressing the physical button, this script picks the first match
+(sorted by chip path) and prints a warning naming the other candidates;
+use `scripts/buttons_debug_print.py` to find the right one by hand and
+then pin it down with an explicit `gpiochipN:offset` override.
 """
 
 import argparse
+import glob
 import time
 
-import board
-import digitalio
+import gpiod
 from adafruit_extended_bus import ExtendedI2C
+from gpiod.line import Bias, Direction, Value
 from pythonosc.udp_client import SimpleUDPClient
 
 import adafruit_ads7830.ads7830 as ADC
@@ -55,8 +68,45 @@ DEFAULT_HOST = "192.168.7.1"
 DEFAULT_PORT = 7700
 DEFAULT_I2C_BUS = 1
 NUM_CHANNELS = 8
-DEFAULT_BUTTON_PINS = ["P2_27", "P2_28", "P2_29", "P2_30", "P2_31", "P2_32"]
+DEFAULT_BUTTON_PINS = ["P2.27", "P2.28", "P2.29", "P2.30", "P2.31", "P2.32"]
 DEFAULT_BUTTON_DEBOUNCE = 3
+GPIO_CONSUMER = "ads7830_to_osc"
+
+
+def find_line_candidates(name):
+    """Return [(chip_path, offset), ...] for every gpiochip exposing a
+    line named `name` (with any parenthesized ball-name suffix stripped,
+    e.g. a line named "P2.29(M22)" matches "P2.29") - normally one, see
+    the ambiguity note in the module docstring."""
+    candidates = []
+    for chip_path in sorted(glob.glob("/dev/gpiochip*")):
+        chip = gpiod.Chip(chip_path)
+        try:
+            num_lines = chip.get_info().num_lines
+            for offset in range(num_lines):
+                line_name = chip.get_line_info(offset).name
+                if line_name and line_name.split("(", 1)[0] == name:
+                    candidates.append((chip_path, offset))
+        finally:
+            chip.close()
+    return candidates
+
+
+def resolve_button_pin(pin):
+    if ":" in pin:
+        chip, offset = pin.split(":", 1)
+        return chip if chip.startswith("/dev/") else f"/dev/{chip}", int(offset)
+
+    candidates = find_line_candidates(pin)
+    if not candidates:
+        raise SystemExit(f"no gpio line named {pin!r} found (check `gpioinfo` for the exact name)")
+    if len(candidates) > 1:
+        chosen_chip, chosen_offset = candidates[0]
+        others = ", ".join(f"{c}:{o}" for c, o in candidates[1:])
+        print(f"warning: button pin {pin!r} is ambiguous, matches {chosen_chip}:{chosen_offset} and {others} - "
+              f"using {chosen_chip}:{chosen_offset}; confirm with buttons_debug_print.py and override with "
+              f"--button-pins if that's the wrong one")
+    return candidates[0]
 
 
 def parse_args():
@@ -66,19 +116,18 @@ def parse_args():
     parser.add_argument("--i2c-bus", type=int, default=DEFAULT_I2C_BUS, help="Linux I2C bus number for /dev/i2c-N carrying I2C1 (P1.33/P1.36) - verify on the board, e.g. with `i2cdetect -l` (default: %(default)s)")
     parser.add_argument("--interval", type=float, default=0.02, help="poll interval in seconds, used for both faders and buttons (default: %(default)s)")
     parser.add_argument("--deadband", type=float, default=0.004, help="minimum fader change (0.0-1.0) before resending a channel (default: %(default)s)")
-    parser.add_argument("--button-pins", default=",".join(DEFAULT_BUTTON_PINS), help="comma-separated `board` module attribute names for the 6 buttons, in order (default: %(default)s)")
+    parser.add_argument("--button-pins", default=",".join(DEFAULT_BUTTON_PINS), help="comma-separated `P2.NN` header pin names (see `gpioinfo`) or explicit `gpiochipN:offset` pairs, in order (default: %(default)s)")
     parser.add_argument("--button-debounce", type=int, default=DEFAULT_BUTTON_DEBOUNCE, help="number of consecutive identical polls required before a button state change is sent (default: %(default)s)")
     return parser.parse_args()
 
 
 def setup_buttons(pin_names):
     buttons = []
-    for name in pin_names:
-        pin = getattr(board, name)
-        button = digitalio.DigitalInOut(pin)
-        button.direction = digitalio.Direction.INPUT
-        button.pull = digitalio.Pull.UP
-        buttons.append(button)
+    for pin in pin_names:
+        chip_path, offset = resolve_button_pin(pin)
+        settings = gpiod.LineSettings(direction=Direction.INPUT, bias=Bias.PULL_UP, active_low=True)
+        request = gpiod.request_lines(chip_path, consumer=GPIO_CONSUMER, config={offset: settings})
+        buttons.append((request, offset))
     return buttons
 
 
@@ -108,8 +157,8 @@ def main():
                     client.send_message(f"/fader/{i + 1}", value)
                     last_values[i] = value
 
-            for i, button in enumerate(buttons):
-                pressed = not button.value
+            for i, (request, offset) in enumerate(buttons):
+                pressed = request.get_value(offset) == Value.ACTIVE
                 if pressed == pending_pressed[i]:
                     pending_count[i] += 1
                 else:
@@ -122,6 +171,9 @@ def main():
             time.sleep(args.interval)
     except KeyboardInterrupt:
         pass
+    finally:
+        for request, _ in buttons:
+            request.release()
 
 
 if __name__ == "__main__":
