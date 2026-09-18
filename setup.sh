@@ -1,9 +1,12 @@
 #!/bin/sh
 # Board setup, step 0: grant the current user passwordless sudo for
-# exactly the commands needed to manage olad and run apply-ola-config.sh
-# - nothing broader. Lets an assistant/automation drive the rest of the
-# setup (systemctl, journalctl, apply-ola-config.sh) without needing an
-# interactive sudo password every time.
+# exactly the commands needed to manage olad, manage the
+# ads7830-to-osc.service (fader/button -> OSC bridge), and run
+# apply-ola-config.sh - nothing broader. Lets an assistant/automation
+# drive the rest of the setup (systemctl, journalctl,
+# apply-ola-config.sh) without needing an interactive sudo password
+# every time. Re-run this whenever the rule needs to cover another
+# service.
 #
 # Run this once per board, as your normal login user (it calls sudo
 # itself - don't run this whole script with sudo).
@@ -21,7 +24,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SUDOERS_FILE=/etc/sudoers.d/light-desk-ola
 USER_NAME="$(id -un)"
 
-RULE="$USER_NAME ALL=(root) NOPASSWD: /usr/sbin/service olad *, /usr/bin/systemctl * olad*, /usr/bin/journalctl -u olad*, $SCRIPT_DIR/apply-ola-config.sh"
+RULE="$USER_NAME ALL=(root) NOPASSWD: /usr/sbin/service olad *, /usr/bin/systemctl * olad*, /usr/bin/journalctl -u olad*, /usr/bin/systemctl * ads7830-to-osc*, /usr/bin/journalctl -u ads7830-to-osc*, $SCRIPT_DIR/apply-ola-config.sh"
 
 echo "==> installing $SUDOERS_FILE"
 printf '%s\n' "$RULE" | sudo tee "$SUDOERS_FILE" >/dev/null
