@@ -32,9 +32,30 @@ this repository should contain scripts and documentation for the setup process.
         docstring still needs a physical button press to resolve
     -   buttons wiring check: `scripts/buttons_debug_print.py` - reads
         the buttons directly via libgpiod (bypassing Blinka's `board`
-        module entirely), confirmed running on real pb2 hardware; still
-        needs a physical button press to confirm the P2.27-P2.32 wiring
-        and pull-up polarity
+        module entirely), confirmed running on real pb2 hardware
+    -   **buttons stuck low - unresolved, pick up next session**: ran
+        `buttons_debug_print.py` (all 7 pins incl. P2.34) and plain
+        `gpioget` against P2.27/28/30/32/34 individually on real
+        hardware, with physical button presses during the capture
+        window - every pin reads constant "low"/"inactive", never once
+        "high", press or no press. Isolated further on P2.27 alone:
+        `gpioget -b pull-up`, `-b pull-down`, and `-b disabled` (floating)
+        all return the *same* "inactive" reading - software bias can't
+        override whatever's holding the line low, so this isn't the
+        pull-up-request bug the two scripts' docstrings worried about.
+        Two live hypotheses, not yet distinguished:
+        1. a wiring fault (short to GND) affecting the whole button row
+        2. a fixed pull-down baked into the base device tree's pinmux
+           for this pin group, which gpiod's runtime bias request can't
+           override
+        Next step needs hands on the board: physically unplug one
+        button wire (e.g. P2.27) so it's truly floating in free air,
+        then re-read it (`gpioget -b disabled P2.27` or
+        `buttons_debug_print.py`) - still low with nothing attached
+        means SoC/pinmux (hypothesis 2), floats/reads high or noisy
+        means the wiring/button itself (hypothesis 1). Test was done
+        with `ads7830-to-osc.service` stopped (it holds these GPIO
+        lines exclusively) and restarted afterward.
 
 ## system overview
 - main controller: [pocketbeagle 2](https://www.beagleboard.org/boards/pocketbeagle-2)
