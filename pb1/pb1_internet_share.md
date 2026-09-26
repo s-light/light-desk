@@ -82,7 +82,8 @@ Apply the changes:
 
 ```bash
 sudo systemctl restart systemd-networkd
-ip route        # should show: default via 192.168.17.1 dev usb0
+ip route        
+# should show: default via 192.168.17.1 dev usb0
 ```
 
 ### DNS on the board
