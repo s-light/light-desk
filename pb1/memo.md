@@ -281,6 +281,31 @@ happened between sessions, unrelated to anything here). U-Boot's
 configured on the current kernel until `install-uart3-overlay.sh` is
 re-run to install it under the new kernel's overlay directory too.
 
+**Fixed**: re-ran `install-uart3-overlay.sh` under `6.18.53-bone55`,
+rebooted with a full serial capture start-to-finish. Confirmed via
+`dmesg`: `481a6000.serial: ttyS3` is a real DT-probed device now (not
+the phantom port from before) - universe 3 restored. All 4
+UARTs + I2C1 verified against real dmesg MMIO lines, not just
+`/dev/ttySN` presence: `ttyS1`=`48022000`, `ttyS2`=`48024000`,
+`ttyS3`=`481a6000`, `ttyS4`=`481a8000`, `i2c-1`=`4802a000`.
+
+This boot's full log also sharpens the console-switch hang theory
+above: total time from `Starting kernel ...` to SSH/`ttyGS0` getty
+ready was only **~45-53 seconds** here (`bb-usb-gadgets.service`,
+`network-online.target`, `getty.target` all reached by then), *despite*
+the same `VBUS_ERROR in a_wait_vrise (...SessEnd)` retries and a `usb
+usb2-port1: over-current condition` warning also present in this dmesg.
+That's well under the 2+ minutes of total silence seen twice with
+`console=ttyGS0` - so that hang wasn't just "the gadget is slow, be
+patient", it was genuinely anomalous. The recurring `VBUS_ERROR`/
+over-current messages are themselves worth a look before retrying -
+could point to a marginal USB cable or port on the host side, separate
+from the console-switch question. Try a different cable/direct port
+(no hub) first, *then* retry the console switch with both consoles
+active (`console=ttyS0,115200n8 console=ttyGS0,115200n8`) as planned
+above - that way a repeat of this exact hang would actually be visible
+on serial instead of leaving the board looking dead.
+
 **Gotcha found while checking this**: `/dev/ttyS3` still exists even
 with the overlay missing, which looks like it's working but isn't -
 the core 8250 driver reserves a few legacy/phantom `ttySN` nodes

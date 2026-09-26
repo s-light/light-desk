@@ -42,7 +42,7 @@ Confirmed on real hardware unless noted:
 | :------- | :---- | :-------------------------------- | :------------- | :--------------------- |
 | 1        | UART1 | `BB-UART1-00A0.dtbo` (stock)       | P2.09/P2.11    | confirmed - `/dev/ttyS1` present |
 | 2        | UART2 | `BB-UART2-00A0.dtbo` (stock)       | P1.08/P1.10    | confirmed - `/dev/ttyS2` present |
-| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom) | P2.29 (TX-only) | confirmed working once (kernel `6.18.39-bone44`); **currently NOT active** - see warning below |
+| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom) | P2.29 (TX-only) | confirmed - `481a6000.serial: ttyS3` in dmesg (re-installed for kernel `6.18.53-bone55` via `install-uart3-overlay.sh`) |
 | 4        | UART4 | none needed (enabled in base dts) | P2.05/P2.07    | confirmed - `481a8000.serial: ttyS4` in dmesg |
 
 > [!WARNING]
