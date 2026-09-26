@@ -340,3 +340,36 @@ phantom port would silently do nothing rather than error clearly.
      behind the UART3/P2.29 conflict after all. MOSI/MISO/CS0 pins still
      need the same direct verification before wiring anything.
    - Parked for now - focus is back on the UARTs (item 5).
+
+## Decision (2026-09-27): stopping at 4 universes for PB1
+
+Universe 5 (freeing UART0 via `switch-console-to-usb.sh`) is **not
+worth the trouble for now**, given the reproducible multi-minute hang
+it caused (see above) - deliberately deprioritized, not forgotten. PB1
+ships with 4 DMX universes (1-4, all confirmed working) instead of the
+originally-planned 5. Revisit only if/when there's an actual need for
+the 5th, using the cable-swap + dual-console approach noted above.
+
+Next priorities, in order:
+
+8. Verify the fader ADC works end-to-end on PB1: `scripts/ads7830_to_osc.py`
+   already takes `--i2c-bus`, so `--i2c-bus 1` should just work given
+   I2C1 is confirmed live at P1.06/P1.12 - but not yet actually run on
+   PB1. Try `scripts/ads7830_debug_print.py` first (simpler, no OSC
+   dependency) to confirm live fader reads, same as was done on PB2.
+9. Verify buttons work on PB1. Note: the README's button pin list
+   (P2.27/28/29/30/31/32/34) and PB2's "stuck low, unresolved" bug are
+   both PB2-specific - PB1 needs its own pin choice, checked against
+   what's actually free here. P2.29 is already committed to UART3
+   (universe 3) on PB1, unlike PB2, so at minimum that one pin from the
+   PB2 list isn't available - re-derive a free-pin set for PB1 rather
+   than assuming the PB2 list carries over (same category of mistake as
+   the I2C1 pin mix-up above).
+10. Only once both of those are confirmed working in this test setup:
+    move to the real hardware/fader setup, step by step (not all at
+    once) - per the user's stated plan.
+11. PB1-specific `ola-uartdmx.conf` (device list `ttyS1-4`, not PB2's
+    `ttyS1/3/4/5/7`) and `patch-sacn-to-uart.sh` variant are still
+    needed before `apply-ola-config.sh` can just be run on PB1 - not
+    blocking the fader/button work above, but needed before DMX output
+    itself can be tested end-to-end.

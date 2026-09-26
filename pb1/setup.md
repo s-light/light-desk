@@ -58,7 +58,7 @@ Confirmed on real hardware unless noted:
 > (The other UARTs don't have this ambiguity: each keeps a fixed
 > DT-alias-based `ttySN` number rather than shifting when another UART
 > is missing, so `ttyS1`/`ttyS2`/`ttyS4` reliably mean what they say.)
-| 5        | UART0 | none (console reassignment only, see `switch-console-to-usb.sh`) | P1.30/P1.32 | not yet tested |
+| 5        | UART0 | none (console reassignment only, see `switch-console-to-usb.sh`) | P1.30/P1.32 | **not pursued** - the console switch reproducibly hung the board for 2+ min (see `memo.md`); PB1 stops at 4 universes for now |
 
 I2C1 (fader ADC): `BB-I2C1-00A0.dtbo` (stock) - P1.06/P1.12 - **confirmed
 working**, ADS7830 answers at `i2cget -y 1 0x48`.
