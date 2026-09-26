@@ -221,3 +221,9 @@ Next steps (continuing from item 2 above, which is now partially done):
    directly, the same way P1.06/P1.12 vs P2.09/P2.11 got sorted out
    above. Fallback if SPI1 doesn't pan out: bit-banged/software SPI on
    free GPIOs works fine for a small, low-refresh TFT.
+   - **Update**: confirmed against the official pinout docs that P1.36
+     also carries `spi1_sclk` as an alt-function (currently unused by
+     anything in this project) - so `SPI1_SCLK` isn't necessarily stuck
+     behind the UART3/P2.29 conflict after all. MOSI/MISO/CS0 pins still
+     need the same direct verification before wiring anything.
+   - Parked for now - focus is back on the UARTs (item 5).
