@@ -169,3 +169,55 @@ fsck.vfat -a /dev/sda1` after unmounting it - was proposed but explicitly
    verify `/dev/ttyS1`, `/dev/ttyS2`, `/dev/ttyS3`, `/dev/ttyS0` (freed),
    `i2cdetect -y 1` (ADS7830 at 0x48-0x4b), `systemctl is-active
    serial-getty@ttyGS0` - then write `pb1/setup.md`.
+
+## Update (2026-09-26)
+
+Card was reflashed fresh (the corrupted-FAT card from the previous
+session is set aside, untouched). Progress since:
+
+- `pb1/setup.sh`'s job was already done via the SD card's first-boot
+  sysconf/env-file mechanism (`light` user + groups came up correctly on
+  first boot) - ran it anyway is unnecessary now, skipped.
+- Wired only the 3 **stock** overlays (`BB-UART1-00A0`, `BB-UART2-00A0`,
+  `BB-I2C1-00A0`) into `uEnv.txt` by hand, deliberately leaving the
+  custom `BB-UART3-light-desk-00A0.dtbo` out, and rebooted - **survived**.
+  `/dev/ttyS1`, `/dev/ttyS2`, `/dev/i2c-1` all present.
+- Confirmed via `/sys/kernel/debug/pinctrl/...` that `BB-I2C1-00A0`
+  really routes I2C1 to `spi0_cs0`/`spi0_d1`, i.e. header pins
+  **P1.06/P1.12** - not P1.33/P1.36 (that's PocketBeagle **2**'s I2C1
+  pinout, mistakenly assumed at first) and not P2.09/P2.11 either (that
+  pin pair does carry an I2C1_SCL/SDA alt-function on the AM335x, but
+  it's the `uart1_txd`/`uart1_rxd` pins, already claimed by UART1 for
+  universe 1 in this project's overlay set).
+- ADS7830 was initially wired to P2.09/P2.11 (per the official PocketBeagle
+  pinout table, which does list an I2C1 alt-function there) and failed
+  with `i2cget: Error: Read failed` - expected, since that pin pair is
+  electrically UART1 in our config, not I2C1. Rewired to P1.06/P1.12 -
+  **confirmed working**, `i2cget -y 1 0x48` reads back a value.
+- Added `pb1/setup.sh`... er, `pb1/setup.md` (HW pinout + DMX universe/
+  overlay pin map, confirmed parts only) and `pb1/install-packages.sh`
+  (`ola` + `i2c-tools` via apt, doesn't chain into `apply-ola-config.sh`
+  yet - see that script's own header comment for why).
+
+Next steps (continuing from item 2 above, which is now partially done):
+
+5. Add `BB-UART3-light-desk-00A0.dtbo` (still the untested custom
+   overlay) to the now-confirmed 3-overlay `uEnv.txt` and reboot - this
+   is still the one to watch, per item 2/3 above (unchanged advice).
+6. Once that survives, apply `switch-console-to-usb.sh` as its own
+   separate reboot (item 2's last bullet, still applies).
+7. **New, from the TFT-display question**: once UART3 is confirmed and
+   the final pin set is locked in, check whether SPI1 is actually usable
+   for a small SPI TFT. What's known so far: SPI0's all 4 signals are
+   already fully consumed (`SPI0_CS0`/`SPI0_D1` by I2C1 at P1.06/P1.12,
+   `SPI0_SCLK`/`SPI0_D0` by UART2 at P1.08/P1.10) - dead end. SPI1's
+   clock (`SPI1_SCLK`) lands on P2.29, i.e. the same pin as the untested
+   UART3 overlay - so SPI1 loses its clock line under the current plan
+   unless UART3 moves or `SPI1_SCLK` has a usable alt-routing elsewhere
+   (there was a hint of one, unconfirmed). Two automated lookups of the
+   official PocketBeagle pinout page gave *inconsistent* answers for
+   SPI1's MOSI/MISO/CS0 pin locations (mixed up D0 vs D1, ambiguous
+   CS0) - don't trust either without checking the actual PDF/silkscreen
+   directly, the same way P1.06/P1.12 vs P2.09/P2.11 got sorted out
+   above. Fallback if SPI1 doesn't pan out: bit-banged/software SPI on
+   free GPIOs works fine for a small, low-refresh TFT.
