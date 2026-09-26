@@ -42,7 +42,7 @@ Confirmed on real hardware unless noted:
 | :------- | :---- | :-------------------------------- | :------------- | :--------------------- |
 | 1        | UART1 | `BB-UART1-00A0.dtbo` (stock)       | P2.09/P2.11    | confirmed - `/dev/ttyS1` present |
 | 2        | UART2 | `BB-UART2-00A0.dtbo` (stock)       | P1.08/P1.10    | confirmed - `/dev/ttyS2` present |
-| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom) | P2.29 (TX-only) | **not yet re-tested** - see `memo.md` |
+| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom) | P2.29 (TX-only) | confirmed - `/dev/ttyS3` present |
 | 4        | UART4 | none needed (enabled in base dts) | P2.05/P2.07    | not yet tested on this boot |
 | 5        | UART0 | none (console reassignment only, see `switch-console-to-usb.sh`) | P1.30/P1.32 | not yet tested |
 

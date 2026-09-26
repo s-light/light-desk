@@ -201,11 +201,16 @@ session is set aside, untouched). Progress since:
 
 Next steps (continuing from item 2 above, which is now partially done):
 
-5. Add `BB-UART3-light-desk-00A0.dtbo` (still the untested custom
-   overlay) to the now-confirmed 3-overlay `uEnv.txt` and reboot - this
-   is still the one to watch, per item 2/3 above (unchanged advice).
-6. Once that survives, apply `switch-console-to-usb.sh` as its own
-   separate reboot (item 2's last bullet, still applies).
+5. ~~Add `BB-UART3-light-desk-00A0.dtbo`~~ **Done, confirmed working.**
+   Built + installed via `install-uart3-overlay.sh`, wired via
+   `apply-uenv-overlays.sh`, rebooted - survived cleanly, `/dev/ttyS3`
+   present alongside `ttyS1`/`ttyS2`/`i2c-1`. So item 3's "custom overlay
+   might need restructuring" theory was moot - **the custom overlay was
+   never the problem**; the earlier hang was the corrupted SD card from
+   the previous session, now set aside. Console still untouched
+   (`ttyS0`).
+6. Apply `switch-console-to-usb.sh` as its own separate reboot (item 2's
+   last bullet, still applies) - **not done yet, next up**.
 7. **New, from the TFT-display question**: once UART3 is confirmed and
    the final pin set is locked in, check whether SPI1 is actually usable
    for a small SPI TFT. What's known so far: SPI0's all 4 signals are
