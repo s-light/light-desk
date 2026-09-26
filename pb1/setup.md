@@ -42,8 +42,22 @@ Confirmed on real hardware unless noted:
 | :------- | :---- | :-------------------------------- | :------------- | :--------------------- |
 | 1        | UART1 | `BB-UART1-00A0.dtbo` (stock)       | P2.09/P2.11    | confirmed - `/dev/ttyS1` present |
 | 2        | UART2 | `BB-UART2-00A0.dtbo` (stock)       | P1.08/P1.10    | confirmed - `/dev/ttyS2` present |
-| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom) | P2.29 (TX-only) | confirmed - `/dev/ttyS3` present |
-| 4        | UART4 | none needed (enabled in base dts) | P2.05/P2.07    | not yet tested on this boot |
+| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom) | P2.29 (TX-only) | confirmed working once (kernel `6.18.39-bone44`); **currently NOT active** - see warning below |
+| 4        | UART4 | none needed (enabled in base dts) | P2.05/P2.07    | confirmed - `481a8000.serial: ttyS4` in dmesg |
+
+> [!WARNING]
+> **`/dev/ttyS3` existing does NOT mean UART3/universe 3 is actually
+> enabled.** The kernel's core 8250 driver always reserves a handful of
+> legacy/phantom `ttySN` device nodes regardless of real hardware; when
+> the real DT-probed UART3 isn't loaded, `/dev/ttyS3` silently falls
+> back to being one of those inert phantom ports instead - it still
+> exists, but isn't connected to any pin. Don't trust `ls /dev/ttyS3`
+> alone. Check `dmesg | grep -i uart3` for a real MMIO probe line (e.g.
+> `481aa000.serial: ttyS3 at MMIO ...`) instead - if that line is
+> missing, the overlay isn't loaded, whatever `/dev/ttyS3` says.
+> (The other UARTs don't have this ambiguity: each keeps a fixed
+> DT-alias-based `ttySN` number rather than shifting when another UART
+> is missing, so `ttyS1`/`ttyS2`/`ttyS4` reliably mean what they say.)
 | 5        | UART0 | none (console reassignment only, see `switch-console-to-usb.sh`) | P1.30/P1.32 | not yet tested |
 
 I2C1 (fader ADC): `BB-I2C1-00A0.dtbo` (stock) - P1.06/P1.12 - **confirmed

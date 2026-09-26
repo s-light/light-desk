@@ -210,7 +210,90 @@ Next steps (continuing from item 2 above, which is now partially done):
    the previous session, now set aside. Console still untouched
    (`ttyS0`).
 6. Apply `switch-console-to-usb.sh` as its own separate reboot (item 2's
-   last bullet, still applies) - **not done yet, next up**.
+   last bullet, still applies) - **attempted, reverted, see below.**
+
+## Update (2026-09-27): console-to-USB switch hangs the board
+
+Ran `switch-console-to-usb.sh` + reboot (item 6). Board went completely
+unreachable - no SSH, no ping to `192.168.17.2`, static LEDs (no
+heartbeat), for 2+ minutes, reproduced identically on a second
+power-cycle. Root-caused via serial (which stayed on UART0/`ttyS0`
+throughout - `switch-console-to-usb.sh` only changes the *Linux*
+`console=`, U-Boot's own serial console is separate and unaffected):
+
+- U-Boot boots cleanly every time, loads all 4 overlays fine (the
+  custom UART3 one still isn't found under this kernel's overlay dir -
+  see the kernel-version note below - but that's non-fatal, boot
+  continues past it regardless of console= value).
+- With `console=ttyGS0`: **zero** bytes appear on the serial terminal
+  after `Starting kernel ...` - not even early kernel decompression
+  lines.
+- With `console=ttyS0` (reverted): the same boot prints
+  `[    0.000000] Malformed early option 'earlycon'` - the bare
+  `earlycon` kernel arg (no explicit device/address) is rejected by
+  this kernel version and produces no output at all. This fully
+  explains the ttyGS0 silence: nothing before the real console
+  registers is visible either way, and `ttyGS0` doesn't exist as a
+  device until `bb-usb-gadgets.service` creates it via configfs, likely
+  well into boot.
+- `bb-usb-gadgets.service` (stock, sets up the `g_multi` composite
+  gadget - ncm+acm+rndis - via configfs, and itself explicitly runs
+  `systemctl start serial-getty@ttyGS0.service` as its last step, not a
+  normal unit dependency) completed in ~15s on the `console=ttyS0` boot,
+  with `usb0` (192.168.17.2) and `ttyGS0` both coming up fine. 15s is
+  nowhere near the 2+ minutes of total unreachability seen with
+  `console=ttyGS0` - so this isn't just "the gadget is slow", something
+  about naming `ttyGS0` as *the* console specifically prevents this from
+  completing (or from being visible) within any reasonable time.
+  Leading theory: a boot-ordering chicken-and-egg problem - something
+  early in boot implicitly wants "the console" ready before letting
+  other units proceed, but the requested console (`ttyGS0`) is itself
+  only created by a service that runs later. Not confirmed.
+
+**Recovery was non-destructive this time** (unlike the SD-card
+corruption incident) - just pulled the card, mounted the FAT boot
+partition on a reader, and reverted `console=ttyGS0` back to
+`console=ttyS0` in `/boot/uEnv.txt`. No need to re-enable
+`serial-getty@ttyS0.service` for this to work - systemd auto-starts a
+getty on whatever tty `console=` names, independent of that service's
+enabled/disabled state (confirmed: `ttyGS0`'s getty was "active" but
+never "enabled" either, started imperatively by
+`bb-usb-gadgets.service` instead).
+
+**Current state: reverted to `console=ttyS0`, confirmed working again**
+- universes 1-3 (`ttyS1`/`ttyS2`/`ttyS3`) + I2C1 fader all still fine,
+  `usb0`/SSH/`ttyGS0` all working normally with `ttyS0` also active as
+  console. Universe 5 (freeing UART0) is **not** wired up - deferred.
+
+Next step, for a future session - don't just retry the same swap blind:
+set **both** consoles at once
+(`console=ttyS0,115200n8 console=ttyGS0,115200n8`) instead of replacing
+one with the other. Keeps full serial visibility throughout boot no
+matter what the gadget does, so a repeat hang would actually be visible
+this time, while still proving out whether `ttyGS0` reliably comes up.
+Only drop `ttyS0` from `console=` once that's proven solid.
+
+Separately (unrelated, non-blocking): the custom UART3 overlay is
+still only installed under `/boot/dtbs/6.18.39-bone44/overlays/` - the
+board is now running `6.18.53-bone55` (an apt-triggered kernel update
+happened between sessions, unrelated to anything here). U-Boot's
+"unable to find" for it is non-fatal, but universe 3 silently isn't
+configured on the current kernel until `install-uart3-overlay.sh` is
+re-run to install it under the new kernel's overlay directory too.
+
+**Gotcha found while checking this**: `/dev/ttyS3` still exists even
+with the overlay missing, which looks like it's working but isn't -
+the core 8250 driver reserves a few legacy/phantom `ttySN` nodes
+regardless of real hardware, and `ttyS3` fell back to being one of
+those (traced to `serial8250:0.3` in sysfs, no real MMIO device behind
+it) instead of disappearing. `dmesg | grep -i uart3` shows nothing for
+this boot - that's the real tell, not `ls /dev/ttyS3`. Confirmed the
+other UARTs don't have this ambiguity: `ttyS1`/`ttyS2` (UART1/UART2)
+and `ttyS4` (UART4, kept its own number, doesn't shift down to fill
+UART3's gap) all show real `NNNNNNNN.serial: ttySN at MMIO ...` dmesg
+lines this boot. Written up in `setup.md` as a warning so this doesn't
+bite anyone configuring `ola-uartdmx.conf` later - pointing it at a
+phantom port would silently do nothing rather than error clearly.
 7. **New, from the TFT-display question**: once UART3 is confirmed and
    the final pin set is locked in, check whether SPI1 is actually usable
    for a small SPI TFT. What's known so far: SPI0's all 4 signals are
