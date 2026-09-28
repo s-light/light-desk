@@ -501,3 +501,22 @@ Next priorities, in order:
     (`ttyS1`-`ttyS4`, one universe each). DMX output itself (an actual
     fixture on the line) still not checked, but the sACN->UART patch
     path is confirmed working end-to-end.
+
+12. **All 7 real faders wired and confirmed working (2026-09-29)** by
+    the user. Follow-up noted for a later session: real potentiometers
+    don't quite hit the rails - two faders bottom out at 0.008, not
+    0.000, and all of them top out at 0.996, not 1.000. Both
+    `ads7830_debug_print.py` and `ads7830_to_osc.py` currently just do
+    `chan.value / 65535` with no calibration (see
+    `scripts/ads7830_to_osc.py:159`) - `ads7830_to_osc.py` needs a
+    per-channel (or one shared, if the offset turns out consistent
+    across faders) min/max calibration + clamp so the OSC output
+    actually reaches a clean 0.0/1.0 at each fader's physical extremes,
+    otherwise QLC+ (or whatever's on the receiving end) never sees a
+    true black/full value. Options to weigh next session: hardcoded
+    per-channel min/max constants (simple, but brittle if a
+    potentiometer is swapped), a `--fader-calibrate` pass that samples
+    live and writes out per-channel min/max, or just clamp-and-rescale
+    with a fixed small margin (e.g. treat <=0.01 as 0.0, >=0.99 as
+    1.0) if the deadzone turns out consistent enough not to need
+    per-channel values.
