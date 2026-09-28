@@ -359,6 +359,18 @@ Next priorities, in order:
    I2C1/P1.06+P1.12 and the ADS7830 wiring end-to-end. Not yet tried
    `ads7830_to_osc.py`/the OSC path itself, but the ADC read path
    underneath it is confirmed.
+   - **Quick-check confirmed both ends of the 7-fader range
+     (2026-09-28)**: user wired test potentiometers on ADC channels 0
+     and 7 (the first/last of the eventual 7). Both showed clear,
+     responsive movement when turned - ch0 first, ch7 on a second
+     sample after being told to move it (its first sample window
+     happened to catch it not-yet-moved, pegged at 0.996 - a false
+     alarm, not a wiring issue). One thing noted for later: with ch0
+     swung hard, ch7 and the floating ch1-ch6 channels showed
+     correlated movement/drift too (mux crosstalk between
+     back-to-back ADS7830 channel reads, not a wiring fault) - worth
+     re-checking once all 7 fader channels are wired to real
+     (low-impedance) pots, which should reduce it.
 9. Verify buttons work on PB1. Note: the README's button pin list
    (P2.27/28/29/30/31/32/34) and PB2's "stuck low, unresolved" bug are
    both PB2-specific - PB1 needs its own pin choice, checked against
