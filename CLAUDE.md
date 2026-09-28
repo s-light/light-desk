@@ -111,8 +111,10 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
 - OS: Debian 13 "trixie" arm64 (plain userland, not Yocto-specific)
 
 ## Working conventions
-- User handles all git commits themselves — don't commit unless explicitly
-  asked.
+- Don't commit unless explicitly asked. When asked to commit, do it
+  (plain `git commit`, per the global GPG-signing rule) and write a
+  commit message with no Claude/Anthropic attribution line — this repo
+  opts out of the tool-added "Co-Authored-By" trailer.
 - No `gh` CLI available in this environment; use WebSearch/WebFetch for
   GitHub content (issues, gists, raw files) instead.
 - Docs are English-only — translate any German that creeps back in.
