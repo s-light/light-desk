@@ -14,18 +14,26 @@
 #
 # Usage: sudo ./apply-ola-config.sh
 # Override the config location with: sudo CONFIG_DIR=/path ./apply-ola-config.sh
+#
+# Defaults are for PocketBeagle 2 (5 universes, ola-config/). A different
+# board passes its own e131/uartdmx .conf dir and universe count via
+# OLA_CONFIG_SRC / NUM_UNIVERSES - PocketBeagle 1 does this through its
+# wrapper, pb1/apply-ola-config.sh, rather than by hand.
 
 set -eu
 
 CONFIG_DIR="${CONFIG_DIR:-/etc/ola}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+OLA_CONFIG_SRC="${OLA_CONFIG_SRC:-$SCRIPT_DIR/ola-config}"
+NUM_UNIVERSES="${NUM_UNIVERSES:-5}"
+export NUM_UNIVERSES
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "must run as root, e.g.: sudo $0" >&2
     exit 1
 fi
 
-echo "==> config dir: $CONFIG_DIR"
+echo "==> config dir: $CONFIG_DIR (source: $OLA_CONFIG_SRC, $NUM_UNIVERSES universes)"
 mkdir -p "$CONFIG_DIR"
 
 # Every plugin olad ships, minus e131/uartdmx/dummy (handled below).
@@ -61,8 +69,8 @@ for plugin in $DISABLED_PLUGINS; do
 done
 echo "==> disabled $count unused plugins"
 
-cp "$SCRIPT_DIR/ola-config/ola-e131.conf" "$CONFIG_DIR/ola-e131.conf"
-cp "$SCRIPT_DIR/ola-config/ola-uartdmx.conf" "$CONFIG_DIR/ola-uartdmx.conf"
+cp "$OLA_CONFIG_SRC/ola-e131.conf" "$CONFIG_DIR/ola-e131.conf"
+cp "$OLA_CONFIG_SRC/ola-uartdmx.conf" "$CONFIG_DIR/ola-uartdmx.conf"
 printf 'enabled = true\n' > "$CONFIG_DIR/ola-dummy.conf"
 echo "==> installed ola-e131.conf, ola-uartdmx.conf, ola-dummy.conf"
 
@@ -89,11 +97,11 @@ if command -v systemctl >/dev/null 2>&1 && systemctl list-unit-files olad.servic
     sleep 2
 else
     echo "!! olad.service not installed (see ../olad.service) - start olad manually, then run:" >&2
-    echo "     $SCRIPT_DIR/ola-config/patch-sacn-to-uart.sh" >&2
+    echo "     NUM_UNIVERSES=$NUM_UNIVERSES $SCRIPT_DIR/ola-config/patch-sacn-to-uart.sh" >&2
     exit 0
 fi
 
-echo "==> patching sACN universes 1-5 through to their UART outputs"
+echo "==> patching sACN universes 1-$NUM_UNIVERSES through to their UART outputs"
 if ! "$SCRIPT_DIR/ola-config/patch-sacn-to-uart.sh"; then
     echo "!! patching failed - check the device aliases with 'ola_dev_info' and" >&2
     echo "   adjust E131_DEVICE/UARTDMX_DEVICE_START in ola-config/patch-sacn-to-uart.sh" >&2

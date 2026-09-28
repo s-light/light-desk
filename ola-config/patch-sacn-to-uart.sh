@@ -1,9 +1,13 @@
 #!/bin/sh
-# Patch the 5 sACN (E1.31) input ports to universes 1-5, and each of the
-# 5 uartdmx output devices to the same universes 1-5, so each incoming
+# Patch the N sACN (E1.31) input ports to universes 1-N, and each of the
+# N uartdmx output devices to the same universes 1-N, so each incoming
 # sACN universe comes straight back out on its own UART/DMX line.
 #
-# e131 is ONE OLA device with 5 input ports (port i -> universe i+1).
+# N = NUM_UNIVERSES (default 5, PocketBeagle 2). PocketBeagle 1 uses 4 -
+# pb1/apply-ola-config.sh sets that; it must match both input_ports in
+# ola-e131.conf and the number of "device =" lines in ola-uartdmx.conf.
+#
+# e131 is ONE OLA device with N input ports (port i -> universe i+1).
 # uartdmx is different: olad creates one SEPARATE device per successfully
 # opened UART, each with a single port 0 - not one device with 5 ports.
 # Confirmed via `ola_dev_info` after the overlay in ../overlays was
@@ -30,19 +34,22 @@
 #
 # Defaults below assume apply-ola-config.sh's plugin set (only dummy,
 # e131, uartdmx enabled): dummy loads first and takes alias 1, e131
-# loads next (alias 2), then the 5 uartdmx devices take 3-7 in the
-# order listed above.
+# loads next (alias 2), then the N uartdmx devices take 3..N+2 in the
+# order listed in ola-uartdmx.conf.
 
 set -e
 
-E131_DEVICE=2          # alias of the E1.31 device (has our 5 input ports)
+NUM_UNIVERSES="${NUM_UNIVERSES:-5}"
+E131_DEVICE=2          # alias of the E1.31 device (has our N input ports)
 UARTDMX_DEVICE_START=3 # alias of the first uartdmx device (ttyS1); each
-                        # of the 5 uartdmx devices takes the next alias
+                        # of the N uartdmx devices takes the next alias
 
-for i in 0 1 2 3 4; do
+i=0
+while [ "$i" -lt "$NUM_UNIVERSES" ]; do
     universe=$((i + 1))
     uartdmx_device=$((UARTDMX_DEVICE_START + i))
     ola_patch -d "$E131_DEVICE" -p "$i" -i -u "$universe"
     ola_patch -d "$uartdmx_device" -p 0 -u "$universe"
     echo "universe $universe: e131 in port $i -> uartdmx device $uartdmx_device port 0"
+    i=$((i + 1))
 done

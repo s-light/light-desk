@@ -12,13 +12,10 @@
 # Idempotent - `apt-get install` is a no-op if a package is already at
 # the latest available version. Safe to re-run.
 #
-# NOTE: this does NOT configure olad itself (see ../apply-ola-config.sh
-# and ../ola-config/) - that config currently hardcodes PocketBeagle 2's
-# UART device list (ttyS1/ttyS3/ttyS4/ttyS5/ttyS7). PB1's DMX universes
-# land on ttyS0-ttyS4 instead (see apply-uenv-overlays.sh and
-# switch-console-to-usb.sh), so a PB1-specific ola-uartdmx.conf +
-# patch-sacn-to-uart.sh variant is still needed before olad can just be
-# pointed at this board - tracked as a follow-up, not done here.
+# NOTE: this does NOT configure olad itself - run ./apply-ola-config.sh
+# after this (see that script and ola-config/ in this folder) for PB1's
+# own 4-universe config (ttyS1-ttyS4), not PocketBeagle 2's 5-universe
+# one at the repo root.
 #
 # Run as your normal user (it calls sudo itself).
 #

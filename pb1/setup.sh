@@ -2,9 +2,9 @@
 # PocketBeagle 1 board setup, step 0: creates the 'light' login user
 # (mirroring the PocketBeagle 2 board, see the repo root CLAUDE.md) and
 # grants it passwordless sudo for exactly the PB1 bring-up scripts in
-# this folder - nothing broader. Mirrors the repo root's setup.sh (same
-# idea, PB2 board), but scoped to the PB1-specific scripts instead of
-# olad/apply-ola-config.sh.
+# this folder, plus olad/ads7830-to-osc service management and this
+# folder's apply-ola-config.sh - mirrors the repo root's setup.sh (same
+# idea, PB2 board), just scoped to PB1's own script paths.
 #
 # There's nothing project-specific tied to the 'light' username beyond
 # what this script sets up: every other script in this repo (the root
@@ -28,7 +28,9 @@
 #     one-time overlay installs, apt-get)
 #   - installs a NOPASSWD sudoers rule for 'light' covering exactly the
 #     other scripts in this folder (install-uart3-overlay.sh,
-#     apply-uenv-overlays.sh, switch-console-to-usb.sh)
+#     apply-uenv-overlays.sh, switch-console-to-usb.sh,
+#     apply-ola-config.sh), plus olad/ads7830-to-osc service management
+#     (systemctl/journalctl) - mirrors the repo root setup.sh's rule
 #
 # Run this once per board, as your normal login user (it calls sudo
 # itself - don't run this whole script with sudo). It will prompt for
@@ -76,7 +78,7 @@ echo "==> set a login password for '$NEW_USER' (needed for sudo prompts not cove
 sudo passwd "$NEW_USER"
 
 SUDOERS_FILE=/etc/sudoers.d/light-desk-pb1
-RULE="$NEW_USER ALL=(root) NOPASSWD: $SCRIPT_DIR/install-uart3-overlay.sh, $SCRIPT_DIR/apply-uenv-overlays.sh, $SCRIPT_DIR/switch-console-to-usb.sh"
+RULE="$NEW_USER ALL=(root) NOPASSWD: $SCRIPT_DIR/install-uart3-overlay.sh, $SCRIPT_DIR/apply-uenv-overlays.sh, $SCRIPT_DIR/switch-console-to-usb.sh, $SCRIPT_DIR/apply-ola-config.sh, /usr/sbin/service olad *, /usr/bin/systemctl * olad*, /usr/bin/journalctl -u olad*, /usr/bin/systemctl * ads7830-to-osc*, /usr/bin/journalctl -u ads7830-to-osc*"
 
 echo "==> installing $SUDOERS_FILE"
 printf '%s\n' "$RULE" | sudo tee "$SUDOERS_FILE" >/dev/null

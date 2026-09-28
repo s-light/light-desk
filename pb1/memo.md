@@ -368,8 +368,22 @@ Next priorities, in order:
 10. Only once both of those are confirmed working in this test setup:
     move to the real hardware/fader setup, step by step (not all at
     once) - per the user's stated plan.
-11. PB1-specific `ola-uartdmx.conf` (device list `ttyS1-4`, not PB2's
-    `ttyS1/3/4/5/7`) and `patch-sacn-to-uart.sh` variant are still
-    needed before `apply-ola-config.sh` can just be run on PB1 - not
-    blocking the fader/button work above, but needed before DMX output
-    itself can be tested end-to-end.
+11. ~~PB1-specific `ola-uartdmx.conf` ... `apply-ola-config.sh`~~ **Done
+    (2026-09-28)**: `pb1/ola-config/` (4-universe `ola-e131.conf` +
+    `ola-uartdmx.conf` for `ttyS1-4`) and `pb1/apply-ola-config.sh` (a
+    thin wrapper around the repo root's `apply-ola-config.sh`, passing
+    `OLA_CONFIG_SRC`/`NUM_UNIVERSES=4`) now exist. The shared
+    `ola-config/patch-sacn-to-uart.sh` was made universe-count-agnostic
+    (`NUM_UNIVERSES` env var, default 5) instead of forking it per
+    board. `pb1/setup.sh`'s NOPASSWD sudoers rule was extended to cover
+    `apply-ola-config.sh` plus olad/ads7830-to-osc systemctl/journalctl,
+    mirroring the repo root's `setup.sh`. **Not yet run on real
+    hardware** - still needs `install-packages.sh` + this script
+    exercised on PB1 (`pb_6ch`) to confirm olad actually comes up and
+    DMX goes out on all 4 UARTs.
+
+12. Item 8 above (fader ADC verification) is still blocked: PB1
+    (`pb_6ch`, 192.168.17.2) was unreachable over SSH as of 2026-09-28
+    (`connect ... port 22: Connection timed out`) - board likely off/
+    disconnected/on a different network. Re-check connectivity before
+    resuming items 8-10.

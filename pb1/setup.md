@@ -63,6 +63,18 @@ Confirmed on real hardware unless noted:
 I2C1 (fader ADC): `BB-I2C1-00A0.dtbo` (stock) - P1.06/P1.12 - **confirmed
 working**, ADS7830 answers at `i2cget -y 1 0x48`.
 
+## olad config (sACN -> UART DMX)
+
+`apply-ola-config.sh` (this folder) installs PB1's own 4-universe olad
+config: `ola-config/ola-e131.conf` (4 sACN input ports) and
+`ola-config/ola-uartdmx.conf` (`ttyS1`-`ttyS4`, matching the pin map
+above). It's a thin wrapper around the repo root's
+`../apply-ola-config.sh` (same plugin set, same port-9091 fix) with
+`OLA_CONFIG_SRC`/`NUM_UNIVERSES` pointed at PB1's config instead of
+PocketBeagle 2's 5-universe one. Not yet run on real PB1 hardware -
+run after `install-packages.sh`, before testing sACN -> DMX
+end-to-end.
+
 See `memo.md` for full bring-up history and remaining open steps
-(custom UART3 overlay retest, console switch, olad config for PB1's
-UART device list).
+(fader ADC end-to-end test, button pin selection, olad config
+verification on real hardware).
