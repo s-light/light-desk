@@ -352,11 +352,13 @@ the 5th, using the cable-swap + dual-console approach noted above.
 
 Next priorities, in order:
 
-8. Verify the fader ADC works end-to-end on PB1: `scripts/ads7830_to_osc.py`
-   already takes `--i2c-bus`, so `--i2c-bus 1` should just work given
-   I2C1 is confirmed live at P1.06/P1.12 - but not yet actually run on
-   PB1. Try `scripts/ads7830_debug_print.py` first (simpler, no OSC
-   dependency) to confirm live fader reads, same as was done on PB2.
+8. ~~Verify the fader ADC works end-to-end on PB1~~ **Done
+   (2026-09-28)**: ran `scripts/ads7830_debug_print.py --i2c-bus 1`
+   (via `scripts/.venv`, already set up on the board) on real PB1
+   hardware - all 8 channels print live, changing values, confirming
+   I2C1/P1.06+P1.12 and the ADS7830 wiring end-to-end. Not yet tried
+   `ads7830_to_osc.py`/the OSC path itself, but the ADC read path
+   underneath it is confirmed.
 9. Verify buttons work on PB1. Note: the README's button pin list
    (P2.27/28/29/30/31/32/34) and PB2's "stuck low, unresolved" bug are
    both PB2-specific - PB1 needs its own pin choice, checked against
@@ -365,25 +367,109 @@ Next priorities, in order:
    PB2 list isn't available - re-derive a free-pin set for PB1 rather
    than assuming the PB2 list carries over (same category of mistake as
    the I2C1 pin mix-up above).
+   - **Pin selection, real-hardware build has 6 buttons / 7 faders, not
+     PB2's 6/8** (per the user, 2026-09-28) - `pb1/pinout-reference.md`
+     (new: ground-truth pinmux table, parsed verbatim from the official
+     docs HTML, not a model summary - see that file's own note) was
+     used to re-derive free pins.
+   - **First pick, P2.25/27/28/30/31/32/33, had a dead end**: `P2.27`
+     resolves in the pinmux table to `gpio1_08`, but `gpioinfo` on real
+     PB1 shows that line named `"[SYSBOOT 8]"`, not `P2.27` - it's a
+     boot-strapping pin, not usable as GPIO despite the table listing a
+     GPIO mode for it. Found by actually running
+     `buttons_debug_print.py` on the board (with no buttons wired -
+     just checking the pins resolve) rather than trusting the table
+     alone. This also exposed a real bug in both `buttons_debug_print.py`
+     and `ads7830_to_osc.py`: their gpio-line-name matching only
+     stripped a `(...)`-style suffix (PB2's `gpioinfo` style), not
+     PB1's `[...]`-style (e.g. `"P2.25 [SPI1_MOSI]"`) - fixed to strip
+     either.
+   - **Working 6-pin set (lines resolve, no PB2-style crash)**:
+     **P2.25, P2.28, P2.30, P2.31, P2.32, P2.33** - all present as named
+     gpio lines on real PB1, none SYSBOOT/reserved, none overlapping any
+     other committed PB1 function.
+   - **New finding, not yet a green light**: with nothing wired to any
+     of these 6 pins, `gpioget -b pull-up|pull-down|disabled` all
+     return the *same* fixed value per pin regardless of bias
+     (`P2.25` always "active"/high, the other 5 always "inactive"/low) -
+     software bias has zero effect. Checked two unrelated, definitely-
+     otherwise-free plain-GPIO pins (`P2.02`, `P2.03`, GPMC-mux group,
+     nothing to do with the SPI1/PRU cluster the 6 candidates sit in)
+     and got the exact same symptom - **so this isn't specific to these
+     6 pins or a wiring fault, it reproduces board-wide**. Best current
+     explanation: AM335x's `pinctrl-single` driver (used here) is known
+     not to support runtime bias changes through the generic Linux
+     pinctrl API that `libgpiod`'s `-b`/`Bias` option goes through - the
+     pull config has to be baked into the pin's static pinmux value in
+     the device tree at boot, not toggled live. That would also explain
+     PB2's older "buttons stuck low, unresolved" bug (see the PB2
+     history above) as the same root cause, not a PB2-specific wiring
+     issue.
+   - **Practical implication**: don't rely on `gpiod`'s software
+     pull-up for these buttons - either wire an external pull-up
+     resistor per button (classic button-to-GND design) or bake a
+     pull-up into a small pinmux overlay per button pin (same pattern
+     as `pb1/overlays/BB-UART3-light-desk-00A0.dts`). Needs deciding
+     before wiring, and re-testing with an actual button (or a
+     jumper-to-GND stand-in) once done - a truly floating pin with no
+     real pull either way can't be trusted to read meaningfully at all,
+     bias override or not.
+   - `config-pin` (BeagleBoard's usual pin-mux CLI) isn't installed on
+     this image (`command not found`) and `/sys/kernel/debug/pinctrl`
+     needs root (no password-less sudo for ad-hoc debugfs reads) -
+     either would help confirm the pinctrl-single theory directly, not
+     done yet.
+   - **Overlay approach chosen and built (2026-09-28)**, per the user's
+     preference for the SoC's internal pull-up over external resistors.
+     Found the base `am335x-pocketbeagle.dts` (on the board, under
+     `/opt/source/dtb-*.x/src/arm/ti/omap/`) already defines a
+     ready-made `PIN_INPUT_PULLUP, MUX_MODE7` pinctrl-single node per
+     header pin (`P2_02_gpio`, `P2_04_gpio`, `P2_06_gpio`, `P2_22_gpio`,
+     `P2_24_gpio`, `P2_33_gpio`, ...) - unused by anything, since
+     nothing references them from a `pinctrl-0`. All 6 of our 6 chosen
+     button pins happen to have one of these ready-made nodes and sit
+     on the same GPIO bank (`gpio1`), so
+     `pb1/overlays/BB-GPIO-buttons-light-desk-00A0.dts` (new) is a
+     single small fragment on `&gpio1` that adds
+     `pinctrl-names/pinctrl-0` referencing those 6 existing labels by
+     phandle - no need to hand-compute AM335x padconf values. Targeting
+     the GPIO bank controller itself (not a `gpio-keys`/`gpio-leds`
+     node) matters: any platform device with a bound driver gets
+     `pinctrl-0` applied automatically at probe (generic Linux
+     driver-core behavior), and `gpio1`'s own driver already
+     probes/binds normally - so this activates the pad config without
+     any kernel driver *claiming* the GPIO lines, leaving them free for
+     `libgpiod` from userspace (a `gpio-keys` node would also reserve
+     the lines and break the existing Python scripts' direct polling).
+   - Compiled clean on real PB1 with the same `dtc -@ -O dtb -b 0`
+     one-liner the UART3 overlay uses (no C preprocessor/macros needed -
+     just phandle references, which `dtc` resolves natively via
+     `__fixups__`/`__symbols__`, the same mechanism the already-working
+     UART3 overlay relies on). Decompiled the output to confirm the 6
+     phandle fixups are present and correctly named - not yet installed
+     or boot-tested (`install-gpio-buttons-overlay.sh` written, wired
+     into `apply-uenv-overlays.sh`'s overlay list, and added to
+     `setup.sh`'s NOPASSWD rule, but not run - needs a reboot to take
+     effect, left for the user to trigger deliberately rather than done
+     automatically mid-session).
+   - Final button pins: **P2.02, P2.04, P2.06, P2.22, P2.24, P2.33**
+     (dropped `P2.30`/`P2.31`/`P2.32` from the earlier PRU/SPI1-cluster
+     pick - those don't have a ready-made pullup `_gpio` label in the
+     base dts, so using them would mean hand-writing padconf values
+     instead of reusing verified ones; not worth it when 6 ready-made
+     ones exist and sit on a single bank).
 10. Only once both of those are confirmed working in this test setup:
     move to the real hardware/fader setup, step by step (not all at
     once) - per the user's stated plan.
 11. ~~PB1-specific `ola-uartdmx.conf` ... `apply-ola-config.sh`~~ **Done
-    (2026-09-28)**: `pb1/ola-config/` (4-universe `ola-e131.conf` +
-    `ola-uartdmx.conf` for `ttyS1-4`) and `pb1/apply-ola-config.sh` (a
-    thin wrapper around the repo root's `apply-ola-config.sh`, passing
-    `OLA_CONFIG_SRC`/`NUM_UNIVERSES=4`) now exist. The shared
-    `ola-config/patch-sacn-to-uart.sh` was made universe-count-agnostic
-    (`NUM_UNIVERSES` env var, default 5) instead of forking it per
-    board. `pb1/setup.sh`'s NOPASSWD sudoers rule was extended to cover
-    `apply-ola-config.sh` plus olad/ads7830-to-osc systemctl/journalctl,
-    mirroring the repo root's `setup.sh`. **Not yet run on real
-    hardware** - still needs `install-packages.sh` + this script
-    exercised on PB1 (`pb_6ch`) to confirm olad actually comes up and
-    DMX goes out on all 4 UARTs.
-
-12. Item 8 above (fader ADC verification) is still blocked: PB1
-    (`pb_6ch`, 192.168.17.2) was unreachable over SSH as of 2026-09-28
-    (`connect ... port 22: Connection timed out`) - board likely off/
-    disconnected/on a different network. Re-check connectivity before
-    resuming items 8-10.
+    (2026-09-28), now hardware-verified**: `pb1/ola-config/` (4-universe
+    `ola-e131.conf` + `ola-uartdmx.conf` for `ttyS1-4`) and
+    `pb1/apply-ola-config.sh` (a thin wrapper around the repo root's
+    `apply-ola-config.sh`, passing `OLA_CONFIG_SRC`/`NUM_UNIVERSES=4`)
+    written, then the user ran `pb1/setup.sh` and `pb1/apply-ola-config.sh`
+    on real PB1 (`pb_6ch`). Confirmed via `systemctl status olad`,
+    `ola_plugin_info`, and `ola_dev_info`: olad active, e131 plugin
+    loaded, all 4 universes patched E1.31-in -> UART-out
+    (`ttyS1`-`ttyS4`, one universe each). DMX output itself (an actual
+    fixture on the line) still not checked, but the sACN->UART patch
+    path is confirmed working end-to-end.

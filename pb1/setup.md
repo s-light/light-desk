@@ -34,6 +34,25 @@ Fader ADC (Adafruit ADS7830, I2C) to the PocketBeagle 1 P1 header:
 > gives `i2cget: Error: Read failed` - the bus exists but nothing is
 > electrically connected to it at those pins while UART1 owns them.
 
+This PB1 build has **7 faders** (not PB2's 8 - one ADS7830 channel goes
+unused) and **6 buttons** (same count as PB2). Pass
+`--num-channels 7` to `scripts/ads7830_debug_print.py`/
+`scripts/ads7830_to_osc.py` accordingly.
+
+Button pins: **P2.02, P2.04, P2.06, P2.22, P2.24, P2.33**, plain
+momentary switches to GND, using the SoC's internal pull-up (no
+external resistor needed). AM335x's `pinctrl-single` driver doesn't
+honor `libgpiod`'s runtime bias requests (confirmed board-wide on real
+hardware, not specific to these pins), so the pull-up has to be baked
+into the boot-time pinmux instead: run
+`sudo ./pb1/install-gpio-buttons-overlay.sh` then
+`sudo ./pb1/apply-uenv-overlays.sh` and reboot (see
+`overlays/BB-GPIO-buttons-light-desk-00A0.dts` for why/how). Not yet
+installed/boot-tested on real hardware - see `memo.md` item 9.
+
+See `pb1/pinout-reference.md` for the full P1/P2 pinmux table this and
+other pin choices are checked against.
+
 ## DMX universe / overlay pin map
 
 Confirmed on real hardware unless noted:
@@ -71,10 +90,13 @@ config: `ola-config/ola-e131.conf` (4 sACN input ports) and
 above). It's a thin wrapper around the repo root's
 `../apply-ola-config.sh` (same plugin set, same port-9091 fix) with
 `OLA_CONFIG_SRC`/`NUM_UNIVERSES` pointed at PB1's config instead of
-PocketBeagle 2's 5-universe one. Not yet run on real PB1 hardware -
-run after `install-packages.sh`, before testing sACN -> DMX
-end-to-end.
+PocketBeagle 2's 5-universe one. **Confirmed on real PB1 hardware
+(2026-09-28)**: olad active, all 4 universes patched E1.31-in ->
+`ttyS1`-`ttyS4`-out (`ola_plugin_info`/`ola_dev_info`).
+
+Fader ADC (I2C1, ADS7830) also confirmed end-to-end on real hardware
+(2026-09-28) via `scripts/ads7830_debug_print.py --i2c-bus 1`.
 
 See `memo.md` for full bring-up history and remaining open steps
-(fader ADC end-to-end test, button pin selection, olad config
-verification on real hardware).
+(button pin selection/verification, an actual DMX fixture on the
+line).

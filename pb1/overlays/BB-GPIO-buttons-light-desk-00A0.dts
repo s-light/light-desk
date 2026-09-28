@@ -1,0 +1,45 @@
+/dts-v1/;
+/plugin/;
+
+/*
+ * light-desk: activate internal pull-up input mode for 6 button GPIO
+ * pins on PocketBeagle 1 (P2.02, P2.04, P2.06, P2.22, P2.24, P2.33),
+ * read from userspace via libgpiod by scripts/buttons_debug_print.py /
+ * scripts/ads7830_to_osc.py (see pb1/memo.md item 9 for the pin
+ * selection history).
+ *
+ * The base am335x-pocketbeagle.dts (see /opt/source/dtb-*.x/src/arm/
+ * ti/omap/am335x-pocketbeagle.dts on the board, under &am33xx_pinmux)
+ * already defines a ready-made pinctrl-single node per header pin,
+ * pre-configured exactly as PIN_INPUT_PULLUP + MUX_MODE7 (GPIO) -
+ * P2_02_gpio, P2_04_gpio, P2_06_gpio, P2_22_gpio, P2_24_gpio,
+ * P2_33_gpio below - but none of them are referenced by any device's
+ * pinctrl-0, so they're never actually applied; the pins sit at
+ * whatever mux/bias U-Boot/ROM left them in at boot instead. Confirmed
+ * on real hardware: with nothing wired to any of these 6 pins,
+ * `gpioget -b pull-up|pull-down|disabled` all returned the exact same
+ * fixed value per pin no matter the bias flag - i.e. libgpiod's
+ * runtime bias request has zero effect here (this reproduced on
+ * unrelated pins too, e.g. P2.02/P2.03, so it's not specific to these
+ * 6 - AM335x's pinctrl-single driver doesn't support runtime bias
+ * changes through the generic Linux pinctrl API that libgpiod's -b
+ * option goes through; the pull config has to be the static pinmux
+ * value applied at boot, which is exactly what this overlay does).
+ *
+ * All 6 pins happen to sit on the same GPIO bank (gpio1), so one
+ * fragment on &gpio1 covers all of them: any platform device with a
+ * bound driver gets pinctrl-0 applied automatically at probe time
+ * (generic Linux driver-core behavior, independent of what the driver
+ * itself does), and gpio1's own omap-gpio driver already probes/binds
+ * normally - so adding pinctrl-names/pinctrl-0 here applies the pad
+ * config without any device claiming the GPIO lines themselves (unlike
+ * e.g. a gpio-keys or gpio-leds node, which would also reserve the
+ * lines and block libgpiod from requesting them from userspace - not
+ * what we want here, since the existing Python scripts poll these
+ * lines directly).
+ */
+
+&gpio1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&P2_02_gpio &P2_04_gpio &P2_06_gpio &P2_22_gpio &P2_24_gpio &P2_33_gpio>;
+};

@@ -1,11 +1,15 @@
 #!/bin/sh
-# Wire the 4 device-tree overlays this project needs on PocketBeagle 1
+# Wire the 5 device-tree overlays this project needs on PocketBeagle 1
 # into /boot/uEnv.txt's U-Boot overlay slots (uboot_overlay_addr0-7):
 #
-#   - BB-UART1-00A0.dtbo              stock overlay -> universe 1 (P2.09/P2.11)
-#   - BB-UART2-00A0.dtbo              stock overlay -> universe 2 (P1.08/P1.10)
-#   - BB-I2C1-00A0.dtbo                stock overlay -> ADS7830 fader ADC (P1.06/P1.12)
-#   - BB-UART3-light-desk-00A0.dtbo   this repo's overlay -> universe 3 (P2.29, TX-only)
+#   - BB-UART1-00A0.dtbo               stock overlay -> universe 1 (P2.09/P2.11)
+#   - BB-UART2-00A0.dtbo               stock overlay -> universe 2 (P1.08/P1.10)
+#   - BB-I2C1-00A0.dtbo                 stock overlay -> ADS7830 fader ADC (P1.06/P1.12)
+#   - BB-UART3-light-desk-00A0.dtbo    this repo's overlay -> universe 3 (P2.29, TX-only)
+#   - BB-GPIO-buttons-light-desk-00A0.dtbo  this repo's overlay -> internal
+#     pull-up input mode for the 6 button GPIO pins (P2.02, P2.04, P2.06,
+#     P2.22, P2.24, P2.33) - see install-gpio-buttons-overlay.sh and the
+#     overlay source for why this needs an overlay at all
 #
 # universe 4 (UART4, P2.05/P2.07) needs no overlay - the base
 # am335x-pocketbeagle.dtb already enables it by default. universe 5
@@ -30,7 +34,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 UENV_CONF=/boot/uEnv.txt
-OVERLAYS="BB-UART1-00A0.dtbo BB-UART2-00A0.dtbo BB-I2C1-00A0.dtbo BB-UART3-light-desk-00A0.dtbo"
+OVERLAYS="BB-UART1-00A0.dtbo BB-UART2-00A0.dtbo BB-I2C1-00A0.dtbo BB-UART3-light-desk-00A0.dtbo BB-GPIO-buttons-light-desk-00A0.dtbo"
 
 python3 - "$UENV_CONF" $OVERLAYS <<'PYEOF'
 import re
