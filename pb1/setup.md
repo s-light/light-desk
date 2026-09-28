@@ -42,13 +42,17 @@ unused) and **6 buttons** (same count as PB2). Pass
 Button pins: **P2.02, P2.04, P2.06, P2.22, P2.24, P2.33**, plain
 momentary switches to GND, using the SoC's internal pull-up (no
 external resistor needed). AM335x's `pinctrl-single` driver doesn't
-honor `libgpiod`'s runtime bias requests (confirmed board-wide on real
-hardware, not specific to these pins), so the pull-up has to be baked
-into the boot-time pinmux instead: run
-`sudo ./pb1/install-gpio-buttons-overlay.sh` then
-`sudo ./pb1/apply-uenv-overlays.sh` and reboot (see
-`overlays/BB-GPIO-buttons-light-desk-00A0.dts` for why/how). Not yet
-installed/boot-tested on real hardware - see `memo.md` item 9.
+honor `libgpiod`'s runtime bias requests until a pin is already
+claimed by some pinctrl consumer (confirmed on real hardware), so the
+pull-up is baked into the boot-time pinmux via
+`overlays/BB-GPIO-buttons-light-desk-00A0.dts`, installed with
+`sudo ./pb1/install-gpio-buttons-overlay.sh` +
+`sudo ./pb1/apply-uenv-overlays.sh` and a reboot.
+
+**Confirmed on real PB1 hardware (2026-09-28)**: with nothing wired,
+all 6 pins read a clean "high" (`gpioget -b pull-up` and
+`buttons_debug_print.py`). Not yet tested with an actual button
+wired - see `memo.md` item 9.
 
 See `pb1/pinout-reference.md` for the full P1/P2 pinmux table this and
 other pin choices are checked against.

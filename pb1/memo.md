@@ -446,12 +446,28 @@ Next priorities, in order:
      just phandle references, which `dtc` resolves natively via
      `__fixups__`/`__symbols__`, the same mechanism the already-working
      UART3 overlay relies on). Decompiled the output to confirm the 6
-     phandle fixups are present and correctly named - not yet installed
-     or boot-tested (`install-gpio-buttons-overlay.sh` written, wired
-     into `apply-uenv-overlays.sh`'s overlay list, and added to
-     `setup.sh`'s NOPASSWD rule, but not run - needs a reboot to take
-     effect, left for the user to trigger deliberately rather than done
-     automatically mid-session).
+     phandle fixups are present and correctly named.
+   - **Installed and boot-tested on real PB1, confirmed working
+     (2026-09-28)**: user ran `install-gpio-buttons-overlay.sh` +
+     `apply-uenv-overlays.sh` and rebooted. `gpioget -b pull-up P2.02
+     P2.04 P2.06 P2.22 P2.24 P2.33` and
+     `buttons_debug_print.py --button-pins P2.02,P2.04,P2.06,P2.22,P2.24,P2.33`
+     both read a clean, consistent "high"/"active" on all 6 with
+     nothing wired - the internal-pull-up overlay works.
+     Bonus finding: explicit `gpioget -b pull-down|disabled` on `P2.02`
+     now *does* change the reading (low, as expected) - runtime bias
+     override works now too, whereas pre-overlay it had zero effect on
+     any pin tested (see above). Best explanation: `pinctrl-single`'s
+     runtime bias reconfiguration path only works once a pin is already
+     claimed/active under *some* pinctrl consumer (here, `&gpio1`'s own
+     probe via our overlay) - with no consumer at all, there's no
+     active pinctrl state for the dynamic bias request to modify, so it
+     silently no-ops. Consistent with, and now fully explaining, the
+     earlier board-wide "stuck value regardless of bias" symptom.
+   - **Still open**: only tested with nothing wired (no buttons
+     physically attached yet) - still need an actual button (or a
+     jumper-to-GND stand-in) per pin to confirm each one pulls low on
+     press, before calling item 9 fully done.
    - Final button pins: **P2.02, P2.04, P2.06, P2.22, P2.24, P2.33**
      (dropped `P2.30`/`P2.31`/`P2.32` from the earlier PRU/SPI1-cluster
      pick - those don't have a ready-made pullup `_gpio` label in the
