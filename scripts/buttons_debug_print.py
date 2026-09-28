@@ -37,6 +37,16 @@ is actually muxed in). When that happens this script reads and prints
 *all* candidates for that name, suffixed with their chip/offset, so you
 can press the physical button and see which column actually moves.
 
+Line names carry an optional bracketed or parenthesized alt-function
+suffix depending on board/overlay (seen so far: "P2.29(M22)" on
+PocketBeagle 2, "P2.29 [SPI1_CLK]" on PocketBeagle 1) - stripped before
+matching, so plain "P2.29" finds either. A P2.NN name with **no**
+`gpioinfo` match at all (as opposed to an ambiguous one) usually means
+that ball is dedicated to something else in this kernel's default pin
+config - e.g. several PocketBeagle 1 P2 pins double as SYSBOOT
+strapping pins and never show up as plain GPIO lines despite being
+listed as `gpioN_M` in the official pinmux tables.
+
 Usage:
     python3 buttons_debug_print.py [--button-pins P2.27,P2.28,...] [--interval 0.1]
 
@@ -45,6 +55,7 @@ Ctrl-C to stop.
 
 import argparse
 import glob
+import re
 import time
 
 import gpiod
@@ -59,10 +70,10 @@ def find_line_candidates(name):
     """Return [(chip_path, offset), ...] for every gpiochip exposing a
     line named `name` - normally one, but see the ambiguity note above.
 
-    Matches the line's name with any parenthesized ball-name suffix
-    stripped (e.g. a line literally named "P2.29(M22)" matches "P2.29"),
-    since that's how some of these header pins are labeled by the kernel
-    (see `gpioinfo`)."""
+    Matches the line's name with any bracketed/parenthesized alt-function
+    suffix stripped (e.g. lines named "P2.29(M22)" or "P2.29 [SPI1_CLK]"
+    both match "P2.29"), since that's how these header pins are labeled
+    by the kernel depending on board/overlay (see `gpioinfo`)."""
     candidates = []
     for chip_path in sorted(glob.glob("/dev/gpiochip*")):
         chip = gpiod.Chip(chip_path)
@@ -70,7 +81,7 @@ def find_line_candidates(name):
             num_lines = chip.get_info().num_lines
             for offset in range(num_lines):
                 line_name = chip.get_line_info(offset).name
-                if line_name and line_name.split("(", 1)[0] == name:
+                if line_name and re.split(r"[\[(]", line_name, maxsplit=1)[0].strip() == name:
                     candidates.append((chip_path, offset))
         finally:
             chip.close()

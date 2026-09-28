@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Read the ADS7830 8-channel ADC (faders) and 6 GPIO buttons, send both to
-QLC+ via OSC.
+"""Read the ADS7830 ADC (faders, --num-channels of its 8, default 8) and
+GPIO buttons (--button-pins, default 6), send both to QLC+ via OSC.
 
-Hardware: Adafruit ADS7830 on the PocketBeagle 2's I2C1 bus (see README.md
-for pinout). Each ADC channel is expected to carry one 100mm slide
-potentiometer. The 6 buttons are plain momentary switches to GND on
-P2.27-P2.32 (see README.md's "7x momentary buttons" section - only the
-first 6 of those 7 pins are wired/used here).
+Hardware: Adafruit ADS7830 on I2C1 (see README.md/pb1/setup.md for
+pinout, board-dependent). Each ADC channel used is expected to carry one
+100mm slide potentiometer. Buttons are plain momentary switches to GND;
+defaults below (P2.27-P2.32, all 8 ADC channels) are PocketBeagle 2's -
+override both flags for a different board/wiring, e.g. PocketBeagle 1's
+6-button/7-fader build (see pb1/setup.md).
 
 Usage:
     python3 ads7830_to_osc.py --host 192.168.7.1 --port 7700
@@ -54,6 +55,7 @@ then pin it down with an explicit `gpiochipN:offset` override.
 
 import argparse
 import glob
+import re
 import time
 
 import gpiod
@@ -67,7 +69,7 @@ from adafruit_ads7830.analog_in import AnalogIn
 DEFAULT_HOST = "192.168.7.1"
 DEFAULT_PORT = 7700
 DEFAULT_I2C_BUS = 1
-NUM_CHANNELS = 8
+DEFAULT_NUM_CHANNELS = 8
 DEFAULT_BUTTON_PINS = ["P2.27", "P2.28", "P2.29", "P2.30", "P2.31", "P2.32"]
 DEFAULT_BUTTON_DEBOUNCE = 3
 GPIO_CONSUMER = "ads7830_to_osc"
@@ -75,9 +77,10 @@ GPIO_CONSUMER = "ads7830_to_osc"
 
 def find_line_candidates(name):
     """Return [(chip_path, offset), ...] for every gpiochip exposing a
-    line named `name` (with any parenthesized ball-name suffix stripped,
-    e.g. a line named "P2.29(M22)" matches "P2.29") - normally one, see
-    the ambiguity note in the module docstring."""
+    line named `name` (with any bracketed/parenthesized alt-function
+    suffix stripped, e.g. lines named "P2.29(M22)" or "P2.29 [SPI1_CLK]"
+    both match "P2.29" - the exact style depends on board/overlay) -
+    normally one, see the ambiguity note in the module docstring."""
     candidates = []
     for chip_path in sorted(glob.glob("/dev/gpiochip*")):
         chip = gpiod.Chip(chip_path)
@@ -85,7 +88,7 @@ def find_line_candidates(name):
             num_lines = chip.get_info().num_lines
             for offset in range(num_lines):
                 line_name = chip.get_line_info(offset).name
-                if line_name and line_name.split("(", 1)[0] == name:
+                if line_name and re.split(r"[\[(]", line_name, maxsplit=1)[0].strip() == name:
                     candidates.append((chip_path, offset))
         finally:
             chip.close()
@@ -114,6 +117,7 @@ def parse_args():
     parser.add_argument("--host", default=DEFAULT_HOST, help="OSC target host (default: %(default)s)")
     parser.add_argument("--port", type=int, default=DEFAULT_PORT, help="OSC target port (default: %(default)s)")
     parser.add_argument("--i2c-bus", type=int, default=DEFAULT_I2C_BUS, help="Linux I2C bus number for /dev/i2c-N carrying I2C1 (P1.33/P1.36) - verify on the board, e.g. with `i2cdetect -l` (default: %(default)s)")
+    parser.add_argument("--num-channels", type=int, default=DEFAULT_NUM_CHANNELS, help="number of ADS7830 fader channels to read/send, 1-8 - lower this on a board that doesn't wire up all 8 (e.g. PocketBeagle 1's 7-fader build) (default: %(default)s)")
     parser.add_argument("--interval", type=float, default=0.02, help="poll interval in seconds, used for both faders and buttons (default: %(default)s)")
     parser.add_argument("--deadband", type=float, default=0.004, help="minimum fader change (0.0-1.0) before resending a channel (default: %(default)s)")
     parser.add_argument("--button-pins", default=",".join(DEFAULT_BUTTON_PINS), help="comma-separated `P2.NN` header pin names (see `gpioinfo`) or explicit `gpiochipN:offset` pairs, in order (default: %(default)s)")
@@ -136,16 +140,16 @@ def main():
 
     i2c = ExtendedI2C(args.i2c_bus)
     adc = ADC.ADS7830(i2c)
-    channels = [AnalogIn(adc, i) for i in range(NUM_CHANNELS)]
+    channels = [AnalogIn(adc, i) for i in range(args.num_channels)]
 
     button_pin_names = args.button_pins.split(",")
     buttons = setup_buttons(button_pin_names)
 
     client = SimpleUDPClient(args.host, args.port)
-    print(f"sending faders 1-{NUM_CHANNELS} to osc://{args.host}:{args.port}/fader/N")
+    print(f"sending faders 1-{args.num_channels} to osc://{args.host}:{args.port}/fader/N")
     print(f"sending buttons 1-{len(buttons)} to osc://{args.host}:{args.port}/button/N")
 
-    last_values = [None] * NUM_CHANNELS
+    last_values = [None] * args.num_channels
     sent_pressed = [False] * len(buttons)
     pending_pressed = [False] * len(buttons)
     pending_count = [0] * len(buttons)
