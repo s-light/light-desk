@@ -132,6 +132,7 @@ def parse_args():
     parser.add_argument("--fader-max", type=float, default=DEFAULT_FADER_MAX, help="raw fader reading (0.0-1.0) that maps to an OSC value of 1.0, same reasoning as --fader-min (default: %(default)s)")
     parser.add_argument("--button-pins", default=",".join(DEFAULT_BUTTON_PINS), help="comma-separated `P2.NN` header pin names (see `gpioinfo`) or explicit `gpiochipN:offset` pairs, in order (default: %(default)s)")
     parser.add_argument("--button-debounce", type=int, default=DEFAULT_BUTTON_DEBOUNCE, help="number of consecutive identical polls required before a button state change is sent (default: %(default)s)")
+    parser.add_argument("--verbose", action="store_true", help="print each OSC message as it's sent (faders and buttons are otherwise silent once running - useful to confirm it's actually sending, e.g. while wiring up a new receiver)")
     return parser.parse_args()
 
 
@@ -172,6 +173,8 @@ def main():
                 if last_values[i] is None or abs(value - last_values[i]) >= args.deadband:
                     client.send_message(f"/fader/{i + 1}", value)
                     last_values[i] = value
+                    if args.verbose:
+                        print(f"/fader/{i + 1} {value:.3f}")
 
             for i, (request, offset) in enumerate(buttons):
                 pressed = request.get_value(offset) == Value.ACTIVE
@@ -183,6 +186,8 @@ def main():
                 if pending_count[i] >= args.button_debounce and pressed != sent_pressed[i]:
                     client.send_message(f"/button/{i + 1}", 1.0 if pressed else 0.0)
                     sent_pressed[i] = pressed
+                    if args.verbose:
+                        print(f"/button/{i + 1} {'press' if pressed else 'release'}")
 
             time.sleep(args.interval)
     except KeyboardInterrupt:

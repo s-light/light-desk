@@ -46,7 +46,7 @@ Environment=NUM_CHANNELS=8
 Environment=BUTTON_PINS=P2.27,P2.28,P2.29,P2.30,P2.31,P2.32
 Environment=FADER_MIN=0.0
 Environment=FADER_MAX=1.0
-ExecStart=__VENV_DIR__/bin/python3 __REPO_DIR__/scripts/ads7830_to_osc.py --host $OSC_HOST --port $OSC_PORT --i2c-bus $I2C_BUS --num-channels $NUM_CHANNELS --button-pins $BUTTON_PINS --fader-min $FADER_MIN --fader-max $FADER_MAX
+ExecStart=__VENV_DIR__/bin/python3 -u __REPO_DIR__/scripts/ads7830_to_osc.py --host $OSC_HOST --port $OSC_PORT --i2c-bus $I2C_BUS --num-channels $NUM_CHANNELS --button-pins $BUTTON_PINS --fader-min $FADER_MIN --fader-max $FADER_MAX
 Restart=on-failure
 RestartSec=2
 
