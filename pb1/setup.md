@@ -39,10 +39,23 @@ unused) and **6 buttons** (same count as PB2). Pass
 `--num-channels 7` to `scripts/ads7830_debug_print.py`/
 `scripts/ads7830_to_osc.py` accordingly.
 
-Button pins: **P2.02, P2.04, P2.06, P2.22, P2.24, P2.33**, plain
-momentary switches to GND, using the SoC's internal pull-up (no
-external resistor needed). AM335x's `pinctrl-single` driver doesn't
-honor `libgpiod`'s runtime bias requests until a pin is already
+Buttons (plain momentary switches, each wired between its P2 pin and
+GND) to the PocketBeagle 1 P2 header:
+
+| button | PB1 P2 pin |
+| :----- | :--------- |
+| 1      | P2.02      |
+| 2      | P2.04      |
+| 3      | P2.06      |
+| 4      | P2.22      |
+| 5      | P2.24      |
+| 6      | P2.33      |
+
+GND: any GND pin on the P2 header works, e.g. P2.15 or P2.21.
+
+Using the SoC's internal pull-up (no external resistor needed).
+AM335x's `pinctrl-single` driver doesn't honor `libgpiod`'s runtime
+bias requests until a pin is already
 claimed by some pinctrl consumer (confirmed on real hardware), so the
 pull-up is baked into the boot-time pinmux via
 `overlays/BB-GPIO-buttons-light-desk-00A0.dts`, installed with
@@ -61,12 +74,13 @@ other pin choices are checked against.
 
 Confirmed on real hardware unless noted:
 
-| universe | UART  | overlay                          | pins           | status                |
-| :------- | :---- | :-------------------------------- | :------------- | :--------------------- |
-| 1        | UART1 | `BB-UART1-00A0.dtbo` (stock)       | P2.09/P2.11    | confirmed - `/dev/ttyS1` present |
-| 2        | UART2 | `BB-UART2-00A0.dtbo` (stock)       | P1.08/P1.10    | confirmed - `/dev/ttyS2` present |
-| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom) | P2.29 (TX-only) | confirmed - `481a6000.serial: ttyS3` in dmesg (re-installed for kernel `6.18.53-bone55` via `install-uart3-overlay.sh`) |
-| 4        | UART4 | none needed (enabled in base dts) | P2.05/P2.07    | confirmed - `481a8000.serial: ttyS4` in dmesg |
+| universe | UART  | overlay                                                          | pins            | status                                                                                                                        |
+| :------- | :---- | :--------------------------------------------------------------- | :-------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| 1        | UART1 | `BB-UART1-00A0.dtbo` (stock)                                     | P2.09/P2.11     | confirmed - `/dev/ttyS1` present                                                                                              |
+| 2        | UART2 | `BB-UART2-00A0.dtbo` (stock)                                     | P1.08/P1.10     | confirmed - `/dev/ttyS2` present                                                                                              |
+| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom)            | P2.29 (TX-only) | confirmed - `481a6000.serial: ttyS3` in dmesg (re-installed for kernel `6.18.53-bone55` via `install-uart3-overlay.sh`)       |
+| 4        | UART4 | none needed (enabled in base dts)                                | P2.05/P2.07     | confirmed - `481a8000.serial: ttyS4` in dmesg                                                                                 |
+| 5        | UART0 | none (console reassignment only, see `switch-console-to-usb.sh`) | P1.30/P1.32     | **not pursued** - the console switch reproducibly hung the board for 2+ min (see `memo.md`); PB1 stops at 4 universes for now |
 
 > [!WARNING]
 > **`/dev/ttyS3` existing does NOT mean UART3/universe 3 is actually
@@ -81,10 +95,8 @@ Confirmed on real hardware unless noted:
 > (The other UARTs don't have this ambiguity: each keeps a fixed
 > DT-alias-based `ttySN` number rather than shifting when another UART
 > is missing, so `ttyS1`/`ttyS2`/`ttyS4` reliably mean what they say.)
-| 5        | UART0 | none (console reassignment only, see `switch-console-to-usb.sh`) | P1.30/P1.32 | **not pursued** - the console switch reproducibly hung the board for 2+ min (see `memo.md`); PB1 stops at 4 universes for now |
 
-I2C1 (fader ADC): `BB-I2C1-00A0.dtbo` (stock) - P1.06/P1.12 - **confirmed
-working**, ADS7830 answers at `i2cget -y 1 0x48`.
+I2C1 (fader ADC): `BB-I2C1-00A0.dtbo` (stock) - P1.06/P1.12 - **confirmed working**, ADS7830 answers at `i2cget -y 1 0x48`.
 
 ## olad config (sACN -> UART DMX)
 
