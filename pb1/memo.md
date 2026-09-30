@@ -572,7 +572,24 @@ Next priorities, in order:
       `setup-i2c.sh` uses, just with PB1-specific `sed` overrides on
       top. Requires `setup-i2c.sh` to have been run at least once
       already (venv/udev setup). Added to `setup.sh`'s NOPASSWD rule.
-    - **Not yet run on the board** - needs the user's sudo password
-      (new script, not yet covered by a re-run of `setup.sh`) and
-      restarts a live service, so left for the user to trigger
-      deliberately: `sudo ./pb1/configure-ads7830-to-osc.sh`.
+    - **Run on the board, service stable (2026-10-01)**: user ran
+      `sudo ./pb1/configure-ads7830-to-osc.sh` - out of the crash loop,
+      `systemctl status` clean.
+    - **Follow-up, found while checking the fix**: even the service's
+      one-time startup banner never reached the journal - Python
+      stdout is block-buffered when not a TTY (systemd's journal
+      capture), and the script writes almost nothing after startup
+      (OSC sends are network calls, not prints), so the buffer never
+      flushed. Same class of issue as every debug-script SSH test in
+      this memo needing `python3 -u`. Fixed by adding `-u` to the
+      service template's `ExecStart`. Also added `--verbose` to
+      `ads7830_to_osc.py` (off by default, not used by the service) to
+      print each OSC message as sent - confirmed working manually on
+      real PB1 (ran it in the foreground after stopping the service,
+      saw the startup banner and all 7 `/fader/N` sends, then restored
+      the service via `configure-ads7830-to-osc.sh` again).
+    - **Verified end-to-end with QLC+ (2026-10-01)**: user connected
+      QLC+ to the running service - faders and buttons both confirmed
+      working over OSC. PB1's fader/button bring-up (items 8/9) is
+      now fully done, tested with the real downstream consumer, not
+      just the debug scripts.
