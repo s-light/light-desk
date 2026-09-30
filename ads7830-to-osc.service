@@ -17,9 +17,14 @@
 #   sudo systemctl status ads7830-to-osc.service
 #   sudo journalctl -u ads7830-to-osc.service -f
 #
-# override OSC target / I2C bus without editing this file:
+# override OSC target / I2C bus / channel count / button pins / fader
+# calibration without editing this file:
 #   sudo systemctl edit ads7830-to-osc.service
-#   # add under [Service]: Environment=OSC_HOST=... / OSC_PORT=... / I2C_BUS=...
+#   # add under [Service]: Environment=OSC_HOST=... / OSC_PORT=... /
+#   # I2C_BUS=... / NUM_CHANNELS=... / BUTTON_PINS=P2.xx,P2.xx,... /
+#   # FADER_MIN=... / FADER_MAX=...
+#   # (defaults below are PocketBeagle 2's - PocketBeagle 1 needs at
+#   # least NUM_CHANNELS=7 and its own BUTTON_PINS, see pb1/setup.md)
 #
 # disable / remove:
 #   sudo systemctl disable --now ads7830-to-osc.service
@@ -37,7 +42,11 @@ WorkingDirectory=__REPO_DIR__
 Environment=OSC_HOST=192.168.7.1
 Environment=OSC_PORT=7700
 Environment=I2C_BUS=1
-ExecStart=__VENV_DIR__/bin/python3 __REPO_DIR__/scripts/ads7830_to_osc.py --host $OSC_HOST --port $OSC_PORT --i2c-bus $I2C_BUS
+Environment=NUM_CHANNELS=8
+Environment=BUTTON_PINS=P2.27,P2.28,P2.29,P2.30,P2.31,P2.32
+Environment=FADER_MIN=0.0
+Environment=FADER_MAX=1.0
+ExecStart=__VENV_DIR__/bin/python3 __REPO_DIR__/scripts/ads7830_to_osc.py --host $OSC_HOST --port $OSC_PORT --i2c-bus $I2C_BUS --num-channels $NUM_CHANNELS --button-pins $BUTTON_PINS --fader-min $FADER_MIN --fader-max $FADER_MAX
 Restart=on-failure
 RestartSec=2
 

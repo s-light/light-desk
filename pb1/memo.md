@@ -544,3 +544,35 @@ Next priorities, in order:
     with a fixed small margin (e.g. treat <=0.01 as 0.0, >=0.99 as
     1.0) if the deadzone turns out consistent enough not to need
     per-channel values.
+    - **Basic version done (2026-10-01)**: added `--fader-min`/
+      `--fader-max` to `ads7830_to_osc.py` (defaults 0.0/1.0, so PB2's
+      behavior is unchanged) - the shared clamp-and-rescale option from
+      above, not per-channel calibration. PB1's service now passes
+      `--fader-min 0.01 --fader-max 0.99` (see next item). Per-channel
+      calibration is still open if the shared margin turns out not to
+      be enough once QLC+ testing starts.
+
+13. **`ads7830-to-osc.service` found crash-looping on real PB1
+    (2026-10-01)**, discovered while checking whether it was running
+    for the user's QLC+ test: `journalctl` showed a restart every ~9s,
+    `no gpio line named 'P2.27' found` - it was installed from the
+    plain PB2-defaults template (`../setup-i2c.sh`), whose
+    `--button-pins` default doesn't exist on PB1. Root cause is the
+    same class of mistake as item 9's original pin list - PB2 defaults
+    silently don't carry over.
+    - Extended `../ads7830-to-osc.service`'s template with
+      `NUM_CHANNELS`/`BUTTON_PINS`/`FADER_MIN`/`FADER_MAX` environment
+      variables (PB2-default values, so the root-level/PB2 behavior is
+      unchanged) alongside the existing `OSC_HOST`/`OSC_PORT`/
+      `I2C_BUS`.
+    - Added `pb1/configure-ads7830-to-osc.sh`: reinstalls the systemd
+      unit with PB1's values baked in (7 channels, PB1's 6 button pins,
+      host `192.168.17.1` per `pb1_internet_share.md`, fader
+      min/max 0.01/0.99) - same placeholder-fill approach
+      `setup-i2c.sh` uses, just with PB1-specific `sed` overrides on
+      top. Requires `setup-i2c.sh` to have been run at least once
+      already (venv/udev setup). Added to `setup.sh`'s NOPASSWD rule.
+    - **Not yet run on the board** - needs the user's sudo password
+      (new script, not yet covered by a re-run of `setup.sh`) and
+      restarts a live service, so left for the user to trigger
+      deliberately: `sudo ./pb1/configure-ads7830-to-osc.sh`.

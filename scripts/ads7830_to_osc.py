@@ -17,7 +17,13 @@ setup from pocketbeagle2-internet-sharing.md (host IP 192.168.7.1) and that
 QLC+'s OSC plugin listens on its default input port for universe 1 (7700).
 Each fader N (1-8) is sent as a float in [0.0, 1.0] to /fader/N; each
 button N (1-6) is sent as a float, 1.0 on press and 0.0 on release, to
-/button/N. Assign these addresses to VirtualConsole widgets in QLC+ via
+/button/N. Real potentiometers often don't quite reach the electrical
+rails (e.g. reading 0.008 instead of 0.0 fully down, 0.996 instead of
+1.0 fully up) - use --fader-min/--fader-max (checked with
+ads7830_debug_print.py first) to clamp-and-rescale so /fader/N still
+reaches a clean 0.0/1.0 at the physical extremes; an OSC receiver
+expecting a true 0.0/1.0 (e.g. for full black/full bright) won't see
+one otherwise. Assign these addresses to VirtualConsole widgets in QLC+ via
 "autodetect".
 
 NOTE: this script opens the I2C bus directly by Linux bus number via
@@ -70,6 +76,8 @@ DEFAULT_HOST = "192.168.7.1"
 DEFAULT_PORT = 7700
 DEFAULT_I2C_BUS = 1
 DEFAULT_NUM_CHANNELS = 8
+DEFAULT_FADER_MIN = 0.0
+DEFAULT_FADER_MAX = 1.0
 DEFAULT_BUTTON_PINS = ["P2.27", "P2.28", "P2.29", "P2.30", "P2.31", "P2.32"]
 DEFAULT_BUTTON_DEBOUNCE = 3
 GPIO_CONSUMER = "ads7830_to_osc"
@@ -120,6 +128,8 @@ def parse_args():
     parser.add_argument("--num-channels", type=int, default=DEFAULT_NUM_CHANNELS, help="number of ADS7830 fader channels to read/send, 1-8 - lower this on a board that doesn't wire up all 8 (e.g. PocketBeagle 1's 7-fader build) (default: %(default)s)")
     parser.add_argument("--interval", type=float, default=0.02, help="poll interval in seconds, used for both faders and buttons (default: %(default)s)")
     parser.add_argument("--deadband", type=float, default=0.004, help="minimum fader change (0.0-1.0) before resending a channel (default: %(default)s)")
+    parser.add_argument("--fader-min", type=float, default=DEFAULT_FADER_MIN, help="raw fader reading (0.0-1.0) that maps to an OSC value of 0.0 - real potentiometers often don't quite reach the rails (e.g. 0.008 instead of 0.0 at the bottom), which would otherwise mean the OSC receiver never sees a clean 0.0 (default: %(default)s)")
+    parser.add_argument("--fader-max", type=float, default=DEFAULT_FADER_MAX, help="raw fader reading (0.0-1.0) that maps to an OSC value of 1.0, same reasoning as --fader-min (default: %(default)s)")
     parser.add_argument("--button-pins", default=",".join(DEFAULT_BUTTON_PINS), help="comma-separated `P2.NN` header pin names (see `gpioinfo`) or explicit `gpiochipN:offset` pairs, in order (default: %(default)s)")
     parser.add_argument("--button-debounce", type=int, default=DEFAULT_BUTTON_DEBOUNCE, help="number of consecutive identical polls required before a button state change is sent (default: %(default)s)")
     return parser.parse_args()
@@ -157,6 +167,8 @@ def main():
         while True:
             for i, chan in enumerate(channels):
                 value = chan.value / 65535
+                value = (value - args.fader_min) / (args.fader_max - args.fader_min)
+                value = min(1.0, max(0.0, value))
                 if last_values[i] is None or abs(value - last_values[i]) >= args.deadband:
                     client.send_message(f"/fader/{i + 1}", value)
                     last_values[i] = value
