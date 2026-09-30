@@ -495,6 +495,15 @@ Next priorities, in order:
      needs either the user's sudo password or a re-run of `setup.sh`
      (to pick up the sudoers rule) before it can run non-interactively,
      left for the user to do deliberately along with the reboot.
+   - **Installed, rebooted, confirmed on real PB1 (2026-09-30)**: all 6
+     pins (`P2.02, P2.04, P2.06, P2.20, P2.22, P2.24`) read a clean
+     "high" via `gpioget -b pull-up`. Also found `buttons_debug_print.py`
+     run bare defaults to PB2's pins (`P2.27` etc, which error - not a
+     bug, just the wrong board's default) - added
+     `pb1/buttons-debug-print.sh`, a thin wrapper passing PB1's
+     `--button-pins` through, confirmed working on real hardware (`-u`
+     needed on the `python3` invocation, same output-buffering quirk
+     as every other non-interactive SSH test in this memo).
    - Final button pins: **P2.02, P2.04, P2.06, P2.22, P2.24, P2.33**
      (dropped `P2.30`/`P2.31`/`P2.32` from the earlier PRU/SPI1-cluster
      pick - those don't have a ready-made pullup `_gpio` label in the

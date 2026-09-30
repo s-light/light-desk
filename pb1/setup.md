@@ -62,13 +62,13 @@ pull-up is baked into the boot-time pinmux via
 `sudo ./pb1/install-gpio-buttons-overlay.sh` +
 `sudo ./pb1/apply-uenv-overlays.sh` and a reboot.
 
-**Confirmed on real PB1 hardware (2026-09-28) with the original pin
-set (P2.02, P2.04, P2.06, P2.22, P2.24, P2.33)**: with nothing wired,
-all 6 pins read a clean "high" (`gpioget -b pull-up` and
-`buttons_debug_print.py`). **2026-09-30: swapped P2.33 for P2.20** for
-a physically tighter header layout - recompiles clean, but not yet
-re-installed/boot-tested with this exact pin set, and no button is
-wired yet either way - see `memo.md` item 9.
+**Confirmed on real PB1 hardware (2026-09-30), final pin set
+(P2.02, P2.04, P2.06, P2.20, P2.22, P2.24)**: with nothing wired, all
+6 pins read a clean "high" via `gpioget -b pull-up` and
+`./buttons-debug-print.sh` (this folder's wrapper around
+`../scripts/buttons_debug_print.py`, pointed at PB1's own pins instead
+of the script's PB2-default `--button-pins`). No button physically
+wired yet - see `memo.md` item 9.
 
 See `pb1/pinout-reference.md` for the full P1/P2 pinmux table this and
 other pin choices are checked against.
