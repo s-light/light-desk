@@ -480,6 +480,21 @@ Next priorities, in order:
      physically attached yet) - still need an actual button (or a
      jumper-to-GND stand-in) per pin to confirm each one pulls low on
      press, before calling item 9 fully done.
+   - **Pin swap, P2.33 -> P2.20 (2026-09-30)**: at the user's request,
+     for a physically tighter header layout (P2.02-P2.24 cluster
+     together; P2.33 sat off on its own further down the header, for
+     no stronger reason than "it had a ready-made pullup label and
+     happened to share gpio1 with the others"). P2.20 also has a
+     ready-made `PIN_INPUT_PULLUP, MUX_MODE7` node (`P2_20_gpio`), so
+     the swap is clean - the one wrinkle is that P2.20 is `gpio2_00`,
+     a different bank than the other 5 (`gpio1_*`), so the overlay now
+     has two small fragments (`&gpio1` for 5 pins, `&gpio2` for
+     `P2.20` alone) instead of one. Recompiled clean on real PB1 with
+     both fragments' phandle fixups present and correctly named. Not
+     yet installed/boot-tested - `install-gpio-buttons-overlay.sh`
+     needs either the user's sudo password or a re-run of `setup.sh`
+     (to pick up the sudoers rule) before it can run non-interactively,
+     left for the user to do deliberately along with the reboot.
    - Final button pins: **P2.02, P2.04, P2.06, P2.22, P2.24, P2.33**
      (dropped `P2.30`/`P2.31`/`P2.32` from the earlier PRU/SPI1-cluster
      pick - those don't have a ready-made pullup `_gpio` label in the
