@@ -116,6 +116,30 @@ PocketBeagle 2's 5-universe one. **Confirmed on real PB1 hardware
 Fader ADC (I2C1, ADS7830) also confirmed end-to-end on real hardware
 (2026-09-28) via `scripts/ads7830_debug_print.py --i2c-bus 1`.
 
+## APA102 output (SPI1)
+
+One APA102 strip (7x10 = 70 pixels) on SPI1 - P1.36 (sclk), P2.32
+(mosi), P1.33 (miso, unused by APA102 but muxed for a clean spidev
+node), P2.30 (cs0, likewise unused electrically). SPI0 is already
+fully consumed (I2C1 + UART2 share its 4 pins on different modes), and
+AM335x only has 2 SPI controllers total, so a future second SPI
+device (e.g. a display) should go on `spi-gpio` (bit-banged, separate
+GPIOs) rather than sharing this bus via a second chip-select.
+
+Install: `sudo ./pb1/install-spi1-overlay.sh`, `sudo
+./pb1/apply-uenv-overlays.sh`, reboot, confirm `/dev/spidev1.0`
+exists, then `sudo ./pb1/apply-ola-config.sh` (re-enables OLA's "spi"
+plugin on top of the usual set, patches sACN universe 5 - a dedicated
+universe for the pixel strip, not mirrored onto universes 1-4 - to
+the SPI device via `pb1/ola-config/ola-spi.conf` +
+`patch-spi-apa102.sh`).
+
+Quick visual test once that's up: `scripts/apa102_running_dot_test.py`
+sweeps a single white pixel across the strip. **Not yet
+installed/boot-tested on real hardware** - overlay and OLA config are
+written and the overlay compiles clean, but see `memo.md` item 14 for
+what's still open.
+
 See `memo.md` for full bring-up history and remaining open steps
-(button pin selection/verification, an actual DMX fixture on the
-line).
+(button press verification with an actual button, an actual DMX
+fixture on the line, the SPI1/APA102 install above).

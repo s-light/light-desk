@@ -15,10 +15,15 @@
 # Usage: sudo ./apply-ola-config.sh
 # Override the config location with: sudo CONFIG_DIR=/path ./apply-ola-config.sh
 #
-# Defaults are for PocketBeagle 2 (5 universes, ola-config/). A different
-# board passes its own e131/uartdmx .conf dir and universe count via
-# OLA_CONFIG_SRC / NUM_UNIVERSES - PocketBeagle 1 does this through its
-# wrapper, pb1/apply-ola-config.sh, rather than by hand.
+# Defaults are for PocketBeagle 2 (5 universes, ola-config/, only
+# e131/uartdmx/dummy enabled). A different board passes its own
+# e131/uartdmx .conf dir and universe count via OLA_CONFIG_SRC /
+# NUM_UNIVERSES, and can re-enable additional plugins (space-separated
+# plugin name list, as used in the DISABLED_PLUGINS list below) via
+# EXTRA_ENABLED_PLUGINS - each gets "enabled = true" and, if
+# OLA_CONFIG_SRC/ola-<plugin>.conf exists, that file installed too.
+# PocketBeagle 1 does all of this through its wrapper,
+# pb1/apply-ola-config.sh, rather than by hand.
 
 set -eu
 
@@ -27,6 +32,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 OLA_CONFIG_SRC="${OLA_CONFIG_SRC:-$SCRIPT_DIR/ola-config}"
 NUM_UNIVERSES="${NUM_UNIVERSES:-5}"
 export NUM_UNIVERSES
+EXTRA_ENABLED_PLUGINS="${EXTRA_ENABLED_PLUGINS:-}"
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "must run as root, e.g.: sudo $0" >&2
@@ -73,6 +79,16 @@ cp "$OLA_CONFIG_SRC/ola-e131.conf" "$CONFIG_DIR/ola-e131.conf"
 cp "$OLA_CONFIG_SRC/ola-uartdmx.conf" "$CONFIG_DIR/ola-uartdmx.conf"
 printf 'enabled = true\n' > "$CONFIG_DIR/ola-dummy.conf"
 echo "==> installed ola-e131.conf, ola-uartdmx.conf, ola-dummy.conf"
+
+for plugin in $EXTRA_ENABLED_PLUGINS; do
+    printf 'enabled = true\n' > "$CONFIG_DIR/ola-$plugin.conf"
+    if [ -f "$OLA_CONFIG_SRC/ola-$plugin.conf" ]; then
+        cp "$OLA_CONFIG_SRC/ola-$plugin.conf" "$CONFIG_DIR/ola-$plugin.conf"
+        echo "==> re-enabled + installed ola-$plugin.conf"
+    else
+        echo "==> re-enabled ola-$plugin.conf (no $OLA_CONFIG_SRC/ola-$plugin.conf to install - plugin defaults apply)"
+    fi
+done
 
 if id olad >/dev/null 2>&1; then
     chown -R olad:olad "$CONFIG_DIR" 2>/dev/null || true

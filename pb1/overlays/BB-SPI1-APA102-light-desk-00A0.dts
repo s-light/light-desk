@@ -1,0 +1,67 @@
+/dts-v1/;
+/plugin/;
+
+/*
+ * light-desk: enable SPI1 (dedicated, single device, no CS sharing)
+ * for a single APA102 LED strip output via OLA's SPI plugin, on
+ * PocketBeagle 1.
+ *
+ * SPI0's 4 header pins are already fully consumed on PB1 (I2C1 on
+ * P1.06/P1.12, UART2 on P1.08/P1.10 - different modes of the same 4
+ * balls) - see setup.md. AM335x has exactly 2 native SPI controllers
+ * total (SPI0, SPI1), so SPI1 is the only hardware SPI bus left; a
+ * future second SPI device (e.g. a small display) should NOT share
+ * this bus via a second chip-select - go through `spi-gpio`
+ * (bit-banged, on different free GPIOs) instead for a fully
+ * independent second stack with zero shared pins/timing, see
+ * memo.md's SPI/TFT notes.
+ *
+ * Pins (all confirmed free against every other committed PB1 pin -
+ * see pinout-reference.md), all MUX_MODE3 of the same mcasp0_* ball
+ * group:
+ *   P1.36 - spi1_sclk  (mcasp0_aclkx, offset 0x190)
+ *   P1.33 - spi1_d0    (mcasp0_fsx,   offset 0x194) - MISO, unused by
+ *           APA102 (write-only chipset) but muxed anyway so the
+ *           spidev node comes up clean
+ *   P2.32 - spi1_d1    (mcasp0_axr0,  offset 0x198) - MOSI
+ *   P2.30 - spi1_cs0   (mcasp0_ahclkr,offset 0x19c) - CS0, likewise
+ *           electrically unused by APA102 but needed for the kernel's
+ *           SPI framework to register a spidev channel at all
+ *
+ * Raw offset/flags/mode numbers (not AM33XX_PADCONF()/AM335X_PIN_*
+ * macros - this board's dtc build doesn't preprocess overlays, see
+ * BB-UART3-light-desk-00A0.dts for the same convention and how the
+ * offsets were derived: (AM335X_PIN_<NAME> & 0xffff) - 0x800, from
+ * /opt/source/dtb-*.x/include/dt-bindings/pinctrl/am33xx.h on the
+ * board). Flags 0x30 = PIN_INPUT_PULLUP (INPUT_EN | PULL_UP) - matches
+ * the convention the base am335x-pocketbeagle.dts itself already uses
+ * for its own (different-ball) spi1_pins fragment, applied uniformly
+ * to sclk/d0/d1/cs0 regardless of direction; safe since the McSPI
+ * controller's own IO buffers (not this pad config) drive the
+ * output pins once active.
+ */
+
+&am33xx_pinmux {
+	bb_spi1_apa102_pins: pinmux_bb_spi1_apa102_pins {
+		pinctrl-single,pins = <
+			0x190 0x30 0x03 /* P1.36 mcasp0_aclkx.spi1_sclk */
+			0x194 0x30 0x03 /* P1.33 mcasp0_fsx.spi1_d0 (MISO, unused) */
+			0x198 0x30 0x03 /* P2.32 mcasp0_axr0.spi1_d1 (MOSI) */
+			0x19c 0x30 0x03 /* P2.30 mcasp0_ahclkr.spi1_cs0 */
+		>;
+	};
+};
+
+&spi1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&bb_spi1_apa102_pins>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	apa102@0 {
+		compatible = "spidev";
+		reg = <0>;
+		spi-max-frequency = <16000000>;
+	};
+};

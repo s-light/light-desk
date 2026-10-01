@@ -40,9 +40,12 @@
 set -e
 
 NUM_UNIVERSES="${NUM_UNIVERSES:-5}"
-E131_DEVICE=2          # alias of the E1.31 device (has our N input ports)
-UARTDMX_DEVICE_START=3 # alias of the first uartdmx device (ttyS1); each
-                        # of the N uartdmx devices takes the next alias
+E131_DEVICE="${E131_DEVICE:-2}"          # alias of the E1.31 device (has our N input ports)
+UARTDMX_DEVICE_START="${UARTDMX_DEVICE_START:-3}" # alias of the first uartdmx device (ttyS1); each
+                        # of the N uartdmx devices takes the next alias -
+                        # override if another plugin (e.g. PB1's "spi",
+                        # see pb1/apply-ola-config.sh) loads between e131
+                        # and uartdmx and shifts this
 
 i=0
 while [ "$i" -lt "$NUM_UNIVERSES" ]; do

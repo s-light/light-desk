@@ -593,3 +593,92 @@ Next priorities, in order:
       working over OSC. PB1's fader/button bring-up (items 8/9) is
       now fully done, tested with the real downstream consumer, not
       just the debug scripts.
+
+14. **One APA102 strip via OLA's SPI plugin, planned/built (2026-10-01)**,
+    at the user's request, with a second SPI device ("maybe later a
+    display") noted as a near-future want. Checked and confirmed:
+    - OLA's SPI plugin (`plugins/spi/SPIOutput.cpp` upstream) supports
+      APA102 natively - standard SPI mode 0, MOSI+SCLK only. Confirmed
+      the installed olad (0.10.9) actually has plugin id 15 "SPI" via
+      `ola_plugin_info` on real hardware, not just checked upstream
+      source.
+    - SPI0's 4 header pins are fully consumed already (I2C1 + UART2,
+      different modes of the same 4 balls) - SPI1 is the only native
+      SPI controller left (AM335x has exactly 2 total). **User asked
+      for two independent SPI stacks (one APA102 via OLA, one later
+      for a display) that don't share a bus/CS** - OLA's SPI plugin
+      apparently doesn't play well with a second device on the same
+      bus. Answer: SPI1 (hardware) dedicated solely to the APA102, and
+      a future display goes on `spi-gpio` (bit-banged, software,
+      different free GPIOs) instead of SPI1's second chip-select -
+      fully independent, zero shared pins/timing. Not built yet (the
+      user said "maybe later").
+    - Pins for SPI1 (all confirmed free against `pinout-reference.md`):
+      **P1.36 sclk, P2.32 mosi (`spi1_d1`), P1.33 miso (`spi1_d0`,
+      unused by APA102 but muxed for a clean spidev node), P2.30 cs0**
+      (also unused electrically by APA102, but needed for the kernel
+      to register the spidev channel at all) - all Mode3 of the same
+      `mcasp0_*` ball group. This resolves the old SPI1/UART3
+      P2.29-clash worry from way above (item 7) - a different ball
+      group entirely, no conflict.
+    - New `pb1/overlays/BB-SPI1-APA102-light-desk-00A0.dts` - raw
+      offset/flags/mode numbers (same convention as the UART3/buttons
+      overlays, no macros), derived from
+      `/opt/source/dtb-*.x/include/dt-bindings/pinctrl/am33xx.h`'s
+      `AM335X_PIN_*` defines on the board (offset = define - 0x800),
+      flags 0x30 (`PIN_INPUT_PULLUP`) matching the convention the base
+      dts's own (different-ball) `spi1_pins` fragment already uses for
+      this exact peripheral. Compiled clean on real PB1, both fixups
+      (`am33xx_pinmux`, `spi1`) resolved correctly when decompiled.
+      Added `pb1/install-spi1-overlay.sh` (same pattern as the other
+      per-overlay install scripts) and wired into
+      `apply-uenv-overlays.sh`'s list + `setup.sh`'s NOPASSWD rule.
+    - **APA102 universe: dedicated universe 5**, not mirrored onto an
+      existing DMX universe (user's explicit choice) - `ola-e131.conf`
+      bumped to `input_ports = 5`. New `pb1/ola-config/ola-spi.conf`:
+      personality 7 (`PERS_APA102_INDIVIDUAL` - confirmed against the
+      actual enum in `plugins/spi/SPIOutput.h`, RDM personality IDs,
+      1-based, used directly as the config value, not a guess),
+      `pixel-count = 70` (the strip is a 7x10 matrix, confirmed by the
+      user, 210 DMX/sACN slots total).
+    - Enabling the "spi" plugin shifts olad's device aliases (plugin
+      load order is by plugin ID: dummy=1, e131=11, spi=15,
+      uartdmx=20 - spi now loads *between* e131 and uartdmx). Made
+      `ola-config/patch-sacn-to-uart.sh`'s `E131_DEVICE`/
+      `UARTDMX_DEVICE_START` env-overridable for this. Extended the
+      shared `apply-ola-config.sh` with an opt-in
+      `EXTRA_ENABLED_PLUGINS` (space-separated plugin names, each
+      re-enabled + its conf installed if present) - PB2's behavior is
+      unchanged (empty by default). `pb1/apply-ola-config.sh` now sets
+      `EXTRA_ENABLED_PLUGINS=spi` + `UARTDMX_DEVICE_START=4`, and
+      after the shared script's usual universes-1-4 patch, runs the
+      new `pb1/ola-config/patch-spi-apa102.sh` (universe 5 -> SPI
+      device port 0; expected device alias 3, separate from the
+      uartdmx loop since it's a different device shape).
+    - **Not yet installed/boot-tested** - overlay only compiled, not
+      loaded at boot; OLA config only written, not applied. Needs, in
+      order: `sudo ./pb1/install-spi1-overlay.sh`, `sudo
+      ./pb1/apply-uenv-overlays.sh`, reboot, confirm `/dev/spidev1.0`
+      exists, then `sudo ./pb1/apply-ola-config.sh` and verify device
+      aliases with `ola_dev_info` match what `patch-spi-apa102.sh`
+      assumes before trusting the patch.
+    - **Test script added**: `scripts/apa102_running_dot_test.py` -
+      streams a single white pixel sweeping across a configurable
+      range (default: pixels 0-9 of a 70-pixel/7x10 strip, 1s/step) to
+      a universe (default 5), as a quick visual end-to-end check once
+      the overlay/OLA config above are live. **Does not use OLA's
+      actual Python client bindings** - checked and confirmed no
+      `python3-ola` package exists on this Debian 13 image, and OLA
+      doesn't publish them on PyPI either (they're SWIG-built from the
+      C++ source tree, which would mean a from-source OLA build just
+      for this - see `ola-pb2-crosscompile-handoff.md`'s notes on how
+      heavy that is on this board). Uses `ola_streaming_client`
+      instead (a CLI tool the plain `ola` apt package already
+      installs) as a long-lived subprocess, one CSV DMX frame per
+      stdin line. **Verified working against the dummy universe on
+      real PB1** (`--universe 1`, safe/no hardware involved): checked
+      olad's web API (`/get_dmx?u=1`) mid-run and saw exactly one
+      pixel's 3 channels at 255 with correct offset, 210 channels
+      total (70*3) - confirms the streaming approach and frame math
+      are both correct, independent of the SPI/APA102 side still
+      being uninstalled.
