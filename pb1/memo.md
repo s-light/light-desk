@@ -655,13 +655,13 @@ Next priorities, in order:
       new `pb1/ola-config/patch-spi-apa102.sh` (universe 5 -> SPI
       device port 0; expected device alias 3, separate from the
       uartdmx loop since it's a different device shape).
-    - **Not yet installed/boot-tested** - overlay only compiled, not
-      loaded at boot; OLA config only written, not applied. Needs, in
-      order: `sudo ./pb1/install-spi1-overlay.sh`, `sudo
-      ./pb1/apply-uenv-overlays.sh`, reboot, confirm `/dev/spidev1.0`
-      exists, then `sudo ./pb1/apply-ola-config.sh` and verify device
-      aliases with `ola_dev_info` match what `patch-spi-apa102.sh`
-      assumes before trusting the patch.
+    - **Installed, boot-tested, confirmed working on real PB1
+      hardware (2026-10-01)**: user ran `install-spi1-overlay.sh`,
+      `apply-uenv-overlays.sh`, rebooted, then `apply-ola-config.sh`,
+      then verified via the olad web UI and
+      `scripts/apa102_running_dot_test.py` - the real device-alias
+      numbers matched what `patch-spi-apa102.sh` assumed, no
+      adjustment needed.
     - **Test script added**: `scripts/apa102_running_dot_test.py` -
       streams a single white pixel sweeping across a configurable
       range (default: pixels 0-9 of a 70-pixel/7x10 strip, 1s/step) to

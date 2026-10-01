@@ -118,13 +118,24 @@ Fader ADC (I2C1, ADS7830) also confirmed end-to-end on real hardware
 
 ## APA102 output (SPI1)
 
-One APA102 strip (7x10 = 70 pixels) on SPI1 - P1.36 (sclk), P2.32
-(mosi), P1.33 (miso, unused by APA102 but muxed for a clean spidev
-node), P2.30 (cs0, likewise unused electrically). SPI0 is already
+One APA102 strip (7x10 = 70 pixels, laid out as 7 fader-backlight
+segments of 10 pixels each) on SPI1, to the PocketBeagle 1 P1/P2
+header:
+
+| APA102 signal | PB1 pin | SPI1 signal | note                                                |
+| :------------- | :------ | :---------- | :--------------------------------------------------- |
+| CLK            | P1.36   | `spi1_sclk` |                                                        |
+| DI (data in)   | P2.32   | `spi1_d1`   | MOSI                                                   |
+| -               | P1.33   | `spi1_d0`   | MISO - not wired to anything, muxed only for a clean spidev node |
+| -               | P2.30   | `spi1_cs0`  | CS0 - not wired to anything, needed for the kernel to register the spidev channel at all |
+
+Only CLK and DI need to actually be wired to the strip - APA102 is a
+write-only chipset, no MISO/CS involved electrically. SPI0 is already
 fully consumed (I2C1 + UART2 share its 4 pins on different modes), and
 AM335x only has 2 SPI controllers total, so a future second SPI
-device (e.g. a display) should go on `spi-gpio` (bit-banged, separate
-GPIOs) rather than sharing this bus via a second chip-select.
+device (e.g. a display) goes on `spi-gpio` (bit-banged, separate free
+GPIOs) rather than sharing this bus via a second chip-select - see
+`memo.md` item 14's "second-SPI-device question" for why.
 
 Install: `sudo ./pb1/install-spi1-overlay.sh`, `sudo
 ./pb1/apply-uenv-overlays.sh`, reboot, confirm `/dev/spidev1.0`
@@ -134,12 +145,12 @@ universe for the pixel strip, not mirrored onto universes 1-4 - to
 the SPI device via `pb1/ola-config/ola-spi.conf` +
 `patch-spi-apa102.sh`).
 
-Quick visual test once that's up: `scripts/apa102_running_dot_test.py`
-sweeps a single white pixel across the strip. **Not yet
-installed/boot-tested on real hardware** - overlay and OLA config are
-written and the overlay compiles clean, but see `memo.md` item 14 for
-what's still open.
+**Confirmed working on real PB1 hardware (2026-10-01)**: verified via
+the olad web UI and `scripts/apa102_running_dot_test.py`, which lights
+one shared position across all 7 segments at once and steps it every
+second (e.g. position 3 -> pixels 3, 13, 23, ..., 63) - a quick way to
+eyeball all 7 segments' wiring/order together.
 
 See `memo.md` for full bring-up history and remaining open steps
 (button press verification with an actual button, an actual DMX
-fixture on the line, the SPI1/APA102 install above).
+fixture on the line, the future `spi-gpio` display).
