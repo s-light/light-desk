@@ -718,3 +718,98 @@ Next priorities, in order:
         for "a small, low-refresh TFT" per this file's own much
         earlier assessment (item 7). Not built yet - still "later,
         maybe" per the user.
+
+15. **Stand-alone mode, `hsv-pixel-strip` (2026-10-01)** - per
+    `../stand alone mode.md` (repo root, the user's own spec): a
+    self-contained fader-driven effect needing no computer/sACN
+    source, toggled on/off by a dedicated physical button, running
+    *alongside* (not instead of) control-desk mode - olad/OSC/the
+    fader->OSC bridge all keep running unaffected either way, per the
+    user ("the other mode does not really interfere with this...
+    it's ok if ola hears other sACN messages... that it sends the OSC
+    events is also fine").
+    - At the user's explicit request, everything new here is Python
+      (not POSIX sh like most of this repo's setup/install tooling) -
+      the systemd `.service` unit files and the devicetree overlay
+      are the only exceptions, since those are inherently declarative
+      formats with no code-based alternative.
+    - **Fader mapping** (fixed by the spec): 0=hue, 1=saturation,
+      2=value, 3=unused, 4=effect speed, 5=color-window width,
+      6=master dimmer.
+    - **Effect formula - this script's own concrete first-pass
+      interpretation**, since the spec names "1d plasma" but doesn't
+      give a formula: one traveling sine wave in hue space across the
+      160-pixel effect strip,
+      `hue(x,t) = fader0 + sin(2*pi*x/160 + t*speed) * 0.5*window`.
+      `window=0` collapses to a flat, non-animated solid color (no
+      hue variation to animate); turning it up spreads hue spatially
+      and makes the wave's motion visible. Documented clearly in the
+      script's own docstring as a starting point, not a spec, since
+      the write-up was itself explicitly "brainstorming"/open-ended
+      here.
+    - **New `scripts/standalone_plasma.py`**: reads all 7 faders via
+      the same `adafruit_extended_bus`/`adafruit_ads7830` path as
+      `ads7830_to_osc.py`, independently of that script/service -
+      concurrent I2C reads from two separate processes are fine (the
+      kernel's I2C driver arbitrates per-transaction, not
+      per-process) - confirmed no conflict. Drives two long-lived
+      `ola_streaming_client` subprocesses (same pattern as
+      `apa102_running_dot_test.py`, for the same reason: no
+      `python3-ola` bindings available) - one for the 160px effect
+      strip (default universe 1), one for the 70px APA102 fader
+      backlight (default universe 5, reusing the segment-per-fader
+      layout from item 14). Backlight visualization: faders 0-2 each
+      show a bar (length = fader value) in the *live* computed HSV
+      color so all three agree; fader 3's segment stays off; faders
+      4-6 show a plain white bar. Verified: pure frame-generation
+      logic checked locally (stubbed hardware imports, confirmed
+      window=0 gives a uniformly solid frame, window=1 varies, bar
+      lengths match fader values exactly, unused segment stays dark);
+      then run for real on PB1 against inert test universes (4, and
+      90/91 before realizing those don't exist as OLA universes at
+      all without a patched port - learned the "doesn't play well"
+      lesson about universes-with-no-ports here too, nothing to do
+      with hardware) while real hardware wiring was in progress
+      elsewhere on the board, deliberately avoiding universes 1/5
+      (both have real output ports right now) to not interfere - read
+      real fader values, started both subprocesses, sent frames, no
+      crash.
+    - **Mode-toggle button**: a 7th button pin, **P2.33** (back to
+      the original pre-swap pick from item 9/14 - full circle; it
+      already has a ready-made `PIN_INPUT_PULLUP` base-dts label on
+      the same `gpio1` bank as 5 of the other 6 buttons, so it just
+      needed adding to the *existing*
+      `BB-GPIO-buttons-light-desk-00A0.dts` overlay's `&gpio1`
+      fragment - no new overlay file, no new pinctrl entries to
+      derive). Recompiled clean on real PB1 with the 7th phandle
+      fixup present.
+    - **New `scripts/standalone_mode_toggle.py`**: a tiny always-on
+      watcher (debounced poll, same style as `buttons_debug_print.py`)
+      that starts/stops `standalone-plasma.service` on each press of
+      P2.33. Reads current state live via `systemctl is-active` each
+      time (not tracked locally) so it stays correct even if the
+      service was toggled some other way between presses. Needs root
+      to start/stop a system unit but runs as the normal "light" user
+      itself (only needs GPIO group access to read the button) -
+      shells out to `sudo -n systemctl start|stop
+      standalone-plasma.service`, covered by a dedicated scoped
+      NOPASSWD sudoers rule (see below). Deliberately touches nothing
+      else - never stops/starts olad or ads7830-to-osc.service.
+    - **Two new systemd units** (`pb1/standalone-plasma.service`,
+      `pb1/standalone-mode-toggle.service`) and **one new Python
+      installer, `pb1/install_standalone_mode.py`** (per the user's
+      "all scripts and things as python" - fills both unit templates'
+      placeholders, writes the scoped sudoers rule, `visudo -c`s it,
+      `daemon-reload`s, and enables+starts only the toggle watcher -
+      the plasma service itself is installed but left inactive,
+      started/stopped only by button presses or by hand). Added
+      `install_standalone_mode.py` plus `systemctl`/`journalctl`
+      patterns for both new units to `setup.sh`'s NOPASSWD rule.
+    - **Not yet installed/boot-tested as a whole system** - the
+      overlay change needs a reboot (not forced mid-session while the
+      user was doing hardware wiring), and `install_standalone_mode.py`
+      hasn't been run yet either. Needs, in order: reboot (picks up
+      P2.33), `sudo ./pb1/install_standalone_mode.py`, then a press of
+      P2.33 to confirm the toggle actually starts/stops
+      `standalone-plasma.service`, then a real visual check against
+      universes 1/5 for real.

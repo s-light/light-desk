@@ -1,0 +1,41 @@
+# systemd unit for scripts/standalone_plasma.py - the stand-alone
+# "hsv-pixel-strip" effect (see `stand alone mode.md`).
+#
+# Template - placeholders (__USER__, __REPO_DIR__, __VENV_DIR__)
+# filled in by pb1/install_standalone_mode.py, which also installs
+# this file. Not enabled at boot - toggled on/off by
+# scripts/standalone_mode_toggle.py (the physical mode-switch button)
+# via `systemctl start|stop standalone-plasma.service`, or by hand
+# with the same commands for testing.
+#
+# check status / logs:
+#   sudo systemctl status standalone-plasma.service
+#   sudo journalctl -u standalone-plasma.service -f
+#
+# override universes/pixel counts without editing this file:
+#   sudo systemctl edit standalone-plasma.service
+#   # add under [Service]: Environment=BACKLIGHT_UNIVERSE=... /
+#   # BACKLIGHT_PIXELS=... / SEGMENT_SIZE=... / DMX_UNIVERSE=... /
+#   # DMX_PIXELS=... / I2C_BUS=...
+
+[Unit]
+Description=Stand-alone hsv-pixel-strip effect (fader -> plasma, no computer needed)
+Documentation=file:__REPO_DIR__/scripts/standalone_plasma.py
+After=olad.service
+Wants=olad.service
+
+[Service]
+User=__USER__
+WorkingDirectory=__REPO_DIR__
+Environment=I2C_BUS=1
+Environment=BACKLIGHT_UNIVERSE=5
+Environment=BACKLIGHT_PIXELS=70
+Environment=SEGMENT_SIZE=10
+Environment=DMX_UNIVERSE=1
+Environment=DMX_PIXELS=160
+ExecStart=__VENV_DIR__/bin/python3 -u __REPO_DIR__/scripts/standalone_plasma.py --i2c-bus $I2C_BUS --backlight-universe $BACKLIGHT_UNIVERSE --backlight-pixels $BACKLIGHT_PIXELS --segment-size $SEGMENT_SIZE --dmx-universe $DMX_UNIVERSE --dmx-pixels $DMX_PIXELS
+Restart=on-failure
+RestartSec=2
+
+# Deliberately no [Install]/WantedBy - this unit is not enabled at
+# boot, only started/stopped on demand (see the header comment above).

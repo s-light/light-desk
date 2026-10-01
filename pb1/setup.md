@@ -155,6 +155,38 @@ one shared position across all 7 segments at once and steps it every
 second (e.g. position 3 -> pixels 3, 13, 23, ..., 63) - a quick way to
 eyeball all 7 segments' wiring/order together.
 
+## Stand-alone mode (`hsv-pixel-strip`)
+
+See `../stand alone mode.md` for the spec and `memo.md` item 15 for
+the implementation decisions. A self-contained fader-driven effect
+(no computer/sACN needed) that runs *alongside* control-desk mode,
+toggled by a 7th button:
+
+| button       | PB1 P2 pin |
+| :----------- | :--------- |
+| mode toggle  | P2.33      |
+
+Install (after the 6-button overlay above has been rebuilt to include
+P2.33 and rebooted):
+
+```
+sudo ./pb1/install_standalone_mode.py
+```
+
+This enables+starts `standalone-mode-toggle.service` (always-on
+button watcher); `standalone-plasma.service` (the effect itself) is
+installed but stays inactive until a P2.33 press starts it - or
+start/stop it by hand for testing:
+
+```
+sudo systemctl start standalone-plasma.service
+sudo systemctl stop standalone-plasma.service
+```
+
+**Not yet installed/boot-tested as a whole system** - the overlay
+change needs a reboot first, see `memo.md` item 15 for what's left.
+
 See `memo.md` for full bring-up history and remaining open steps
 (button press verification with an actual button, an actual DMX
-fixture on the line, the future `spi-gpio` display).
+fixture on the line, the future `spi-gpio` display, stand-alone mode
+above).

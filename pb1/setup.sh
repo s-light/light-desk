@@ -79,7 +79,7 @@ echo "==> set a login password for '$NEW_USER' (needed for sudo prompts not cove
 sudo passwd "$NEW_USER"
 
 SUDOERS_FILE=/etc/sudoers.d/light-desk-pb1
-RULE="$NEW_USER ALL=(root) NOPASSWD: $SCRIPT_DIR/install-uart3-overlay.sh, $SCRIPT_DIR/install-gpio-buttons-overlay.sh, $SCRIPT_DIR/install-spi1-overlay.sh, $SCRIPT_DIR/apply-uenv-overlays.sh, $SCRIPT_DIR/switch-console-to-usb.sh, $SCRIPT_DIR/apply-ola-config.sh, $SCRIPT_DIR/configure-ads7830-to-osc.sh, /usr/sbin/service olad *, /usr/bin/systemctl * olad*, /usr/bin/journalctl -u olad*, /usr/bin/systemctl * ads7830-to-osc*, /usr/bin/journalctl -u ads7830-to-osc*"
+RULE="$NEW_USER ALL=(root) NOPASSWD: $SCRIPT_DIR/install-uart3-overlay.sh, $SCRIPT_DIR/install-gpio-buttons-overlay.sh, $SCRIPT_DIR/install-spi1-overlay.sh, $SCRIPT_DIR/apply-uenv-overlays.sh, $SCRIPT_DIR/switch-console-to-usb.sh, $SCRIPT_DIR/apply-ola-config.sh, $SCRIPT_DIR/configure-ads7830-to-osc.sh, $SCRIPT_DIR/install_standalone_mode.py, /usr/sbin/service olad *, /usr/bin/systemctl * olad*, /usr/bin/journalctl -u olad*, /usr/bin/systemctl * ads7830-to-osc*, /usr/bin/journalctl -u ads7830-to-osc*, /usr/bin/systemctl * standalone-plasma*, /usr/bin/journalctl -u standalone-plasma*, /usr/bin/systemctl * standalone-mode-toggle*, /usr/bin/journalctl -u standalone-mode-toggle*"
 
 echo "==> installing $SUDOERS_FILE"
 printf '%s\n' "$RULE" | sudo tee "$SUDOERS_FILE" >/dev/null

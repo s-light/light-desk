@@ -1,0 +1,35 @@
+# systemd unit for scripts/standalone_mode_toggle.py - watches the
+# physical stand-alone-mode toggle button (P2.33) and starts/stops
+# standalone-plasma.service on each press.
+#
+# Template - placeholders (__USER__, __REPO_DIR__) filled in by
+# pb1/install_standalone_mode.py, which also installs this file.
+# Unlike standalone-plasma.service, this one IS enabled at boot -
+# it's the always-on watcher, not the effect itself (see
+# scripts/standalone_mode_toggle.py's docstring).
+#
+# Runs with the SYSTEM python3, not scripts/.venv - it only needs the
+# system `gpiod` package, same reasoning as buttons_debug_print.py.
+#
+# check status / logs:
+#   sudo systemctl status standalone-mode-toggle.service
+#   sudo journalctl -u standalone-mode-toggle.service -f
+#
+# override the button pin without editing this file:
+#   sudo systemctl edit standalone-mode-toggle.service
+#   # add under [Service]: Environment=BUTTON_PIN=P2.xx
+
+[Unit]
+Description=Stand-alone mode toggle button watcher
+After=multi-user.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__REPO_DIR__
+Environment=BUTTON_PIN=P2.33
+ExecStart=/usr/bin/python3 -u __REPO_DIR__/scripts/standalone_mode_toggle.py --button-pin $BUTTON_PIN
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
