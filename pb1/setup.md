@@ -122,12 +122,16 @@ One APA102 strip (7x10 = 70 pixels, laid out as 7 fader-backlight
 segments of 10 pixels each) on SPI1, to the PocketBeagle 1 P1/P2
 header:
 
-| APA102 signal | PB1 pin | SPI1 signal | note                                                |
-| :------------- | :------ | :---------- | :--------------------------------------------------- |
-| CLK            | P1.36   | `spi1_sclk` |                                                        |
-| DI (data in)   | P2.32   | `spi1_d1`   | MOSI                                                   |
-| -               | P1.33   | `spi1_d0`   | MISO - not wired to anything, muxed only for a clean spidev node |
-| -               | P2.30   | `spi1_cs0`  | CS0 - not wired to anything, needed for the kernel to register the spidev channel at all |
+| APA102 signal | PB1 pin | SPI1 signal | note    |
+| :------------ | :------ | :---------- | :------ |
+| CLK           | P1.36   | `spi1_sclk` |         |
+| DI (data in)  | P2.32   | `spi1_d1`   | MOSI    |
+| -             | P1.33   | `spi1_d0`   | MISO *1 |
+| -             | P2.30   | `spi1_cs0`  | CS0  *2 |
+|               |         |             |         |
+
+*1: not wired to anything, muxed only for a clean spidev node
+*2: not wired to anything, needed for the kernel to register the spidev channel at all
 
 Only CLK and DI need to actually be wired to the strip - APA102 is a
 write-only chipset, no MISO/CS involved electrically. SPI0 is already
