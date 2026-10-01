@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Send a single running white dot across an APA102 strip via OLA, as a
-quick end-to-end visual test of the olad -> SPI -> APA102 chain.
+"""Send one running white dot per fader-backlight segment on an
+APA102 strip via OLA, as a quick end-to-end visual test of the
+olad -> SPI -> APA102 chain.
 
 NOTE: this does NOT use OLA's actual Python client bindings
 (`ola.ClientWrapper` et al, the "python-ola"/SWIG bindings) - those
@@ -22,14 +23,17 @@ plugin, personality 7 (APA102_INDIVIDUAL - 3 DMX/sACN slots per pixel,
 R/G/B, no separate brightness slot), patched to its own universe (see
 pb1/ola-config/ola-spi.conf, pb1/ola-config/patch-spi-apa102.sh).
 
+The strip is laid out as one 10-pixel backlight segment per fader (7
+faders x 10 pixels = 70 total) - see pb1/memo.md's stand-alone-mode
+notes. This test lights the *same* position in every segment at once
+(e.g. position 3 lit on pixels 3, 13, 23, ..., 63 simultaneously) and
+steps that shared position every interval, rather than a single dot
+sweeping the whole strip - a quick way to eyeball all 7 segments'
+wiring/order at once.
+
 Usage:
     python3 apa102_running_dot_test.py [--universe 5] [--pixels 70]
-        [--dot-range 0:10] [--interval 1.0]
-
-Default strip shape is PB1's 7x10 = 70 pixels; the dot itself only
-runs across the first 10 (one row) per the user's ask - override
---dot-range (start:end, end exclusive) to sweep a different section,
-or set it to 0:<pixels> to sweep the whole strip.
+        [--segment-size 10] [--pos-range 0:10] [--interval 1.0]
 
 Ctrl-C to stop (sends an all-off frame first).
 """
@@ -47,27 +51,31 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--universe", type=int, default=5, help="OLA universe the APA102 output is patched to (default: %(default)s - PB1's dedicated pixel universe)")
     parser.add_argument("--pixels", type=int, default=70, help="total pixel count of the strip, matches ola-spi.conf's pixel-count (default: %(default)s = PB1's 7x10)")
-    parser.add_argument("--dot-range", default="0:10", help="start:end pixel range (end exclusive) the dot runs across, e.g. 0:10 for just the first row (default: %(default)s)")
+    parser.add_argument("--segment-size", type=int, default=10, help="pixels per repeating segment (one per fader) - the same position lights up in every segment at once (default: %(default)s)")
+    parser.add_argument("--pos-range", default="0:10", help="start:end position-within-segment range (end exclusive) that steps (default: %(default)s)")
     parser.add_argument("--interval", type=float, default=1.0, help="seconds per step (default: %(default)s)")
     args = parser.parse_args()
 
     try:
-        start_str, end_str = args.dot_range.split(":", 1)
-        args.dot_start, args.dot_end = int(start_str), int(end_str)
+        start_str, end_str = args.pos_range.split(":", 1)
+        args.pos_start, args.pos_end = int(start_str), int(end_str)
     except ValueError:
-        parser.error("--dot-range must be START:END, e.g. 0:10")
-    if not (0 <= args.dot_start < args.dot_end <= args.pixels):
-        parser.error(f"--dot-range {args.dot_range!r} must satisfy 0 <= start < end <= --pixels ({args.pixels})")
+        parser.error("--pos-range must be START:END, e.g. 0:10")
+    if not (0 <= args.pos_start < args.pos_end <= args.segment_size):
+        parser.error(f"--pos-range {args.pos_range!r} must satisfy 0 <= start < end <= --segment-size ({args.segment_size})")
+    if args.pixels % args.segment_size != 0:
+        parser.error(f"--pixels ({args.pixels}) must be a whole multiple of --segment-size ({args.segment_size})")
 
     return args
 
 
-def frame_for_pixel(num_pixels, lit_pixel, color):
-    """Return a list of num_pixels*3 DMX values with exactly one pixel
-    set to `color`, everything else off."""
+def frame_for_position(num_pixels, segment_size, position, color):
+    """Return a list of num_pixels*3 DMX values with `position` lit in
+    every segment of `segment_size` pixels, everything else off."""
     frame = [0] * (num_pixels * SLOTS_PER_PIXEL)
-    offset = lit_pixel * SLOTS_PER_PIXEL
-    frame[offset:offset + SLOTS_PER_PIXEL] = color
+    for segment_start in range(0, num_pixels, segment_size):
+        offset = (segment_start + position) * SLOTS_PER_PIXEL
+        frame[offset:offset + SLOTS_PER_PIXEL] = color
     return frame
 
 
@@ -85,16 +93,18 @@ def main():
         text=True,
     )
 
-    print(f"streaming a white dot across pixels {args.dot_start}-{args.dot_end - 1} "
-          f"of {args.pixels} on universe {args.universe}, {args.interval}s/step - Ctrl-C to stop")
+    num_segments = args.pixels // args.segment_size
+    print(f"streaming a white dot across positions {args.pos_start}-{args.pos_end - 1} "
+          f"in each of {num_segments} segments ({args.segment_size} px each, {args.pixels} px total) "
+          f"on universe {args.universe}, {args.interval}s/step - Ctrl-C to stop")
 
     try:
-        pixel = args.dot_start
+        position = args.pos_start
         while True:
-            send_frame(proc, frame_for_pixel(args.pixels, pixel, WHITE))
-            pixel += 1
-            if pixel >= args.dot_end:
-                pixel = args.dot_start
+            send_frame(proc, frame_for_position(args.pixels, args.segment_size, position, WHITE))
+            position += 1
+            if position >= args.pos_end:
+                position = args.pos_start
             time.sleep(args.interval)
     except KeyboardInterrupt:
         pass
