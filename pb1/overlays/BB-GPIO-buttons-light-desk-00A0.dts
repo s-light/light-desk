@@ -2,11 +2,14 @@
 /plugin/;
 
 /*
- * light-desk: activate internal pull-up input mode for 7 button GPIO
+ * light-desk: activate internal pull-up input mode for 8 button GPIO
  * pins on PocketBeagle 1 - the 6 control-desk buttons (P2.02, P2.04,
- * P2.06, P2.20, P2.22, P2.24) plus P2.33, the stand-alone-mode
- * toggle button (see scripts/standalone_mode_toggle.py and
- * memo.md item 15) - read from userspace via libgpiod by
+ * P2.06, P2.20, P2.22, P2.24), P2.33 (the stand-alone-mode toggle
+ * button, see scripts/standalone_mode_toggle.py and memo.md item 15),
+ * and P2.19 (the rotary pulse encoder's own push button - the
+ * encoder's A/B quadrature channels are a separate concern, handled
+ * by BB-ROTARY-ENCODER-light-desk-00A0.dts's eQEP0 hardware decoder,
+ * not GPIO) - read from userspace via libgpiod by
  * scripts/buttons_debug_print.py / scripts/ads7830_to_osc.py /
  * scripts/standalone_mode_toggle.py (see pb1/memo.md item 9 for the
  * original 6-pin selection history).
@@ -16,33 +19,38 @@
  * already defines a ready-made pinctrl-single node per header pin,
  * pre-configured exactly as PIN_INPUT_PULLUP + MUX_MODE7 (GPIO) -
  * P2_02_gpio, P2_04_gpio, P2_06_gpio, P2_20_gpio, P2_22_gpio,
- * P2_24_gpio, P2_33_gpio below - but none of them are referenced by
- * any device's pinctrl-0, so they're never actually applied; the
- * pins sit at whatever mux/bias U-Boot/ROM left them in at boot
- * instead. Confirmed on real hardware: with nothing wired to any of
- * these pins, `gpioget -b pull-up|pull-down|disabled` all returned
- * the exact same fixed value per pin no matter the bias flag - i.e.
- * libgpiod's runtime bias request has zero effect here (this
- * reproduced on unrelated pins too, e.g. P2.02/P2.03, so it's not
- * specific to these - AM335x's pinctrl-single driver doesn't support
- * runtime bias changes through the generic Linux pinctrl API that
- * libgpiod's -b option goes through; the pull config has to be the
- * static pinmux value applied at boot, which is exactly what this
- * overlay does).
+ * P2_24_gpio, P2_33_gpio, P2_19_gpio below - but none of them are
+ * referenced by any device's pinctrl-0, so they're never actually
+ * applied; the pins sit at whatever mux/bias U-Boot/ROM left them in
+ * at boot instead. Confirmed on real hardware: with nothing wired to
+ * any of these pins, `gpioget -b pull-up|pull-down|disabled` all
+ * returned the exact same fixed value per pin no matter the bias
+ * flag - i.e. libgpiod's runtime bias request has zero effect here
+ * (this reproduced on unrelated pins too, e.g. P2.02/P2.03, so it's
+ * not specific to these - AM335x's pinctrl-single driver doesn't
+ * support runtime bias changes through the generic Linux pinctrl API
+ * that libgpiod's -b option goes through; the pull config has to be
+ * the static pinmux value applied at boot, which is exactly what
+ * this overlay does).
  *
- * 6 of the 7 pins (P2.02, P2.04, P2.06, P2.22, P2.24, P2.33) sit on
- * GPIO bank gpio1; P2.20 sits on gpio2 instead. Two small fragments,
- * one per bank, cover this: any platform device with a bound driver
- * gets pinctrl-0 applied automatically at probe time (generic Linux
- * driver-core behavior, independent of what the driver itself
- * does), and both gpio1's and gpio2's own omap-gpio driver instances
- * already probe/bind normally - so adding pinctrl-names/pinctrl-0
- * here applies the pad config without any device claiming the GPIO
- * lines themselves (unlike e.g. a gpio-keys or gpio-leds node, which
- * would also reserve the lines and block libgpiod from requesting
- * them from userspace - not what we want here, since the existing
- * Python scripts poll these lines directly).
+ * 6 of the 8 pins (P2.02, P2.04, P2.06, P2.22, P2.24, P2.33) sit on
+ * GPIO bank gpio1; P2.20 sits on gpio2; P2.19 sits on gpio0. Three
+ * small fragments, one per bank, cover this: any platform device
+ * with a bound driver gets pinctrl-0 applied automatically at probe
+ * time (generic Linux driver-core behavior, independent of what the
+ * driver itself does), and gpio0's/gpio1's/gpio2's own omap-gpio
+ * driver instances already probe/bind normally - so adding
+ * pinctrl-names/pinctrl-0 here applies the pad config without any
+ * device claiming the GPIO lines themselves (unlike e.g. a gpio-keys
+ * or gpio-leds node, which would also reserve the lines and block
+ * libgpiod from requesting them from userspace - not what we want
+ * here, since the existing Python scripts poll these lines directly).
  */
+
+&gpio0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&P2_19_gpio>;
+};
 
 &gpio1 {
 	pinctrl-names = "default";

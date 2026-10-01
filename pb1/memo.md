@@ -813,3 +813,53 @@ Next priorities, in order:
       P2.33 to confirm the toggle actually starts/stops
       `standalone-plasma.service`, then a real visual check against
       universes 1/5 for real.
+
+16. **Rotary pulse encoder with push button (2026-10-01)**, at the
+    user's request ("prepare some more inputs before restart") - 3
+    pins needed: A, B, push button.
+    - Checked AM335x's 3 built-in hardware quadrature-decoder units
+      (eqep0/1/2, `ti,am3352-eqep`, Linux's generic Counter subsystem)
+      against `pinout-reference.md` instead of defaulting to
+      GPIO-polled decoding: `eqep1` only has its A channel broken out
+      anywhere on this header at all (no B pin exists); `eqep2`'s A/
+      B/index channels (P2.24/P2.33/P2.22) all land on pins already
+      committed to other buttons. **`eqep0` is the only one with its
+      full A+B pair free** - P1.31 (`eqep0A_in`) and P2.34
+      (`eqep0B_in`), both mode1, neither conflicting with anything.
+      Used the real hardware decoder deliberately, not GPIO polling
+      like every other input here - avoids missed pulses from
+      poll-rate jitter on a spinning encoder.
+    - New `pb1/overlays/BB-ROTARY-ENCODER-light-desk-00A0.dts`: a
+      pinmux fragment (raw offset/flags/mode, same convention as
+      every other custom overlay here - offsets `0x1a0`/`0x1a4`
+      derived the same way as item 14's SPI1 overlay) plus
+      `&eqep0 { status = "okay"; pinctrl-0 = <...>; }` - confirmed
+      `eqep0` exists in the base dtsi as `status = "disabled"` with
+      no pinctrl of its own, same "needs activating" situation as
+      SPI1 was. Compiled clean on real PB1, fixups resolved
+      correctly.
+    - The encoder's own push button (P2.19, `gpio0_27`, another
+      ready-made `PIN_INPUT_PULLUP` base-dts label) is a plain GPIO
+      pin instead - added to the *existing*
+      `BB-GPIO-buttons-light-desk-00A0.dts` overlay as a new `&gpio0`
+      fragment (now 3 bank fragments: gpio0/gpio1/gpio2), since it's
+      mechanically identical to this project's other buttons, not
+      part of the eQEP0 peripheral. Recompiled clean with the 8th
+      phandle fixup present.
+    - New `pb1/install_rotary_encoder_overlay.py` (Python, per the
+      user's standing preference from item 15) for the new overlay;
+      the button-pin addition reuses the *existing*
+      `install-gpio-buttons-overlay.sh` (just needs re-running, same
+      overlay file). Wired the new overlay into
+      `apply-uenv-overlays.sh`'s list and the new installer's path
+      into `setup.sh`'s NOPASSWD rule.
+    - **Not yet installed/boot-tested** - both overlays compile clean
+      but the reboot hasn't happened yet (deliberately batched with
+      the stand-alone-mode P2.33 change from item 15, since the user
+      asked to prepare several inputs together before one restart).
+      **No consumer script written yet either** - what the encoder
+      should actually control (menu navigation? a parameter nudge in
+      stand-alone mode? something else) wasn't specified, so this
+      item only covers making the hardware available
+      (`/sys/bus/counter/devices/counterN/...` once booted), not
+      yet how it's used.

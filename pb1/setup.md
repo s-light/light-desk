@@ -155,6 +155,34 @@ one shared position across all 7 segments at once and steps it every
 second (e.g. position 3 -> pixels 3, 13, 23, ..., 63) - a quick way to
 eyeball all 7 segments' wiring/order together.
 
+## Rotary pulse encoder
+
+One rotary pulse encoder with integrated push button, to the
+PocketBeagle 1 P1/P2 header:
+
+| encoder signal | PB1 pin | note                                                      |
+| :-------------- | :------ | :--------------------------------------------------------- |
+| A                | P1.31   | `eqep0A_in` - AM335x's hardware quadrature decoder, not GPIO |
+| B                | P2.34   | `eqep0B_in`                                                  |
+| push button      | P2.19   | plain GPIO, internal pull-up, same as the other buttons      |
+| common/GND       | -       | any GND pin on the P1/P2 header                              |
+
+Uses AM335x's `eqep0` hardware quadrature-decode peripheral (checked:
+the only one of its 3 eQEP units with a full free A+B pair on this
+board - `eqep1` has no B channel broken out anywhere, `eqep2`'s
+channels land on pins already committed to other buttons) instead of
+software GPIO polling, so a fast spin doesn't risk missed pulses from
+poll-rate jitter.
+
+Install: `sudo ./pb1/install_rotary_encoder_overlay.py`, re-run
+`sudo ./pb1/install-gpio-buttons-overlay.sh` (picks up the push
+button pin, added to that overlay), `sudo ./pb1/apply-uenv-overlays.sh`,
+reboot, confirm with `ls /sys/bus/counter/devices/`.
+
+**Not yet installed/boot-tested** - overlays compile clean but the
+reboot hasn't happened yet; no consumer script written either (what
+the encoder should actually do is still open - see memo.md item 16).
+
 ## Stand-alone mode (`hsv-pixel-strip`)
 
 See `../stand alone mode.md` for the spec and `memo.md` item 15 for

@@ -1,0 +1,59 @@
+/dts-v1/;
+/plugin/;
+
+/*
+ * light-desk: enable eQEP0 (AM335x's dedicated hardware quadrature
+ * decoder peripheral) for one rotary pulse encoder on PocketBeagle 1.
+ *
+ * Deliberately NOT software/GPIO-polled quadrature decoding (unlike
+ * this project's other inputs) - AM335x has 3 of these decoder units
+ * built in (eqep0/1/2, `ti,am3352-eqep`, Linux's generic "Counter"
+ * subsystem), and using the real hardware avoids missed pulses from
+ * poll-rate jitter on a spinning encoder. Checked eqep1/eqep2 too:
+ * eqep1 only has its A channel broken out anywhere on this header (no
+ * B channel pin exists at all), and eqep2's A/B/index channels all
+ * land on pins already committed to other buttons (P2.22, P2.24,
+ * P2.33) - eqep0 is the only one with its full A+B pair free, on
+ * P1.31/P2.34.
+ *
+ * Pins (all confirmed free against pinout-reference.md):
+ *   P1.31 - eqep0A_in (mcasp0_aclkr,  mode1, offset 0x1a0)
+ *   P2.34 - eqep0B_in (mcasp0_fsr,    mode1, offset 0x1a4)
+ *
+ * (eQEP0 also has an index/strobe pair - P2.28/P1.29 - left unused
+ * here since a plain incremental rotary encoder typically only has
+ * A/B/common/button, no index line.)
+ *
+ * Raw offset/flags/mode numbers (same convention as the other custom
+ * overlays in this repo - no AM33XX_PADCONF()/AM335X_PIN_* macros,
+ * this board's dtc doesn't preprocess), offsets derived the same way
+ * as BB-SPI1-APA102-light-desk-00A0.dts: (AM335X_PIN_<NAME> & 0xffff)
+ * - 0x800 from /opt/source/dtb-*.x/include/dt-bindings/pinctrl/
+ * am33xx.h on the board. Flags 0x30 = PIN_INPUT_PULLUP - matches this
+ * project's convention for button/switch-style inputs (most rotary
+ * encoder breakout boards already carry their own pull-ups on A/B,
+ * same reasoning as the ADS7830/button wiring elsewhere, but the
+ * SoC's pull-up is harmless alongside an external one and is needed
+ * if the board you wire up doesn't have one).
+ *
+ * The encoder's own push button is a separate, plain GPIO pin
+ * (P2.19) - added to BB-GPIO-buttons-light-desk-00A0.dts's &gpio0
+ * fragment instead of here, since it's mechanically identical to
+ * this project's other buttons (momentary switch to GND), not part
+ * of the eQEP0 peripheral.
+ */
+
+&am33xx_pinmux {
+	bb_eqep0_pins: pinmux_bb_eqep0_pins {
+		pinctrl-single,pins = <
+			0x1a0 0x30 0x01 /* P1.31 mcasp0_aclkr.eqep0A_in */
+			0x1a4 0x30 0x01 /* P2.34 mcasp0_fsr.eqep0B_in */
+		>;
+	};
+};
+
+&eqep0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&bb_eqep0_pins>;
+};
