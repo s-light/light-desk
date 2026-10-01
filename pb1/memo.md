@@ -682,3 +682,39 @@ Next priorities, in order:
       total (70*3) - confirms the streaming approach and frame math
       are both correct, independent of the SPI/APA102 side still
       being uninstalled.
+    - **Second-SPI-device question, resolved (2026-10-01)**: user
+      asked whether PB1 can have two fully *independent* SPI buses -
+      one hardware (SPI1, APA102) and a second **real hardware** one
+      (not bit-banged) for the future display, since OLA's SPI plugin
+      apparently doesn't handle a second device sharing a bus via a
+      second chip-select well. Checked against the full
+      `pinout-reference.md` table both directions:
+      - SPI0's 4 pins (P1.06/08/10/12) are already consumed by I2C1 +
+        UART2 (different modes of the same balls). I2C1 *could* move
+        (free alt pins exist at P2.25/P2.27, mode3) - but **UART2 has
+        zero alternate routing anywhere on this board/chip**
+        (`uart2_rxd`/`uart2_txd` appear only on P1.08/P1.10 in the
+        whole table), so SPI0 can't be reclaimed without dropping
+        DMX universe 2 entirely.
+      - Also checked the reverse (move SPI0 itself elsewhere instead
+        of touching UART2): no - `spi0_cs0`/`spi0_sclk`/`spi0_d0`/
+        `spi0_d1` appear **only** on P1.06/P1.08/P1.10/P1.12 in the
+        entire table too. SPI0 has no alternate ball routing at all;
+        it's hard-wired by the SoC's own pin mux to exactly those 4
+        pins. Dead end both directions.
+      - AM335x has exactly 2 native SPI controllers total (SPI0,
+        SPI1) and SPI1 is already committed to the APA102 - so a
+        genuine second *hardware* SPI bus on PB1 is only possible by
+        sacrificing DMX universe 2.
+      - **Decision: keep all 4 DMX universes, use `spi-gpio`
+        (bit-banged, software, different free GPIOs) for the future
+        display instead.** This isn't a compromise on the "doesn't
+        play well with CS" concern specifically - `spi-gpio` is a
+        completely different kernel subsystem on different pins; OLA's
+        SPI plugin never touches it at all, so there's no sharing or
+        conflict to begin with, unlike two chip-selects on the same
+        McSPI controller. The tradeoff is clock speed (software-
+        toggled, a few MHz ceiling) rather than bus contention - fine
+        for "a small, low-refresh TFT" per this file's own much
+        earlier assessment (item 7). Not built yet - still "later,
+        maybe" per the user.
