@@ -22,12 +22,24 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   entry anywhere on this board (not routable at all) and uart6 is the
   console/debug-probe UART - so 5 DMX outputs is the real ceiling here,
   not 6
-- `install-uart-overlay.sh` — builds the overlay above using the DTB
-  source/build tree the board image ships under `/opt/source/dtb-*.x`,
-  installs the `.dtbo`, and wires it into whichever extlinux label is
-  currently `default` (idempotent, doesn't touch other labels). Does not
-  reboot - needed once, then reboot manually and re-run
-  `apply-ola-config.sh`
+- `lightdesk_setup.py` — shared setup/install helpers used by both
+  boards' entrypoints below (compiling+installing a device-tree
+  overlay, filling+installing a systemd unit, writing a scoped
+  sudoers rule, editing the bootloader config, applying olad's
+  config). One consistent Python form for every one of these
+  operations, instead of ~20 separate scripts each reimplementing its
+  own (a mix of POSIX sh and Python) - consolidated at the user's
+  request; see `pb1/memo.md`'s "one setup command" item for the full
+  history/reasoning.
+- `setup_pb2.py` — single entry point for PocketBeagle 2 setup: run
+  with no arguments for every step in order (sudoers, i2c/venv,
+  overlays, olad config, the fader->OSC service), or a step name to
+  run just one (`./setup_pb2.py --list-steps`). Replaces the old
+  separate `setup.sh`/`setup-i2c.sh`/`apply-ola-config.sh`/
+  `install-i2c-overlay.sh`/`install-uart-overlay.sh`. Idempotent -
+  safe to re-run any time; the "overlays" step needs a reboot before
+  "ola" below it can work, and says so instead of failing
+  confusingly.
 - `scripts/ads7830_to_osc.py` — reads the ADS7830 fader ADC via Blinka, sends
   each channel as OSC float `/fader/N` (N=1-8) to QLC+; see
   `scripts/requirements.txt` for the Python deps (`adafruit-blinka`,
@@ -35,42 +47,39 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   Uses `adafruit_extended_bus.ExtendedI2C` instead of `board.I2C()` — Blinka
   has no PocketBeagle 2 board support yet, see setup.md "known issues"
 - `ads7830-to-osc.service` — systemd unit template for the script above
-  (placeholders filled in by `setup-i2c.sh`, not meant to be copied by hand)
-- `setup-i2c.sh` — one-shot board setup for the fader->OSC bridge: i2c group
-  + udev rule so `/dev/i2c-*` doesn't need root, a venv in `scripts/.venv`
-  with `scripts/requirements.txt` installed into it (Debian 13's system
-  Python is PEP-668-locked), then installs+enables
-  `ads7830-to-osc.service`. Mirrors `setup.sh`/`apply-ola-config.sh`'s
-  style (POSIX sh, idempotent, run as normal user - it calls sudo itself)
+  (placeholders filled in by `setup_pb2.py`'s "fader-osc" step, or
+  `pb1/setup_pb1.py`'s own - not meant to be copied by hand)
 - `setup.md` — board bring-up steps: clone, install/configure ola, ADS7830
   HW wiring, the Blinka/PocketBeagle 2 "known issues" workaround, and
-  running `setup-i2c.sh`
+  running `setup_pb2.py`
 - `setup-readonly-root.sh` — final board-lockdown step, run once
   everything else is stable: disables the stock image's unused
   docker/containerd, points journald at volatile storage, and makes root
   read-only via `/etc/fstab` (not `overlayroot` - see the script header
-  for why that doesn't work on this board's U-Boot/extlinux setup)
+  for why that doesn't work on this board's U-Boot/extlinux setup).
+  Deliberately NOT part of `setup_pb2.py` - a one-way lockdown is not
+  something to fold into a re-runnable automated setup
 - `readwrite.sh`, `readonly.sh` — after `setup-readonly-root.sh`, root is
   read-only, so any on-board file change (git pull, deploying a script)
   needs `./readwrite.sh` first and `./readonly.sh` after - both are one
   `mount -o remount` call each, kept as separate scripts so nobody has to
   remember the exact `mount` invocation under pressure
-- `setup.sh` — run once per board, first: installs a scoped
-  `/etc/sudoers.d/light-desk-ola` NOPASSWD rule (systemctl/journalctl for
-  olad, plus running `apply-ola-config.sh`) so the rest of setup doesn't
-  need an interactive sudo password each time
-- `apply-ola-config.sh` — one-shot board setup: disables every olad plugin
-  except e131/uartdmx/dummy, installs the configs below, moves olad's HTTP
-  UI to port 9091 (see "known board quirks" below), restarts olad, runs
-  the port patching. Run this after `setup.sh`.
-- `ola-config/` — olad plugin configs + patch script implementing the
-  README's "sACN in -> UART out" bridge, 5 universes (see the overlay
-  entry above for why 5, not 6): `ola-e131.conf` (5 sACN input ports),
-  `ola-uartdmx.conf` (5 UART output devices - `/dev/ttyS1`, `ttyS3`,
-  `ttyS4`, `ttyS5`, `ttyS7`, verified on real hardware),
-  `patch-sacn-to-uart.sh` (one-time `ola_patch` call mapping universes 1-5
-  straight through input->output; device aliases assumed there are only
-  correct when `apply-ola-config.sh`'s reduced plugin set is active)
+- `ola-config/` — olad plugin configs implementing the README's "sACN
+  in -> UART out" bridge, 5 universes (see the overlay entry above for
+  why 5, not 6): `ola-e131.conf` (5 sACN input ports), `ola-uartdmx.conf`
+  (5 UART output devices - `/dev/ttyS1`, `ttyS3`, `ttyS4`, `ttyS5`,
+  `ttyS7`, verified on real hardware). The `ola_patch` calls that used
+  to live in a `patch-sacn-to-uart.sh` here are now
+  `lightdesk_setup.patch_sacn_to_uart()`, called from `setup_pb2.py`'s
+  "ola" step.
+- `pb1/` — PocketBeagle 1 port of this project (different board, own
+  pin map, own `setup_pb1.py` entry point) - see `pb1/setup.md`/
+  `pb1/memo.md` for its own repo map and bring-up history; it's the
+  actively-developed board as of this writing, well ahead of PB2
+  (sACN->DMX on 4 universes, fader/button->OSC, one APA102 pixel
+  strip via OLA's SPI plugin, a rotary encoder, and a fader-driven
+  stand-alone effect mode needing no computer - all confirmed working
+  on real hardware).
 - `pb1_internet_share.md`, `pocketbeagle2-internet-sharing.md` — near-duplicate
   guides for sharing host internet to the board over USB (NetworkManager +
   systemd-networkd); differ only in IP subnet / board identity — check which
@@ -84,11 +93,11 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   `systemctl status` as "active" regardless (`Type=forking`,
   `RemainAfterExit=yes`, no real PID tracking) - status alone doesn't tell
   you olad is actually alive; check `ola_dev_info`/`ola_plugin_info` or
-  `ps -ef | grep olad`. `apply-ola-config.sh` fixes this via
+  `ps -ef | grep olad`. `setup_pb2.py`'s "ola" step fixes this via
   `/etc/default/ola`'s `DAEMON_ARGS` (`--http-port 9091`).
 - The board (hostname `lightdeskniilo`) is reachable as `ssh pb_lightdesk`;
-  login user `light` needs a password for `sudo` unless `setup.sh` has
-  been run.
+  login user `light` needs a password for `sudo` unless `setup_pb2.py`'s
+  "sudoers" step has been run.
 - **This board's U-Boot/extlinux setup cannot load an initrd correctly.**
   Enabling `initrd /initrd.img` on any extlinux.conf label (confirmed on
   the "microSD (default)" label) causes a kernel panic on boot -

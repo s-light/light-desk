@@ -32,7 +32,7 @@ NOTE: this script opens the I2C bus directly by Linux bus number via
 itself. Use --i2c-bus to point it at the right `/dev/i2c-N` for I2C1
 (P1.33/P1.36) - confirmed working on real PB2 hardware, but only after
 two fixes documented in setup.md "known issues": the I2C1 pins need
-`install-i2c-overlay.sh`'s pin-mux overlay (the base DTS enables the
+`setup_pb2.py`'s "overlays" step's pin-mux overlay (the base DTS enables the
 controller but never routes its pins to the header), and the board's ID
 EEPROM needs a udev permission fix for Blinka's board auto-detection
 (triggered just by importing this module, regardless of --i2c-bus).

@@ -2,8 +2,8 @@
 # "hsv-pixel-strip" effect (see `stand alone mode.md`).
 #
 # Template - placeholders (__USER__, __REPO_DIR__, __VENV_DIR__)
-# filled in by pb1/install_standalone_mode.py, which also installs
-# this file. Not enabled at boot - toggled on/off by
+# filled in by pb1/setup_pb1.py's "standalone-mode" step, which also
+# installs this file. Not enabled at boot - toggled on/off by
 # scripts/standalone_mode_toggle.py (the physical mode-switch button)
 # via `systemctl start|stop standalone-plasma.service`, or by hand
 # with the same commands for testing.

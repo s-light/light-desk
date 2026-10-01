@@ -3,8 +3,8 @@
 # standalone-plasma.service on each press.
 #
 # Template - placeholders (__USER__, __REPO_DIR__) filled in by
-# pb1/install_standalone_mode.py, which also installs this file.
-# Unlike standalone-plasma.service, this one IS enabled at boot -
+# pb1/setup_pb1.py's "standalone-mode" step, which also installs this
+# file. Unlike standalone-plasma.service, this one IS enabled at boot -
 # it's the always-on watcher, not the effect itself (see
 # scripts/standalone_mode_toggle.py's docstring).
 #

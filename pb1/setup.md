@@ -5,6 +5,18 @@
 > for current status and next steps. This file only documents what's
 > confirmed working so far.
 
+## one-command setup
+
+Once the hardware below is wired, `./setup_pb1.py` runs every step in
+order (user+sudoers, packages, i2c/venv, overlays, olad config,
+fader->OSC, stand-alone mode) - idempotent, safe to re-run any time,
+and it tells you when a reboot is needed instead of failing
+confusingly. Run a single step with `./setup_pb1.py STEP_NAME`, or
+see all step names with `./setup_pb1.py --list-steps`. The sections
+below explain what each step actually does and why -
+`../lightdesk_setup.py` holds the shared implementation (also used
+by `../setup_pb2.py`).
+
 ## HW connections
 
 Fader ADC (Adafruit ADS7830, I2C) to the PocketBeagle 1 P1 header:
@@ -25,8 +37,8 @@ Fader ADC (Adafruit ADS7830, I2C) to the PocketBeagle 1 P1 header:
 > SDA/SCL pull-ups on board, so no extra resistors are needed for a
 > single device on the bus.
 >
-> P1.06/P1.12 is where `BB-I2C1-00A0.dtbo` (see `apply-uenv-overlays.sh`)
-> actually routes I2C1. The AM335x also exposes an I2C1_SCL/SDA
+> P1.06/P1.12 is where `BB-I2C1-00A0.dtbo` (see `setup_pb1.py`'s
+> "overlays" step) actually routes I2C1. The AM335x also exposes an I2C1_SCL/SDA
 > alt-function on P2.09/P2.11 (the `uart1_txd`/`uart1_rxd` pins) - but
 > that pin pair is already muxed to UART1 (DMX universe 1) in this
 > project's overlay set, so it's not usable for I2C1 here. Confirmed on
@@ -58,9 +70,8 @@ AM335x's `pinctrl-single` driver doesn't honor `libgpiod`'s runtime
 bias requests until a pin is already
 claimed by some pinctrl consumer (confirmed on real hardware), so the
 pull-up is baked into the boot-time pinmux via
-`overlays/BB-GPIO-buttons-light-desk-00A0.dts`, installed with
-`sudo ./pb1/install-gpio-buttons-overlay.sh` +
-`sudo ./pb1/apply-uenv-overlays.sh` and a reboot.
+`overlays/BB-GPIO-buttons-light-desk-00A0.dts`, installed by
+`./setup_pb1.py overlays` and a reboot.
 
 **Confirmed on real PB1 hardware (2026-09-30), final pin set
 (P2.02, P2.04, P2.06, P2.20, P2.22, P2.24)**: with nothing wired, all
@@ -81,9 +92,9 @@ Confirmed on real hardware unless noted:
 | :------- | :---- | :--------------------------------------------------------------- | :-------------- | :---------------------------------------------------------------------------------------------------------------------------- |
 | 1        | UART1 | `BB-UART1-00A0.dtbo` (stock)                                     | P2.09/P2.11     | confirmed - `/dev/ttyS1` present                                                                                              |
 | 2        | UART2 | `BB-UART2-00A0.dtbo` (stock)                                     | P1.08/P1.10     | confirmed - `/dev/ttyS2` present                                                                                              |
-| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom)            | P2.29 (TX-only) | confirmed - `481a6000.serial: ttyS3` in dmesg (re-installed for kernel `6.18.53-bone55` via `install-uart3-overlay.sh`)       |
+| 3        | UART3 | `BB-UART3-light-desk-00A0.dtbo` (this repo's, custom)            | P2.29 (TX-only) | confirmed - `481a6000.serial: ttyS3` in dmesg (re-installed for kernel `6.18.53-bone55` via `setup_pb1.py overlays`)          |
 | 4        | UART4 | none needed (enabled in base dts)                                | P2.05/P2.07     | confirmed - `481a8000.serial: ttyS4` in dmesg                                                                                 |
-| 5        | UART0 | none (console reassignment only, see `switch-console-to-usb.sh`) | P1.30/P1.32     | **not pursued** - the console switch reproducibly hung the board for 2+ min (see `memo.md`); PB1 stops at 4 universes for now |
+| 5        | UART0 | none (console reassignment only, see `setup_pb1.py`'s "console-to-usb" step) | P1.30/P1.32     | **not pursued** - the console switch reproducibly hung the board for 2+ min (see `memo.md`); PB1 stops at 4 universes for now |
 
 > [!WARNING]
 > **`/dev/ttyS3` existing does NOT mean UART3/universe 3 is actually
@@ -103,13 +114,13 @@ I2C1 (fader ADC): `BB-I2C1-00A0.dtbo` (stock) - P1.06/P1.12 - **confirmed workin
 
 ## olad config (sACN -> UART DMX)
 
-`apply-ola-config.sh` (this folder) installs PB1's own 4-universe olad
-config: `ola-config/ola-e131.conf` (4 sACN input ports) and
-`ola-config/ola-uartdmx.conf` (`ttyS1`-`ttyS4`, matching the pin map
-above). It's a thin wrapper around the repo root's
-`../apply-ola-config.sh` (same plugin set, same port-9091 fix) with
-`OLA_CONFIG_SRC`/`NUM_UNIVERSES` pointed at PB1's config instead of
-PocketBeagle 2's 5-universe one. **Confirmed on real PB1 hardware
+`./setup_pb1.py ola` installs PB1's own 4-universe-plus-SPI olad
+config: `ola-config/ola-e131.conf` (5 sACN input ports, 4 for DMX + 1
+for the APA102 strip below) and `ola-config/ola-uartdmx.conf`
+(`ttyS1`-`ttyS4`, matching the pin map above), via
+`../lightdesk_setup.apply_ola_config()` (same plugin set, same
+port-9091 fix as PocketBeagle 2's `setup_pb2.py ola`, just pointed at
+PB1's config dir/universe count). **Confirmed on real PB1 hardware
 (2026-09-28)**: olad active, all 4 universes patched E1.31-in ->
 `ttyS1`-`ttyS4`-out (`ola_plugin_info`/`ola_dev_info`).
 
@@ -141,13 +152,12 @@ device (e.g. a display) goes on `spi-gpio` (bit-banged, separate free
 GPIOs) rather than sharing this bus via a second chip-select - see
 `memo.md` item 14's "second-SPI-device question" for why.
 
-Install: `sudo ./pb1/install-spi1-overlay.sh`, `sudo
-./pb1/apply-uenv-overlays.sh`, reboot, confirm `/dev/spidev1.0`
-exists, then `sudo ./pb1/apply-ola-config.sh` (re-enables OLA's "spi"
-plugin on top of the usual set, patches sACN universe 5 - a dedicated
-universe for the pixel strip, not mirrored onto universes 1-4 - to
-the SPI device via `pb1/ola-config/ola-spi.conf` +
-`patch-spi-apa102.sh`).
+Install: `./setup_pb1.py overlays`, reboot, confirm `/dev/spidev1.0`
+exists, then `./setup_pb1.py ola` (re-enables OLA's "spi" plugin on
+top of the usual set, patches sACN universe 5 - a dedicated universe
+for the pixel strip, not mirrored onto universes 1-4 - to the SPI
+device via `pb1/ola-config/ola-spi.conf` +
+`lightdesk_setup.patch_spi_apa102()`).
 
 **Confirmed working on real PB1 hardware (2026-10-01)**: verified via
 the olad web UI and `scripts/apa102_running_dot_test.py`, which lights
@@ -174,10 +184,9 @@ channels land on pins already committed to other buttons) instead of
 software GPIO polling, so a fast spin doesn't risk missed pulses from
 poll-rate jitter.
 
-Install: `sudo ./pb1/install_rotary_encoder_overlay.py`, re-run
-`sudo ./pb1/install-gpio-buttons-overlay.sh` (picks up the push
-button pin, added to that overlay), `sudo ./pb1/apply-uenv-overlays.sh`,
-reboot, confirm with `ls /sys/bus/counter/devices/`.
+Install: `./setup_pb1.py overlays` (builds+wires both the rotary
+encoder overlay and the buttons overlay, which picked up the push
+button pin), reboot, confirm with `ls /sys/bus/counter/devices/`.
 
 **Not yet installed/boot-tested** - overlays compile clean but the
 reboot hasn't happened yet; no consumer script written either (what
@@ -194,11 +203,11 @@ toggled by a 7th button:
 | :----------- | :--------- |
 | mode toggle  | P2.33      |
 
-Install (after the 6-button overlay above has been rebuilt to include
+Install (after the buttons overlay above has been rebuilt to include
 P2.33 and rebooted):
 
 ```
-sudo ./pb1/install_standalone_mode.py
+./setup_pb1.py standalone-mode
 ```
 
 This enables+starts `standalone-mode-toggle.service` (always-on

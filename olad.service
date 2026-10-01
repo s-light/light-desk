@@ -10,7 +10,7 @@
 #   sudo cp olad.service /etc/systemd/system/
 #   sudo systemctl daemon-reload
 #   sudo systemctl enable olad.service
-#   sudo ./apply-ola-config.sh   # installs plugin configs + patches ports
+#   sudo ./setup_pb2.py ola   # installs plugin configs + patches ports
 #
 # (skip the useradd/chown steps and change User= below if you'd rather
 # run olad as your normal login user - it just needs to be in a group

@@ -21,7 +21,7 @@ test like this.
 Hardware assumed: a PB1-style single APA102 output on OLA's SPI
 plugin, personality 7 (APA102_INDIVIDUAL - 3 DMX/sACN slots per pixel,
 R/G/B, no separate brightness slot), patched to its own universe (see
-pb1/ola-config/ola-spi.conf, pb1/ola-config/patch-spi-apa102.sh).
+pb1/ola-config/ola-spi.conf, lightdesk_setup.patch_spi_apa102()).
 
 The strip is laid out as one 10-pixel backlight segment per fader (7
 faders x 10 pixels = 70 total) - see pb1/memo.md's stand-alone-mode

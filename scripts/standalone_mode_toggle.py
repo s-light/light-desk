@@ -23,7 +23,7 @@ Toggling needs root (systemctl start/stop on a system unit); this
 script runs as a normal user (it only needs GPIO group access to read
 the button, same as buttons_debug_print.py) and shells out to
 `sudo -n systemctl start|stop standalone-plasma.service` for the
-toggle itself - see pb1/install_standalone_mode.py for the scoped
+toggle itself - see pb1/setup_pb1.py's "standalone-mode" step for the scoped
 NOPASSWD sudoers rule that makes the `-n` (non-interactive) work.
 
 Usage:

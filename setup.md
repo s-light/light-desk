@@ -7,12 +7,25 @@ git clone https://github.com/s-light/light-desk.git
 cd light-desk
 ```
 
+## one-command setup
+
+Once the hardware below is wired, `./setup_pb2.py` runs every step in
+order (sudoers, i2c/venv, overlays, olad config, the fader->OSC
+service) - idempotent, safe to re-run any time, and it tells you when
+a reboot is needed instead of failing confusingly. Run a single step
+with `./setup_pb2.py STEP_NAME`, or see all step names with
+`./setup_pb2.py --list-steps`. The sections below explain what each
+step actually does and why - `lightdesk_setup.py` holds the shared
+implementation (also used by `pb1/setup_pb1.py`).
 
 ## install ola
 
 ```bash
 sudo apt install ola
 ```
+
+(also done by `./setup_pb2.py`'s "packages" step, as part of the
+one-command setup above)
 
 ## configure ola
 
@@ -141,22 +154,23 @@ of network/SSH access.
 #### building the overlay
 
 ```bash
-./install-uart-overlay.sh
+./setup_pb2.py overlays
 ```
 
-Builds `overlays/k3-am62-pocketbeagle2-light-desk-uart-dmx.dtso` using the
-device-tree source/build tooling the board image already ships (no
-cross-compiling needed), installs the resulting `.dtbo` to
-`/boot/firmware/overlays/`, and adds it to the `fdtoverlays` line of
-whichever label `/boot/firmware/extlinux/extlinux.conf`'s `default`
-currently points at (the "microSD (default)" label, unless you changed
-it) - without touching any other label. Idempotent; auto-detects the
-`/opt/source/dtb-*.x` tree matching `uname -r` (override with
-`DTB_SRC_DIR=` if that guess is wrong).
+Builds `overlays/k3-am62-pocketbeagle2-light-desk-uart-dmx.dtso` (and
+the I2C1 overlay below) using the device-tree source/build tooling the
+board image already ships (no cross-compiling needed - see
+`lightdesk_setup.compile_and_install_overlay_extlinux()`), installs
+the resulting `.dtbo` to `/boot/firmware/overlays/`, and adds it to
+the `fdtoverlays` line of whichever label
+`/boot/firmware/extlinux/extlinux.conf`'s `default` currently points
+at (the "microSD (default)" label, unless you changed it) - without
+touching any other label. Idempotent; auto-detects the
+`/opt/source/dtb-*.x` tree matching `uname -r`.
 
 Does **not** reboot - do that yourself once it finishes, then confirm with
 `ls -la /dev/ttyS1 /dev/ttyS3 /dev/ttyS4 /dev/ttyS5` and
-`dmesg | grep -i uart`, and re-run `apply-ola-config.sh` to patch the
+`dmesg | grep -i uart`, and re-run `./setup_pb2.py ola` to patch the
 newly-available UARTs.
 
 ## known issues
@@ -168,9 +182,9 @@ newly-available UARTs.
   `/sys/kernel/debug/pinctrl/pinctrl-maps` (i2c0/i2c2/i2c3 each have a mux
   group there, i2c1 has none) and a full `i2cdetect` scan finding nothing
   on that bus. Same class of gap as the UART overlay above.
-  - **Fix**: `./install-i2c-overlay.sh` builds and installs
+  - **Fix**: `./setup_pb2.py overlays` builds and installs
     `overlays/k3-am62-pocketbeagle2-light-desk-i2c1-adc.dtso`, same
-    pattern as `install-uart-overlay.sh`. Needs a reboot to take effect;
+    overlay step as the UART one above. Needs a reboot to take effect;
     verify with `i2cdetect -y 1` (look for the ADS7830 at 0x48-0x4b) -
     **confirmed working on real PB2 hardware** (both the bus and live
     fader reads via `scripts/ads7830_debug_print.py`).
@@ -190,20 +204,21 @@ newly-available UARTs.
     *any* import of `busio` (even via `adafruit_extended_bus.ExtendedI2C`,
     which never touches `board.I2C()`) crashes with `PermissionError`
     trying to read it - `busio` unconditionally runs board detection at
-    import time. `setup-i2c.sh` installs a udev rule
+    import time. `./setup_pb2.py`'s "i2c" step installs a udev rule
     (`RUN+=` chmod/chgrp, since this is a bare sysfs attribute with no
     `/dev` node for `GROUP=`/`MODE=` to apply to) making it group-readable.
   - Building `scripts/requirements.txt` into the venv also needs `swig`
     and a system `liblgpio.so` (`adafruit-blinka` depends on the `lgpio`
     Python bindings on generic Linux boards, and those link against a C
     library that neither Debian nor PyPI ship prebuilt - see
-    [joan2937/lg](https://github.com/joan2937/lg)). `setup-i2c.sh` builds
-    and installs it from source before the pip install.
+    [joan2937/lg](https://github.com/joan2937/lg)). The same "i2c" step
+    builds and installs it from source before the pip install.
 
 ## run the fader -> OSC bridge as a service
 
 ```bash
-./setup-i2c.sh
+./setup_pb2.py i2c
+./setup_pb2.py fader-osc
 ```
 
 Sets up everything `scripts/ads7830_to_osc.py` needs and installs it as
@@ -211,4 +226,6 @@ Sets up everything `scripts/ads7830_to_osc.py` needs and installs it as
 need to run as root to reach `/dev/i2c-*`), a venv in `scripts/.venv` with
 `scripts/requirements.txt` installed, and the enabled+running systemd
 service itself. See `ads7830-to-osc.service` for how to check status/logs
-or override the OSC host/port/I2C bus afterwards. Safe to re-run.
+or override the OSC host/port/I2C bus afterwards. Safe to re-run - or just
+run `./setup_pb2.py` with no arguments to do this and everything else in
+one go.

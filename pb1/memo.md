@@ -863,3 +863,56 @@ Next priorities, in order:
       item only covers making the hardware available
       (`/sys/bus/counter/devices/counterN/...` once booted), not
       yet how it's used.
+
+17. **One setup command per board (2026-10-01)**, at the user's
+    request: the repo had grown to ~20 separate install/apply/
+    configure scripts across the root and `pb1/` (a mix of POSIX sh
+    and Python, each reimplementing its own root-check/overlay-
+    compile/systemd-unit-fill/sudoers-write boilerplate slightly
+    differently). Consolidated into:
+    - `../lightdesk_setup.py` - shared helpers both boards'
+      entrypoints call into (overlay compile+install for both PB1's
+      `dtc -@`/uEnv.txt style and PB2's full-dtb-tree/extlinux style,
+      systemd unit fill+install, scoped sudoers, apt, i2c/lgpio/venv
+      setup, olad config + universe patching).
+    - `setup_pb1.py` (this folder) - replaces `setup.sh`,
+      `install-packages.sh`, `install-uart3-overlay.sh`,
+      `install-gpio-buttons-overlay.sh`, `install-spi1-overlay.sh`,
+      `install_rotary_encoder_overlay.py`, `apply-uenv-overlays.sh`,
+      `apply-ola-config.sh`, `configure-ads7830-to-osc.sh`,
+      `install_standalone_mode.py`, `switch-console-to-usb.sh` (11
+      files -> named steps in one file; `console-to-usb` kept as a
+      step but deliberately excluded from the default run, same
+      "not pursued" reasoning as always).
+    - `../setup_pb2.py` - replaces the root-level `setup.sh`,
+      `setup-i2c.sh`, `apply-ola-config.sh`, `install-i2c-overlay.sh`,
+      `install-uart-overlay.sh` (5 files -> named steps in one file).
+    - `ola-config/patch-sacn-to-uart.sh` and
+      `pb1/ola-config/patch-spi-apa102.sh` folded into
+      `lightdesk_setup.patch_sacn_to_uart()`/`patch_spi_apa102()`.
+    All 16 old files deleted outright (not kept as deprecated
+    wrappers) once their logic was verified carried over faithfully
+    by reading each one in full first. `setup-readonly-root.sh`/
+    `readwrite.sh`/`readonly.sh` deliberately left alone - a one-way
+    board lockdown and its day-to-day toggle are not "setup steps" to
+    fold into a re-runnable automated script.
+    - Both entrypoints auto-escalate themselves through `sudo` once
+      at the top (reading `SUDO_USER` for whichever step needs to
+      know who invoked it), rather than each step managing its own
+      root-check/sudo calls like the old scripts did - run as your
+      normal user, get one password prompt for the whole thing.
+    - Every step stays idempotent and individually re-runnable
+      (`./setup_pb1.py STEP_NAME`), matching how this whole memo's
+      bring-up history actually used the old granular scripts one at
+      a time for incremental testing - consolidation didn't mean
+      losing that.
+    - **Verified**: both entrypoints compile clean and `--list-steps`
+      runs correctly on real PB1 hardware. The actual root-requiring
+      steps were *not* run end-to-end in this session (needs the
+      user's sudo password, which wasn't available non-interactively) -
+      left for the user to run for real. Cross-checked every ported
+      function's logic against the original script's full source
+      before deleting it, but "read carefully and ported faithfully"
+      is not the same as "ran successfully" - treat the first real
+      `./setup_pb1.py`/`./setup_pb2.py` run on each board as the real
+      test.
