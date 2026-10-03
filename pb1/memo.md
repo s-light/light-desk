@@ -916,3 +916,30 @@ Next priorities, in order:
       is not the same as "ran successfully" - treat the first real
       `./setup_pb1.py`/`./setup_pb2.py` run on each board as the real
       test.
+
+18. **Pinout diagram, SVG (2026-10-03)**, at the user's request: a
+    visual component-side pinout showing just this project's
+    committed connections, not the full pinmux table.
+    - Board geometry (P1 along the bottom edge, P2 along the top,
+      both pin 1 at the left; USB micro-B on the left edge; microSD +
+      the AM3358/OSD3358-SM processor on the right) comes from
+      BeagleBoard.org's official PocketBeagle short-spec PDF's
+      component-side photo - fetched and inspected at high resolution
+      rather than assumed.
+    - **Real finding worth remembering**: P1 and P2 are *not*
+      mirror-symmetric in which header row holds the odd pins. On P1,
+      pin 1 is on the row nearer the board edge; on P2, pin 1 is on
+      the row nearer the board center. Caught by reading the "1"/"2"
+      silkscreen markers directly off the photo for each header
+      independently instead of assuming symmetry - the first draft
+      had this wrong for P2.
+    - `pb1/generate-pinout-diagram.py` (Python, generates
+      `pb1/pinout-diagram.svg`) rather than a hand-drawn/hand-edited
+      SVG - a greedy label-placement algorithm sorts the ~28
+      committed pins left-to-right and stacks their leader-line
+      labels into the first vertical "tier" that doesn't collide with
+      the previous label there, so 28 labels around a small 2x18 pin
+      grid stay legible without manual per-label position tuning.
+      Iterated twice against a rendered PNG preview (inkscape
+      SVG->PNG) to catch title/label overlaps before settling on the
+      final layout.
