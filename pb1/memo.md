@@ -964,3 +964,21 @@ Next priorities, in order:
       central processor/microSD strip, while OUTER-row labels stay
       outside as before - a structural fix (two label zones instead
       of one), not just more spacing.
+    - **Further revised (2026-10-03, same day) per more user
+      feedback**: added a thin outline box around each header's pin
+      grid specifically (separate from the overall board outline, so
+      the header reads as its own component); merged each label's
+      two stacked lines (pin name, then description below it) into
+      one line side by side - more compact and reads more naturally
+      left to right. The real fix underneath that: `assign_tiers()`
+      used to reserve the same fixed horizontal gap (`MIN_GAP`) for
+      every label regardless of its actual text length, which the
+      user correctly guessed was wasting tiers on short labels just
+      to make room for occasional long ones - replaced with a
+      per-label width estimate (`label_width()`, from character
+      count) so two short labels now happily share a tier much
+      closer together than two long ones would need to. Also caught
+      and fixed an SVG-specific gotcha while at it: a plain space
+      *between* two `<tspan>` elements gets collapsed/dropped by the
+      renderer, so the pin-name/description gap needed an explicit
+      `&#160;` (non-breaking space) *inside* the second tspan instead.

@@ -59,8 +59,7 @@ though nothing here wires them up.
 from pathlib import Path
 
 ROW_GAP = 34
-TIER_H = 92           # vertical spacing between stacked label tiers
-MIN_GAP = 150          # min horizontal gap between two labels sharing a tier
+TIER_H = 44           # vertical spacing between stacked label tiers (one text line each now)
 PIN_R_SMALL = 5
 PIN_R_BIG = 9
 
@@ -183,22 +182,43 @@ def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def label_text(entry):
+    _hdr, pin, _cat, short, note = entry
+    pin_name = f"{entry[0]}.{pin:02d}"
+    sub = short if not note else f"{short} ({note})"
+    return f"{pin_name}  {sub}"
+
+
+def label_width(text):
+    """Rough text-width estimate (Helvetica/Arial, ~13px, mixed
+    bold+regular) - good enough to decide tier placement; doesn't need
+    to be exact, just consistently a bit generous."""
+    return 7.3 * len(text) + 24
+
+
 def assign_tiers(entries):
     """Greedy label placement: put each label (processed left to
     right) in the first vertical tier whose most-recently-placed
-    label is at least MIN_GAP away, so labels sharing a tier never
-    overlap horizontally - avoids hand-placing ~40 leader lines."""
+    label's own estimated width doesn't reach this one - so two short
+    labels can share a tier much closer together than two long ones,
+    instead of every label reserving the same worst-case gap
+    regardless of its actual text length. Avoids hand-placing ~40
+    leader lines."""
     tier_last_x = []
+    tier_last_w = []
     assignment = []
     for entry in entries:
         x = colx(entry[1])
-        for t, last_x in enumerate(tier_last_x):
-            if x - last_x >= MIN_GAP:
+        w = label_width(label_text(entry))
+        for t, (last_x, last_w) in enumerate(zip(tier_last_x, tier_last_w)):
+            if x - last_x >= last_w:
                 tier_last_x[t] = x
+                tier_last_w[t] = w
                 assignment.append(t)
                 break
         else:
             tier_last_x.append(x)
+            tier_last_w.append(w)
             assignment.append(len(tier_last_x) - 1)
     return assignment
 
@@ -311,6 +331,17 @@ def main():
     put(f'<text x="{HEADER_LEFT-20}" y="{p1_outer_y+6}" text-anchor="end" font-size="20" fill="{TEXT_MAIN}" font-weight="700">P1</text>')
     put(f'<text x="{HEADER_LEFT-20}" y="{p2_outer_y+6}" text-anchor="end" font-size="20" fill="{TEXT_MAIN}" font-weight="700">P2</text>')
 
+    # outline box around each header's pin grid (both rows), separate
+    # from the overall board outline, so the header itself reads as
+    # its own component
+    header_box_pad = 16
+    put(f'<rect x="{HEADER_LEFT-header_box_pad}" y="{p2_outer_y-header_box_pad}" '
+        f'width="{HEADER_RIGHT-HEADER_LEFT+2*header_box_pad}" height="{p2_inner_y-p2_outer_y+2*header_box_pad}" '
+        f'fill="none" stroke="{TEXT_FAINT}" stroke-width="1.5" rx="8"/>')
+    put(f'<rect x="{HEADER_LEFT-header_box_pad}" y="{p1_inner_y-header_box_pad}" '
+        f'width="{HEADER_RIGHT-HEADER_LEFT+2*header_box_pad}" height="{p1_outer_y-p1_inner_y+2*header_box_pad}" '
+        f'fill="none" stroke="{TEXT_FAINT}" stroke-width="1.5" rx="8"/>')
+
     for header in ("P1", "P2"):
         for pin in range(1, 37):
             x, yy = pin_xy(header, pin)
@@ -337,30 +368,31 @@ def main():
             else:
                 put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_BIG}" fill="{color}" stroke="#05060a" stroke-width="1.5"/>')
 
+            # each tier holds one line of text now (labels are single-
+            # line "P1.06  I2C1_SCL", not stacked pin-name/description).
+            # line_y2 sits just to the pin-ward side of the text (the
+            # leader line continues from there on to the pin itself).
             if placement == "above":
-                ly = top_margin_top + tier * TIER_H + 14
-                line_y2 = ly + TIER_H - 26
-                text_y = ly
+                text_y = top_margin_top + tier * TIER_H + 14
+                line_y2 = text_y + 8
             elif placement == "below":
-                ly = bottom_margin_bottom - (n_p1_outer - tier) * TIER_H + 14
-                line_y2 = ly - 6
-                text_y = ly + TIER_H - 20
+                text_y = bottom_margin_bottom - (n_p1_outer - tier) * TIER_H + 14
+                line_y2 = text_y - 8
             elif placement == "inward-down":
-                ly = p2_inner_band_top + tier * TIER_H + 14
-                line_y2 = ly - 10
-                text_y = ly
+                text_y = p2_inner_band_top + tier * TIER_H + 14
+                line_y2 = text_y - 8
             else:  # inward-up
-                ly = p1_inner_band_top + tier * TIER_H + 14
-                line_y2 = ly + TIER_H - 10
-                text_y = ly
+                text_y = p1_inner_band_top + tier * TIER_H + 14
+                line_y2 = text_y + 8
 
             put(f'<line x1="{x}" y1="{yy}" x2="{x}" y2="{line_y2}" stroke="{color}" stroke-width="1.5"/>')
             put(f'<circle cx="{x}" cy="{line_y2}" r="3.5" fill="{color}"/>')
 
             pin_name = f"{hdr}.{pin:02d}"
-            put(f'<text x="{x+9}" y="{text_y}" font-size="14" font-weight="700" fill="{TEXT_MAIN}">{esc(pin_name)}</text>')
             sub = short if not note else f"{short} ({note})"
-            put(f'<text x="{x+9}" y="{text_y+17}" font-size="12" fill="{TEXT_SUB}">{esc(sub)}</text>')
+            put(f'<text x="{x+9}" y="{text_y}" font-size="14" fill="{TEXT_MAIN}">'
+                f'<tspan font-weight="700">{esc(pin_name)}</tspan>'
+                f'<tspan font-size="12" fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sub)}</tspan></text>')
 
     draw_labels(p2_outer, p2_outer_tiers, "P2", "above")
     draw_labels(p2_inner, p2_inner_tiers, "P2", "inward-down")
