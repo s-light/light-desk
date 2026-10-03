@@ -935,11 +935,32 @@ Next priorities, in order:
       had this wrong for P2.
     - `pb1/generate-pinout-diagram.py` (Python, generates
       `pb1/pinout-diagram.svg`) rather than a hand-drawn/hand-edited
-      SVG - a greedy label-placement algorithm sorts the ~28
-      committed pins left-to-right and stacks their leader-line
-      labels into the first vertical "tier" that doesn't collide with
-      the previous label there, so 28 labels around a small 2x18 pin
-      grid stay legible without manual per-label position tuning.
-      Iterated twice against a rendered PNG preview (inkscape
-      SVG->PNG) to catch title/label overlaps before settling on the
-      final layout.
+      SVG - a greedy label-placement algorithm sorts pins left-to-right
+      and stacks their leader-line labels into the first vertical
+      "tier" that doesn't collide with the previous label there, so
+      dense labels around a small 2x18 pin grid stay legible without
+      manual per-label position tuning. Iterated against rendered PNG
+      previews (inkscape SVG->PNG) to catch title/label overlaps
+      before settling on the layout.
+    - **Revised (2026-10-03) per user feedback** after seeing the
+      first version: landscape canvas with the legend moved to a
+      right-hand sidebar (was stacked below, making the page
+      portrait); dark page background instead of white; P1/P2 headers
+      stretched to span the board's full width, centered (the first
+      draft had them off-center, not spanning it); processor moved
+      off the right edge toward board-center, microSD sized/placed
+      alongside it. **Also added every other power/ground/VREF/
+      battery pin on the header** (not just the 2 this project
+      actually wires, P1.14/P1.22) - drawn as hollow rings vs. filled
+      dots for "available but not wired" vs. "wired", same color, new
+      legend entry.
+    - **Real second finding**: with inner-row and outer-row labels
+      both routed to the same outside margins (the original design),
+      their leader lines crossed each other and the labels collided
+      once there were ~40 labeled pins instead of ~28 - adding the
+      power pins made this much worse. Fixed by moving INNER-row
+      labels (the row nearer board center) *inside* the board instead,
+      into dedicated bands between each header's inner row and the
+      central processor/microSD strip, while OUTER-row labels stay
+      outside as before - a structural fix (two label zones instead
+      of one), not just more spacing.

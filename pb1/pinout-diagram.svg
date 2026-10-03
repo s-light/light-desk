@@ -1,252 +1,328 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1670" font-family="Helvetica, Arial, sans-serif">
-<rect x="0" y="0" width="1920" height="1670" fill="#ffffff"/>
-<text x="960.0" y="48" text-anchor="middle" font-size="30" font-weight="700" fill="#111827">PocketBeagle 1 – light-desk pinout (component side)</text>
-<text x="960.0" y="78" text-anchor="middle" font-size="17" fill="#4b5563">P1/P2 expansion headers – project-committed connections highlighted – see pb1/pinout-reference.md for the full pinmux table</text>
-<rect x="360" y="460" width="1100" height="520" rx="26" ry="26" fill="#1f2430" stroke="#0b0d12" stroke-width="3"/>
-<rect x="326" y="694.0" width="46" height="52" rx="6" fill="#c7cdd6" stroke="#4b5563" stroke-width="2"/>
-<text x="316" y="780.0" text-anchor="start" font-size="16" fill="#111827" font-weight="600">USB micro-B</text>
-<text x="316" y="800.0" text-anchor="start" font-size="14" fill="#374151">(X1)</text>
-<rect x="1200" y="515" width="190" height="95" rx="6" fill="#30343f" stroke="#9ca3af" stroke-width="2"/>
-<text x="1295.0" y="568.5" text-anchor="middle" font-size="15" fill="#e5e7eb">microSD (X2)</text>
-<rect x="1160" y="655.0" width="190" height="190" rx="8" fill="#111318" stroke="#6b7280" stroke-width="2"/>
-<text x="1255.0" y="744.0" text-anchor="middle" font-size="16" fill="#e5e7eb" font-weight="600">AM3358</text>
-<text x="1255.0" y="766.0" text-anchor="middle" font-size="12" fill="#9ca3af">(OSD3358-SM)</text>
-<text x="510" y="710.0" font-size="20" fill="#f59e0b" font-weight="700">beagleboard.org</text>
-<text x="510" y="740.0" font-size="22" fill="#f3f4f6" font-weight="700">PocketBeagle</text>
-<text x="420" y="946" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P1</text>
-<text x="420" y="506" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P2</text>
-<circle cx="460" cy="940" r="5" fill="#6b7280"/>
-<circle cx="460" cy="900" r="5" fill="#6b7280"/>
-<circle cx="508" cy="940" r="5" fill="#6b7280"/>
-<circle cx="508" cy="900" r="5" fill="#6b7280"/>
-<circle cx="556" cy="940" r="5" fill="#6b7280"/>
-<circle cx="556" cy="900" r="5" fill="#6b7280"/>
-<circle cx="604" cy="940" r="5" fill="#6b7280"/>
-<circle cx="604" cy="900" r="5" fill="#6b7280"/>
-<circle cx="652" cy="940" r="5" fill="#6b7280"/>
-<circle cx="652" cy="900" r="5" fill="#6b7280"/>
-<circle cx="700" cy="940" r="5" fill="#6b7280"/>
-<circle cx="700" cy="900" r="5" fill="#6b7280"/>
-<circle cx="748" cy="940" r="5" fill="#6b7280"/>
-<circle cx="748" cy="900" r="5" fill="#6b7280"/>
-<circle cx="796" cy="940" r="5" fill="#6b7280"/>
-<circle cx="796" cy="900" r="5" fill="#6b7280"/>
-<circle cx="844" cy="940" r="5" fill="#6b7280"/>
-<circle cx="844" cy="900" r="5" fill="#6b7280"/>
-<circle cx="892" cy="940" r="5" fill="#6b7280"/>
-<circle cx="892" cy="900" r="5" fill="#6b7280"/>
-<circle cx="940" cy="940" r="5" fill="#6b7280"/>
-<circle cx="940" cy="900" r="5" fill="#6b7280"/>
-<circle cx="988" cy="940" r="5" fill="#6b7280"/>
-<circle cx="988" cy="900" r="5" fill="#6b7280"/>
-<circle cx="1036" cy="940" r="5" fill="#6b7280"/>
-<circle cx="1036" cy="900" r="5" fill="#6b7280"/>
-<circle cx="1084" cy="940" r="5" fill="#6b7280"/>
-<circle cx="1084" cy="900" r="5" fill="#6b7280"/>
-<circle cx="1132" cy="940" r="5" fill="#6b7280"/>
-<circle cx="1132" cy="900" r="5" fill="#6b7280"/>
-<circle cx="1180" cy="940" r="5" fill="#6b7280"/>
-<circle cx="1180" cy="900" r="5" fill="#6b7280"/>
-<circle cx="1228" cy="940" r="5" fill="#6b7280"/>
-<circle cx="1228" cy="900" r="5" fill="#6b7280"/>
-<circle cx="1276" cy="940" r="5" fill="#6b7280"/>
-<circle cx="1276" cy="900" r="5" fill="#6b7280"/>
-<circle cx="460" cy="540" r="5" fill="#6b7280"/>
-<circle cx="460" cy="500" r="5" fill="#6b7280"/>
-<circle cx="508" cy="540" r="5" fill="#6b7280"/>
-<circle cx="508" cy="500" r="5" fill="#6b7280"/>
-<circle cx="556" cy="540" r="5" fill="#6b7280"/>
-<circle cx="556" cy="500" r="5" fill="#6b7280"/>
-<circle cx="604" cy="540" r="5" fill="#6b7280"/>
-<circle cx="604" cy="500" r="5" fill="#6b7280"/>
-<circle cx="652" cy="540" r="5" fill="#6b7280"/>
-<circle cx="652" cy="500" r="5" fill="#6b7280"/>
-<circle cx="700" cy="540" r="5" fill="#6b7280"/>
-<circle cx="700" cy="500" r="5" fill="#6b7280"/>
-<circle cx="748" cy="540" r="5" fill="#6b7280"/>
-<circle cx="748" cy="500" r="5" fill="#6b7280"/>
-<circle cx="796" cy="540" r="5" fill="#6b7280"/>
-<circle cx="796" cy="500" r="5" fill="#6b7280"/>
-<circle cx="844" cy="540" r="5" fill="#6b7280"/>
-<circle cx="844" cy="500" r="5" fill="#6b7280"/>
-<circle cx="892" cy="540" r="5" fill="#6b7280"/>
-<circle cx="892" cy="500" r="5" fill="#6b7280"/>
-<circle cx="940" cy="540" r="5" fill="#6b7280"/>
-<circle cx="940" cy="500" r="5" fill="#6b7280"/>
-<circle cx="988" cy="540" r="5" fill="#6b7280"/>
-<circle cx="988" cy="500" r="5" fill="#6b7280"/>
-<circle cx="1036" cy="540" r="5" fill="#6b7280"/>
-<circle cx="1036" cy="500" r="5" fill="#6b7280"/>
-<circle cx="1084" cy="540" r="5" fill="#6b7280"/>
-<circle cx="1084" cy="500" r="5" fill="#6b7280"/>
-<circle cx="1132" cy="540" r="5" fill="#6b7280"/>
-<circle cx="1132" cy="500" r="5" fill="#6b7280"/>
-<circle cx="1180" cy="540" r="5" fill="#6b7280"/>
-<circle cx="1180" cy="500" r="5" fill="#6b7280"/>
-<circle cx="1228" cy="540" r="5" fill="#6b7280"/>
-<circle cx="1228" cy="500" r="5" fill="#6b7280"/>
-<circle cx="1276" cy="540" r="5" fill="#6b7280"/>
-<circle cx="1276" cy="500" r="5" fill="#6b7280"/>
-<rect x="451" y="931" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
-<rect x="451" y="531" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
-<text x="460" y="1008" text-anchor="middle" font-size="13" fill="#6b7280">pin 1</text>
-<text x="460" y="442" text-anchor="middle" font-size="13" fill="#6b7280">pin 1</text>
-<text x="1276" y="1008" text-anchor="middle" font-size="13" fill="#6b7280">pin 35/36</text>
-<text x="1276" y="442" text-anchor="middle" font-size="13" fill="#6b7280">pin 35/36</text>
-<circle cx="556" cy="900" r="9" fill="#0891b2" stroke="#111318" stroke-width="1.5"/>
-<line x1="556" y1="916" x2="556" y2="1028" stroke="#0891b2" stroke-width="1.5"/>
-<circle cx="556" cy="1040" r="4" fill="#0891b2"/>
-<text x="565" y="1045" font-size="14" font-weight="700" fill="#111827">P1.06</text>
-<text x="565" y="1062" font-size="12" fill="#374151">I2C1_SCL</text>
-<circle cx="604" cy="900" r="9" fill="#4f46e5" stroke="#111318" stroke-width="1.5"/>
-<line x1="604" y1="916" x2="604" y2="1098" stroke="#4f46e5" stroke-width="1.5"/>
-<circle cx="604" cy="1110" r="4" fill="#4f46e5"/>
-<text x="613" y="1115" font-size="14" font-weight="700" fill="#111827">P1.08</text>
-<text x="613" y="1132" font-size="12" fill="#374151">UART2 CLK/TXD</text>
-<circle cx="652" cy="900" r="9" fill="#4f46e5" stroke="#111318" stroke-width="1.5"/>
-<line x1="652" y1="916" x2="652" y2="1168" stroke="#4f46e5" stroke-width="1.5"/>
-<circle cx="652" cy="1180" r="4" fill="#4f46e5"/>
-<text x="661" y="1185" font-size="14" font-weight="700" fill="#111827">P1.10</text>
-<text x="661" y="1202" font-size="12" fill="#374151">UART2 MISO/RXD</text>
-<circle cx="700" cy="900" r="9" fill="#0891b2" stroke="#111318" stroke-width="1.5"/>
-<line x1="700" y1="916" x2="700" y2="1238" stroke="#0891b2" stroke-width="1.5"/>
-<circle cx="700" cy="1250" r="4" fill="#0891b2"/>
-<text x="709" y="1255" font-size="14" font-weight="700" fill="#111827">P1.12</text>
-<text x="709" y="1272" font-size="12" fill="#374151">I2C1_SDA</text>
-<circle cx="748" cy="900" r="9" fill="#dc2626" stroke="#111318" stroke-width="1.5"/>
-<line x1="748" y1="916" x2="748" y2="1028" stroke="#dc2626" stroke-width="1.5"/>
-<circle cx="748" cy="1040" r="4" fill="#dc2626"/>
-<text x="757" y="1045" font-size="14" font-weight="700" fill="#111827">P1.14</text>
-<text x="757" y="1062" font-size="12" fill="#374151">VDD_3V3 (ADS7830 VIN)</text>
-<circle cx="940" cy="900" r="9" fill="#dc2626" stroke="#111318" stroke-width="1.5"/>
-<line x1="940" y1="916" x2="940" y2="1028" stroke="#dc2626" stroke-width="1.5"/>
-<circle cx="940" cy="1040" r="4" fill="#dc2626"/>
-<text x="949" y="1045" font-size="14" font-weight="700" fill="#111827">P1.22</text>
-<text x="949" y="1062" font-size="12" fill="#374151">GND (ADS7830 GND)</text>
-<circle cx="1132" cy="900" r="9" fill="#9ca3af" stroke="#111318" stroke-width="1.5"/>
-<line x1="1132" y1="916" x2="1132" y2="1028" stroke="#9ca3af" stroke-width="1.5"/>
-<circle cx="1132" cy="1040" r="4" fill="#9ca3af"/>
-<text x="1141" y="1045" font-size="14" font-weight="700" fill="#111827">P1.30</text>
-<text x="1141" y="1062" font-size="12" fill="#374151">UART0 TXD (console)</text>
-<circle cx="1180" cy="900" r="9" fill="#9ca3af" stroke="#111318" stroke-width="1.5"/>
-<line x1="1180" y1="916" x2="1180" y2="1098" stroke="#9ca3af" stroke-width="1.5"/>
-<circle cx="1180" cy="1110" r="4" fill="#9ca3af"/>
-<text x="1189" y="1115" font-size="14" font-weight="700" fill="#111827">P1.32</text>
-<text x="1189" y="1132" font-size="12" fill="#374151">UART0 RXD (console)</text>
-<circle cx="1180" cy="940" r="9" fill="#65a30d" stroke="#111318" stroke-width="1.5"/>
-<line x1="1180" y1="956" x2="1180" y2="1168" stroke="#65a30d" stroke-width="1.5"/>
-<circle cx="1180" cy="1180" r="4" fill="#65a30d"/>
-<text x="1189" y="1185" font-size="14" font-weight="700" fill="#111827">P1.31</text>
-<text x="1189" y="1202" font-size="12" fill="#374151">eQEP0 A</text>
-<circle cx="1228" cy="940" r="9" fill="#9333ea" stroke="#111318" stroke-width="1.5"/>
-<line x1="1228" y1="956" x2="1228" y2="1238" stroke="#9333ea" stroke-width="1.5"/>
-<circle cx="1228" cy="1250" r="4" fill="#9333ea"/>
-<text x="1237" y="1255" font-size="14" font-weight="700" fill="#111827">P1.33</text>
-<text x="1237" y="1272" font-size="12" fill="#374151">SPI1 MISO (unused)</text>
-<circle cx="1276" cy="900" r="9" fill="#9333ea" stroke="#111318" stroke-width="1.5"/>
-<line x1="1276" y1="916" x2="1276" y2="1308" stroke="#9333ea" stroke-width="1.5"/>
-<circle cx="1276" cy="1320" r="4" fill="#9333ea"/>
-<text x="1285" y="1325" font-size="14" font-weight="700" fill="#111827">P1.36</text>
-<text x="1285" y="1342" font-size="12" fill="#374151">SPI1 SCLK</text>
-<circle cx="460" cy="500" r="9" fill="#ea580c" stroke="#111318" stroke-width="1.5"/>
-<line x1="460" y1="484" x2="460" y2="412" stroke="#ea580c" stroke-width="1.5"/>
-<circle cx="460" cy="400" r="4" fill="#ea580c"/>
-<text x="469" y="405" font-size="14" font-weight="700" fill="#111827">P2.02</text>
-<text x="469" y="422" font-size="12" fill="#374151">button 1</text>
-<circle cx="508" cy="500" r="9" fill="#ea580c" stroke="#111318" stroke-width="1.5"/>
-<line x1="508" y1="484" x2="508" y2="342" stroke="#ea580c" stroke-width="1.5"/>
-<circle cx="508" cy="330" r="4" fill="#ea580c"/>
-<text x="517" y="335" font-size="14" font-weight="700" fill="#111827">P2.04</text>
-<text x="517" y="352" font-size="12" fill="#374151">button 2</text>
-<circle cx="556" cy="500" r="9" fill="#ea580c" stroke="#111318" stroke-width="1.5"/>
-<line x1="556" y1="484" x2="556" y2="272" stroke="#ea580c" stroke-width="1.5"/>
-<circle cx="556" cy="260" r="4" fill="#ea580c"/>
-<text x="565" y="265" font-size="14" font-weight="700" fill="#111827">P2.06</text>
-<text x="565" y="282" font-size="12" fill="#374151">button 3</text>
-<circle cx="556" cy="540" r="9" fill="#059669" stroke="#111318" stroke-width="1.5"/>
-<line x1="556" y1="524" x2="556" y2="202" stroke="#059669" stroke-width="1.5"/>
-<circle cx="556" cy="190" r="4" fill="#059669"/>
-<text x="565" y="195" font-size="14" font-weight="700" fill="#111827">P2.05</text>
-<text x="565" y="212" font-size="12" fill="#374151">UART4 RXD</text>
-<circle cx="604" cy="540" r="9" fill="#059669" stroke="#111318" stroke-width="1.5"/>
-<line x1="604" y1="524" x2="604" y2="132" stroke="#059669" stroke-width="1.5"/>
-<circle cx="604" cy="120" r="4" fill="#059669"/>
-<text x="613" y="125" font-size="14" font-weight="700" fill="#111827">P2.07</text>
-<text x="613" y="142" font-size="12" fill="#374151">UART4 TXD</text>
-<circle cx="652" cy="540" r="9" fill="#2563eb" stroke="#111318" stroke-width="1.5"/>
-<line x1="652" y1="524" x2="652" y2="412" stroke="#2563eb" stroke-width="1.5"/>
-<circle cx="652" cy="400" r="4" fill="#2563eb"/>
-<text x="661" y="405" font-size="14" font-weight="700" fill="#111827">P2.09</text>
-<text x="661" y="422" font-size="12" fill="#374151">UART1 TXD</text>
-<circle cx="700" cy="540" r="9" fill="#2563eb" stroke="#111318" stroke-width="1.5"/>
-<line x1="700" y1="524" x2="700" y2="342" stroke="#2563eb" stroke-width="1.5"/>
-<circle cx="700" cy="330" r="4" fill="#2563eb"/>
-<text x="709" y="335" font-size="14" font-weight="700" fill="#111827">P2.11</text>
-<text x="709" y="352" font-size="12" fill="#374151">UART1 RXD</text>
-<circle cx="892" cy="500" r="9" fill="#ea580c" stroke="#111318" stroke-width="1.5"/>
-<line x1="892" y1="484" x2="892" y2="412" stroke="#ea580c" stroke-width="1.5"/>
-<circle cx="892" cy="400" r="4" fill="#ea580c"/>
-<text x="901" y="405" font-size="14" font-weight="700" fill="#111827">P2.20</text>
-<text x="901" y="422" font-size="12" fill="#374151">button 6</text>
-<circle cx="892" cy="540" r="9" fill="#65a30d" stroke="#111318" stroke-width="1.5"/>
-<line x1="892" y1="524" x2="892" y2="342" stroke="#65a30d" stroke-width="1.5"/>
-<circle cx="892" cy="330" r="4" fill="#65a30d"/>
-<text x="901" y="335" font-size="14" font-weight="700" fill="#111827">P2.19</text>
-<text x="901" y="352" font-size="12" fill="#374151">encoder button</text>
-<circle cx="940" cy="500" r="9" fill="#ea580c" stroke="#111318" stroke-width="1.5"/>
-<line x1="940" y1="484" x2="940" y2="272" stroke="#ea580c" stroke-width="1.5"/>
-<circle cx="940" cy="260" r="4" fill="#ea580c"/>
-<text x="949" y="265" font-size="14" font-weight="700" fill="#111827">P2.22</text>
-<text x="949" y="282" font-size="12" fill="#374151">button 4</text>
-<circle cx="988" cy="500" r="9" fill="#ea580c" stroke="#111318" stroke-width="1.5"/>
-<line x1="988" y1="484" x2="988" y2="202" stroke="#ea580c" stroke-width="1.5"/>
-<circle cx="988" cy="190" r="4" fill="#ea580c"/>
-<text x="997" y="195" font-size="14" font-weight="700" fill="#111827">P2.24</text>
-<text x="997" y="212" font-size="12" fill="#374151">button 5</text>
-<circle cx="1132" cy="540" r="9" fill="#db2777" stroke="#111318" stroke-width="1.5"/>
-<line x1="1132" y1="524" x2="1132" y2="412" stroke="#db2777" stroke-width="1.5"/>
-<circle cx="1132" cy="400" r="4" fill="#db2777"/>
-<text x="1141" y="405" font-size="14" font-weight="700" fill="#111827">P2.29</text>
-<text x="1141" y="422" font-size="12" fill="#374151">UART3 TXD (TX only)</text>
-<circle cx="1132" cy="500" r="9" fill="#9333ea" stroke="#111318" stroke-width="1.5"/>
-<line x1="1132" y1="484" x2="1132" y2="342" stroke="#9333ea" stroke-width="1.5"/>
-<circle cx="1132" cy="330" r="4" fill="#9333ea"/>
-<text x="1141" y="335" font-size="14" font-weight="700" fill="#111827">P2.30</text>
-<text x="1141" y="352" font-size="12" fill="#374151">SPI1 CS0 (unused)</text>
-<circle cx="1180" cy="500" r="9" fill="#9333ea" stroke="#111318" stroke-width="1.5"/>
-<line x1="1180" y1="484" x2="1180" y2="272" stroke="#9333ea" stroke-width="1.5"/>
-<circle cx="1180" cy="260" r="4" fill="#9333ea"/>
-<text x="1189" y="265" font-size="14" font-weight="700" fill="#111827">P2.32</text>
-<text x="1189" y="282" font-size="12" fill="#374151">SPI1 MOSI</text>
-<circle cx="1228" cy="540" r="9" fill="#ea580c" stroke="#111318" stroke-width="1.5"/>
-<line x1="1228" y1="524" x2="1228" y2="202" stroke="#ea580c" stroke-width="1.5"/>
-<circle cx="1228" cy="190" r="4" fill="#ea580c"/>
-<text x="1237" y="195" font-size="14" font-weight="700" fill="#111827">P2.33</text>
-<text x="1237" y="212" font-size="12" fill="#374151">mode toggle (stand-alone)</text>
-<circle cx="1228" cy="500" r="9" fill="#65a30d" stroke="#111318" stroke-width="1.5"/>
-<line x1="1228" y1="484" x2="1228" y2="132" stroke="#65a30d" stroke-width="1.5"/>
-<circle cx="1228" cy="120" r="4" fill="#65a30d"/>
-<text x="1237" y="125" font-size="14" font-weight="700" fill="#111827">P2.34</text>
-<text x="1237" y="142" font-size="12" fill="#374151">eQEP0 B</text>
-<text x="360" y="1456" font-size="16" font-weight="700" fill="#111827">Legend</text>
-<rect x="360" y="1458" width="18" height="18" rx="3" fill="#0891b2"/>
-<text x="386" y="1473" font-size="14" fill="#1f2937">I2C1 – fader ADC (ADS7830)</text>
-<rect x="360" y="1486" width="18" height="18" rx="3" fill="#2563eb"/>
-<text x="386" y="1501" font-size="14" fill="#1f2937">UART1 – DMX universe 1</text>
-<rect x="360" y="1514" width="18" height="18" rx="3" fill="#4f46e5"/>
-<text x="386" y="1529" font-size="14" fill="#1f2937">UART2 – DMX universe 2</text>
-<rect x="360" y="1542" width="18" height="18" rx="3" fill="#db2777"/>
-<text x="386" y="1557" font-size="14" fill="#1f2937">UART3 – DMX universe 3 (custom overlay, TX only)</text>
-<rect x="360" y="1570" width="18" height="18" rx="3" fill="#059669"/>
-<text x="386" y="1585" font-size="14" fill="#1f2937">UART4 – DMX universe 4</text>
-<rect x="980" y="1458" width="18" height="18" rx="3" fill="#ea580c"/>
-<text x="1006" y="1473" font-size="14" fill="#1f2937">buttons (6 control-desk + 1 stand-alone-mode toggle)</text>
-<rect x="980" y="1486" width="18" height="18" rx="3" fill="#9333ea"/>
-<text x="1006" y="1501" font-size="14" fill="#1f2937">SPI1 – APA102 pixel strip (OLA SPI plugin)</text>
-<rect x="980" y="1514" width="18" height="18" rx="3" fill="#65a30d"/>
-<text x="1006" y="1529" font-size="14" fill="#1f2937">eQEP0 – rotary encoder A/B + its push button</text>
-<rect x="980" y="1542" width="18" height="18" rx="3" fill="#dc2626"/>
-<text x="1006" y="1557" font-size="14" fill="#1f2937">ADS7830 power (VDD_3V3 / GND)</text>
-<rect x="980" y="1570" width="18" height="18" rx="3" fill="#9ca3af"/>
-<text x="1006" y="1585" font-size="14" fill="#1f2937">parked / not pursued (UART0 console-swap universe 5)</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2370 1592" width="2370" height="1592" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="2370" height="1592" fill="#0b0d12"/>
+<text x="875.0" y="48" text-anchor="middle" font-size="30" font-weight="700" fill="#e5e7eb">PocketBeagle 1 – light-desk pinout (component side)</text>
+<text x="875.0" y="78" text-anchor="middle" font-size="16" fill="#9aa3b2">P1/P2 expansion headers – project-committed connections highlighted – see pb1/pinout-reference.md for the full pinmux table</text>
+<rect x="130" y="354" width="1530" height="954" rx="26" ry="26" fill="#1f2430" stroke="#05060a" stroke-width="3"/>
+<rect x="96" y="805.0" width="46" height="52" rx="6" fill="#c7cdd6" stroke="#4b5563" stroke-width="2"/>
+<text x="86" y="891.0" text-anchor="start" font-size="16" fill="#e5e7eb" font-weight="600">USB micro-B</text>
+<text x="86" y="911.0" text-anchor="start" font-size="14" fill="#9aa3b2">(X1)</text>
+<text x="240" y="821.0" font-size="19" fill="#f59e0b" font-weight="700">beagleboard.org</text>
+<text x="240" y="851.0" font-size="21" fill="#e5e7eb" font-weight="700">PocketBeagle</text>
+<rect x="856.2" y="731.0" width="200" height="200" rx="8" fill="#111318" stroke="#6b7280" stroke-width="2"/>
+<text x="956.2" y="825.0" text-anchor="middle" font-size="16" fill="#e5e7eb" font-weight="600">AM3358</text>
+<text x="956.2" y="847.0" text-anchor="middle" font-size="12" fill="#9aa3b2">(OSD3358-SM)</text>
+<rect x="1245" y="746.0" width="340" height="170" rx="6" fill="#30343f" stroke="#9ca3af" stroke-width="2"/>
+<text x="1415.0" y="837.0" text-anchor="middle" font-size="15" fill="#e5e7eb">microSD (X2)</text>
+<text x="165" y="1280" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P1</text>
+<text x="165" y="394" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P2</text>
+<circle cx="185.0" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="185.0" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="1274" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="1240" r="5" fill="#5b6472"/>
+<circle cx="185.0" cy="422" r="5" fill="#5b6472"/>
+<circle cx="185.0" cy="388" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="422" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="388" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="422" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="388" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="422" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="388" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="422" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="388" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="422" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="388" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="422" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="388" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="422" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="388" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="422" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="388" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="422" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="388" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="422" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="388" r="5" fill="#5b6472"/>
+<rect x="176.0" y="1265" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
+<rect x="176.0" y="413" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
+<text x="185.0" y="340" text-anchor="middle" font-size="13" fill="#5b6472">pin 1</text>
+<text x="185.0" y="1332" text-anchor="middle" font-size="13" fill="#5b6472">pin 1</text>
+<text x="1605.0" y="340" text-anchor="middle" font-size="13" fill="#5b6472">pin 35/36</text>
+<text x="1605.0" y="1332" text-anchor="middle" font-size="13" fill="#5b6472">pin 35/36</text>
+<circle cx="185.0" cy="388" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="185.0" y1="388" x2="185.0" y2="200" stroke="#fb923c" stroke-width="1.5"/>
+<circle cx="185.0" cy="200" r="3.5" fill="#fb923c"/>
+<text x="194.0" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.02</text>
+<text x="194.0" y="151" font-size="12" fill="#9aa3b2">button 1</text>
+<circle cx="268.52941176470586" cy="388" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="268.52941176470586" y1="388" x2="268.52941176470586" y2="292" stroke="#fb923c" stroke-width="1.5"/>
+<circle cx="268.52941176470586" cy="292" r="3.5" fill="#fb923c"/>
+<text x="277.52941176470586" y="226" font-size="14" font-weight="700" fill="#e5e7eb">P2.04</text>
+<text x="277.52941176470586" y="243" font-size="12" fill="#9aa3b2">button 2</text>
+<circle cx="352.05882352941177" cy="388" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="352.05882352941177" y1="388" x2="352.05882352941177" y2="200" stroke="#fb923c" stroke-width="1.5"/>
+<circle cx="352.05882352941177" cy="200" r="3.5" fill="#fb923c"/>
+<text x="361.05882352941177" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.06</text>
+<text x="361.05882352941177" y="151" font-size="12" fill="#9aa3b2">button 3</text>
+<circle cx="602.6470588235294" cy="388" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="602.6470588235294" y1="388" x2="602.6470588235294" y2="200" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="602.6470588235294" cy="200" r="3.5" fill="#f87171"/>
+<text x="611.6470588235294" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.12</text>
+<text x="611.6470588235294" y="151" font-size="12" fill="#9aa3b2">PWR BTN</text>
+<circle cx="686.1764705882354" cy="388" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="686.1764705882354" y1="388" x2="686.1764705882354" y2="292" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="686.1764705882354" cy="292" r="3.5" fill="#f87171"/>
+<text x="695.1764705882354" y="226" font-size="14" font-weight="700" fill="#e5e7eb">P2.14</text>
+<text x="695.1764705882354" y="243" font-size="12" fill="#9aa3b2">VIN-BAT</text>
+<circle cx="769.7058823529412" cy="388" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="388" x2="769.7058823529412" y2="200" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="769.7058823529412" cy="200" r="3.5" fill="#f87171"/>
+<text x="778.7058823529412" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.16</text>
+<text x="778.7058823529412" y="151" font-size="12" fill="#9aa3b2">BAT-TEMP</text>
+<circle cx="936.7647058823529" cy="388" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="936.7647058823529" y1="388" x2="936.7647058823529" y2="200" stroke="#fb923c" stroke-width="1.5"/>
+<circle cx="936.7647058823529" cy="200" r="3.5" fill="#fb923c"/>
+<text x="945.7647058823529" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.20</text>
+<text x="945.7647058823529" y="151" font-size="12" fill="#9aa3b2">button 6</text>
+<circle cx="1020.2941176470588" cy="388" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1020.2941176470588" y1="388" x2="1020.2941176470588" y2="292" stroke="#fb923c" stroke-width="1.5"/>
+<circle cx="1020.2941176470588" cy="292" r="3.5" fill="#fb923c"/>
+<text x="1029.2941176470588" y="226" font-size="14" font-weight="700" fill="#e5e7eb">P2.22</text>
+<text x="1029.2941176470588" y="243" font-size="12" fill="#9aa3b2">button 4</text>
+<circle cx="1103.8235294117649" cy="388" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1103.8235294117649" y1="388" x2="1103.8235294117649" y2="200" stroke="#fb923c" stroke-width="1.5"/>
+<circle cx="1103.8235294117649" cy="200" r="3.5" fill="#fb923c"/>
+<text x="1112.8235294117649" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.24</text>
+<text x="1112.8235294117649" y="151" font-size="12" fill="#9aa3b2">button 5</text>
+<circle cx="1354.4117647058824" cy="388" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1354.4117647058824" y1="388" x2="1354.4117647058824" y2="200" stroke="#c084fc" stroke-width="1.5"/>
+<circle cx="1354.4117647058824" cy="200" r="3.5" fill="#c084fc"/>
+<text x="1363.4117647058824" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.30</text>
+<text x="1363.4117647058824" y="151" font-size="12" fill="#9aa3b2">SPI1 CS0 (unused)</text>
+<circle cx="1437.9411764705883" cy="388" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1437.9411764705883" y1="388" x2="1437.9411764705883" y2="292" stroke="#c084fc" stroke-width="1.5"/>
+<circle cx="1437.9411764705883" cy="292" r="3.5" fill="#c084fc"/>
+<text x="1446.9411764705883" y="226" font-size="14" font-weight="700" fill="#e5e7eb">P2.32</text>
+<text x="1446.9411764705883" y="243" font-size="12" fill="#9aa3b2">SPI1 MOSI</text>
+<circle cx="1521.4705882352941" cy="388" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1521.4705882352941" y1="388" x2="1521.4705882352941" y2="200" stroke="#a3e635" stroke-width="1.5"/>
+<circle cx="1521.4705882352941" cy="200" r="3.5" fill="#a3e635"/>
+<text x="1530.4705882352941" y="134" font-size="14" font-weight="700" fill="#e5e7eb">P2.34</text>
+<text x="1530.4705882352941" y="151" font-size="12" fill="#9aa3b2">eQEP0 B</text>
+<circle cx="352.05882352941177" cy="422" r="9" fill="#34d399" stroke="#05060a" stroke-width="1.5"/>
+<line x1="352.05882352941177" y1="422" x2="352.05882352941177" y2="481" stroke="#34d399" stroke-width="1.5"/>
+<circle cx="352.05882352941177" cy="481" r="3.5" fill="#34d399"/>
+<text x="361.05882352941177" y="491" font-size="14" font-weight="700" fill="#e5e7eb">P2.05</text>
+<text x="361.05882352941177" y="508" font-size="12" fill="#9aa3b2">UART4 RXD</text>
+<circle cx="435.5882352941177" cy="422" r="9" fill="#34d399" stroke="#05060a" stroke-width="1.5"/>
+<line x1="435.5882352941177" y1="422" x2="435.5882352941177" y2="573" stroke="#34d399" stroke-width="1.5"/>
+<circle cx="435.5882352941177" cy="573" r="3.5" fill="#34d399"/>
+<text x="444.5882352941177" y="583" font-size="14" font-weight="700" fill="#e5e7eb">P2.07</text>
+<text x="444.5882352941177" y="600" font-size="12" fill="#9aa3b2">UART4 TXD</text>
+<circle cx="519.1176470588235" cy="422" r="9" fill="#60a5fa" stroke="#05060a" stroke-width="1.5"/>
+<line x1="519.1176470588235" y1="422" x2="519.1176470588235" y2="481" stroke="#60a5fa" stroke-width="1.5"/>
+<circle cx="519.1176470588235" cy="481" r="3.5" fill="#60a5fa"/>
+<text x="528.1176470588235" y="491" font-size="14" font-weight="700" fill="#e5e7eb">P2.09</text>
+<text x="528.1176470588235" y="508" font-size="12" fill="#9aa3b2">UART1 TXD</text>
+<circle cx="602.6470588235294" cy="422" r="9" fill="#60a5fa" stroke="#05060a" stroke-width="1.5"/>
+<line x1="602.6470588235294" y1="422" x2="602.6470588235294" y2="573" stroke="#60a5fa" stroke-width="1.5"/>
+<circle cx="602.6470588235294" cy="573" r="3.5" fill="#60a5fa"/>
+<text x="611.6470588235294" y="583" font-size="14" font-weight="700" fill="#e5e7eb">P2.11</text>
+<text x="611.6470588235294" y="600" font-size="12" fill="#9aa3b2">UART1 RXD</text>
+<circle cx="686.1764705882354" cy="422" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="686.1764705882354" y1="422" x2="686.1764705882354" y2="481" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="686.1764705882354" cy="481" r="3.5" fill="#f87171"/>
+<text x="695.1764705882354" y="491" font-size="14" font-weight="700" fill="#e5e7eb">P2.13</text>
+<text x="695.1764705882354" y="508" font-size="12" fill="#9aa3b2">VOUT-5V</text>
+<circle cx="769.7058823529412" cy="422" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="422" x2="769.7058823529412" y2="573" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="769.7058823529412" cy="573" r="3.5" fill="#f87171"/>
+<text x="778.7058823529412" y="583" font-size="14" font-weight="700" fill="#e5e7eb">P2.15</text>
+<text x="778.7058823529412" y="600" font-size="12" fill="#9aa3b2">GND</text>
+<circle cx="936.7647058823529" cy="422" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
+<line x1="936.7647058823529" y1="422" x2="936.7647058823529" y2="481" stroke="#a3e635" stroke-width="1.5"/>
+<circle cx="936.7647058823529" cy="481" r="3.5" fill="#a3e635"/>
+<text x="945.7647058823529" y="491" font-size="14" font-weight="700" fill="#e5e7eb">P2.19</text>
+<text x="945.7647058823529" y="508" font-size="12" fill="#9aa3b2">encoder button</text>
+<circle cx="1020.2941176470588" cy="422" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="1020.2941176470588" y1="422" x2="1020.2941176470588" y2="573" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="1020.2941176470588" cy="573" r="3.5" fill="#f87171"/>
+<text x="1029.2941176470588" y="583" font-size="14" font-weight="700" fill="#e5e7eb">P2.21</text>
+<text x="1029.2941176470588" y="600" font-size="12" fill="#9aa3b2">GND</text>
+<circle cx="1103.8235294117649" cy="422" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="1103.8235294117649" y1="422" x2="1103.8235294117649" y2="481" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="1103.8235294117649" cy="481" r="3.5" fill="#f87171"/>
+<text x="1112.8235294117649" y="491" font-size="14" font-weight="700" fill="#e5e7eb">P2.23</text>
+<text x="1112.8235294117649" y="508" font-size="12" fill="#9aa3b2">VOUT-3.3V</text>
+<circle cx="1354.4117647058824" cy="422" r="9" fill="#f472b6" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1354.4117647058824" y1="422" x2="1354.4117647058824" y2="481" stroke="#f472b6" stroke-width="1.5"/>
+<circle cx="1354.4117647058824" cy="481" r="3.5" fill="#f472b6"/>
+<text x="1363.4117647058824" y="491" font-size="14" font-weight="700" fill="#e5e7eb">P2.29</text>
+<text x="1363.4117647058824" y="508" font-size="12" fill="#9aa3b2">UART3 TXD (TX only)</text>
+<circle cx="1521.4705882352941" cy="422" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1521.4705882352941" y1="422" x2="1521.4705882352941" y2="481" stroke="#fb923c" stroke-width="1.5"/>
+<circle cx="1521.4705882352941" cy="481" r="3.5" fill="#fb923c"/>
+<text x="1530.4705882352941" y="491" font-size="14" font-weight="700" fill="#e5e7eb">P2.33</text>
+<text x="1530.4705882352941" y="508" font-size="12" fill="#9aa3b2">mode toggle (stand-alone)</text>
+<circle cx="352.05882352941177" cy="1240" r="9" fill="#22d3ee" stroke="#05060a" stroke-width="1.5"/>
+<line x1="352.05882352941177" y1="1240" x2="352.05882352941177" y2="1097" stroke="#22d3ee" stroke-width="1.5"/>
+<circle cx="352.05882352941177" cy="1097" r="3.5" fill="#22d3ee"/>
+<text x="361.05882352941177" y="1015" font-size="14" font-weight="700" fill="#e5e7eb">P1.06</text>
+<text x="361.05882352941177" y="1032" font-size="12" fill="#9aa3b2">I2C1_SCL</text>
+<circle cx="435.5882352941177" cy="1240" r="9" fill="#818cf8" stroke="#05060a" stroke-width="1.5"/>
+<line x1="435.5882352941177" y1="1240" x2="435.5882352941177" y2="1189" stroke="#818cf8" stroke-width="1.5"/>
+<circle cx="435.5882352941177" cy="1189" r="3.5" fill="#818cf8"/>
+<text x="444.5882352941177" y="1107" font-size="14" font-weight="700" fill="#e5e7eb">P1.08</text>
+<text x="444.5882352941177" y="1124" font-size="12" fill="#9aa3b2">UART2 CLK/TXD</text>
+<circle cx="519.1176470588235" cy="1240" r="9" fill="#818cf8" stroke="#05060a" stroke-width="1.5"/>
+<line x1="519.1176470588235" y1="1240" x2="519.1176470588235" y2="1097" stroke="#818cf8" stroke-width="1.5"/>
+<circle cx="519.1176470588235" cy="1097" r="3.5" fill="#818cf8"/>
+<text x="528.1176470588235" y="1015" font-size="14" font-weight="700" fill="#e5e7eb">P1.10</text>
+<text x="528.1176470588235" y="1032" font-size="12" fill="#9aa3b2">UART2 MISO/RXD</text>
+<circle cx="602.6470588235294" cy="1240" r="9" fill="#22d3ee" stroke="#05060a" stroke-width="1.5"/>
+<line x1="602.6470588235294" y1="1240" x2="602.6470588235294" y2="1189" stroke="#22d3ee" stroke-width="1.5"/>
+<circle cx="602.6470588235294" cy="1189" r="3.5" fill="#22d3ee"/>
+<text x="611.6470588235294" y="1107" font-size="14" font-weight="700" fill="#e5e7eb">P1.12</text>
+<text x="611.6470588235294" y="1124" font-size="12" fill="#9aa3b2">I2C1_SDA</text>
+<circle cx="686.1764705882354" cy="1240" r="9" fill="#f87171" stroke="#05060a" stroke-width="1.5"/>
+<line x1="686.1764705882354" y1="1240" x2="686.1764705882354" y2="1097" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="686.1764705882354" cy="1097" r="3.5" fill="#f87171"/>
+<text x="695.1764705882354" y="1015" font-size="14" font-weight="700" fill="#e5e7eb">P1.14</text>
+<text x="695.1764705882354" y="1032" font-size="12" fill="#9aa3b2">VDD_3V3 (ADS7830 VIN)</text>
+<circle cx="769.7058823529412" cy="1240" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="1240" x2="769.7058823529412" y2="1189" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="769.7058823529412" cy="1189" r="3.5" fill="#f87171"/>
+<text x="778.7058823529412" y="1107" font-size="14" font-weight="700" fill="#e5e7eb">P1.16</text>
+<text x="778.7058823529412" y="1124" font-size="12" fill="#9aa3b2">GND</text>
+<circle cx="853.2352941176471" cy="1240" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="853.2352941176471" y1="1240" x2="853.2352941176471" y2="1097" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="853.2352941176471" cy="1097" r="3.5" fill="#f87171"/>
+<text x="862.2352941176471" y="1015" font-size="14" font-weight="700" fill="#e5e7eb">P1.18</text>
+<text x="862.2352941176471" y="1032" font-size="12" fill="#9aa3b2">VREFP</text>
+<circle cx="1020.2941176470588" cy="1240" r="9" fill="#f87171" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1020.2941176470588" y1="1240" x2="1020.2941176470588" y2="1097" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="1020.2941176470588" cy="1097" r="3.5" fill="#f87171"/>
+<text x="1029.2941176470588" y="1015" font-size="14" font-weight="700" fill="#e5e7eb">P1.22</text>
+<text x="1029.2941176470588" y="1032" font-size="12" fill="#9aa3b2">GND (ADS7830 GND)</text>
+<circle cx="1103.8235294117649" cy="1240" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="1103.8235294117649" y1="1240" x2="1103.8235294117649" y2="1189" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="1103.8235294117649" cy="1189" r="3.5" fill="#f87171"/>
+<text x="1112.8235294117649" y="1107" font-size="14" font-weight="700" fill="#e5e7eb">P1.24</text>
+<text x="1112.8235294117649" y="1124" font-size="12" fill="#9aa3b2">VOUT-5V</text>
+<circle cx="1354.4117647058824" cy="1240" r="9" fill="#8b94a3" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1354.4117647058824" y1="1240" x2="1354.4117647058824" y2="1097" stroke="#8b94a3" stroke-width="1.5"/>
+<circle cx="1354.4117647058824" cy="1097" r="3.5" fill="#8b94a3"/>
+<text x="1363.4117647058824" y="1015" font-size="14" font-weight="700" fill="#e5e7eb">P1.30</text>
+<text x="1363.4117647058824" y="1032" font-size="12" fill="#9aa3b2">UART0 TXD (console)</text>
+<circle cx="1437.9411764705883" cy="1240" r="9" fill="#8b94a3" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1437.9411764705883" y1="1240" x2="1437.9411764705883" y2="1189" stroke="#8b94a3" stroke-width="1.5"/>
+<circle cx="1437.9411764705883" cy="1189" r="3.5" fill="#8b94a3"/>
+<text x="1446.9411764705883" y="1107" font-size="14" font-weight="700" fill="#e5e7eb">P1.32</text>
+<text x="1446.9411764705883" y="1124" font-size="12" fill="#9aa3b2">UART0 RXD (console)</text>
+<circle cx="1605.0" cy="1240" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1605.0" y1="1240" x2="1605.0" y2="1097" stroke="#c084fc" stroke-width="1.5"/>
+<circle cx="1605.0" cy="1097" r="3.5" fill="#c084fc"/>
+<text x="1614.0" y="1015" font-size="14" font-weight="700" fill="#e5e7eb">P1.36</text>
+<text x="1614.0" y="1032" font-size="12" fill="#9aa3b2">SPI1 SCLK</text>
+<circle cx="185.0" cy="1274" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="185.0" y1="1274" x2="185.0" y2="1386" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="185.0" cy="1386" r="3.5" fill="#f87171"/>
+<text x="194.0" y="1464" font-size="14" font-weight="700" fill="#e5e7eb">P1.01</text>
+<text x="194.0" y="1481" font-size="12" fill="#9aa3b2">VIN</text>
+<circle cx="435.5882352941177" cy="1274" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="435.5882352941177" y1="1274" x2="435.5882352941177" y2="1386" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="435.5882352941177" cy="1386" r="3.5" fill="#f87171"/>
+<text x="444.5882352941177" y="1464" font-size="14" font-weight="700" fill="#e5e7eb">P1.07</text>
+<text x="444.5882352941177" y="1481" font-size="12" fill="#9aa3b2">VIN-USB</text>
+<circle cx="769.7058823529412" cy="1274" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="1274" x2="769.7058823529412" y2="1386" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="769.7058823529412" cy="1386" r="3.5" fill="#f87171"/>
+<text x="778.7058823529412" y="1464" font-size="14" font-weight="700" fill="#e5e7eb">P1.15</text>
+<text x="778.7058823529412" y="1481" font-size="12" fill="#9aa3b2">GND (USB1)</text>
+<circle cx="853.2352941176471" cy="1274" r="9" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<line x1="853.2352941176471" y1="1274" x2="853.2352941176471" y2="1478" stroke="#f87171" stroke-width="1.5"/>
+<circle cx="853.2352941176471" cy="1478" r="3.5" fill="#f87171"/>
+<text x="862.2352941176471" y="1556" font-size="14" font-weight="700" fill="#e5e7eb">P1.17</text>
+<text x="862.2352941176471" y="1573" font-size="12" fill="#9aa3b2">VREFN</text>
+<circle cx="1437.9411764705883" cy="1274" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1437.9411764705883" y1="1274" x2="1437.9411764705883" y2="1386" stroke="#a3e635" stroke-width="1.5"/>
+<circle cx="1437.9411764705883" cy="1386" r="3.5" fill="#a3e635"/>
+<text x="1446.9411764705883" y="1464" font-size="14" font-weight="700" fill="#e5e7eb">P1.31</text>
+<text x="1446.9411764705883" y="1481" font-size="12" fill="#9aa3b2">eQEP0 A</text>
+<circle cx="1521.4705882352941" cy="1274" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1521.4705882352941" y1="1274" x2="1521.4705882352941" y2="1478" stroke="#c084fc" stroke-width="1.5"/>
+<circle cx="1521.4705882352941" cy="1478" r="3.5" fill="#c084fc"/>
+<text x="1530.4705882352941" y="1556" font-size="14" font-weight="700" fill="#e5e7eb">P1.33</text>
+<text x="1530.4705882352941" y="1573" font-size="12" fill="#9aa3b2">SPI1 MISO (unused)</text>
+<text x="1790" y="110" font-size="20" font-weight="700" fill="#e5e7eb">Legend</text>
+<rect x="1790" y="131" width="20" height="20" rx="4" fill="#22d3ee"/>
+<text x="1820" y="146" font-size="14" fill="#e5e7eb">I2C1 – fader ADC (ADS7830)</text>
+<rect x="1790" y="173" width="20" height="20" rx="4" fill="#60a5fa"/>
+<text x="1820" y="188" font-size="14" fill="#e5e7eb">UART1 – DMX universe 1</text>
+<rect x="1790" y="215" width="20" height="20" rx="4" fill="#818cf8"/>
+<text x="1820" y="230" font-size="14" fill="#e5e7eb">UART2 – DMX universe 2</text>
+<rect x="1790" y="257" width="20" height="20" rx="4" fill="#f472b6"/>
+<text x="1820" y="272" font-size="14" fill="#e5e7eb">UART3 – DMX universe 3 (custom overlay, TX</text>
+<text x="1820" y="292" font-size="14" fill="#e5e7eb">only)</text>
+<rect x="1790" y="319" width="20" height="20" rx="4" fill="#34d399"/>
+<text x="1820" y="334" font-size="14" fill="#e5e7eb">UART4 – DMX universe 4</text>
+<rect x="1790" y="361" width="20" height="20" rx="4" fill="#fb923c"/>
+<text x="1820" y="376" font-size="14" fill="#e5e7eb">buttons (6 control-desk + 1 stand-alone-mode</text>
+<text x="1820" y="396" font-size="14" fill="#e5e7eb">toggle)</text>
+<rect x="1790" y="423" width="20" height="20" rx="4" fill="#c084fc"/>
+<text x="1820" y="438" font-size="14" fill="#e5e7eb">SPI1 – APA102 pixel strip (OLA SPI plugin)</text>
+<rect x="1790" y="465" width="20" height="20" rx="4" fill="#a3e635"/>
+<text x="1820" y="480" font-size="14" fill="#e5e7eb">eQEP0 – rotary encoder A/B + its push button</text>
+<rect x="1790" y="507" width="20" height="20" rx="4" fill="#f87171"/>
+<text x="1820" y="522" font-size="14" fill="#e5e7eb">ADS7830 power (VDD_3V3 / GND) – wired</text>
+<rect x="1790" y="549" width="20" height="20" rx="4" fill="none" stroke="#f87171" stroke-width="2.5"/>
+<text x="1820" y="564" font-size="14" fill="#e5e7eb">other power/GND/VREF pins – available, not</text>
+<text x="1820" y="584" font-size="14" fill="#e5e7eb">wired</text>
+<rect x="1790" y="611" width="20" height="20" rx="4" fill="#8b94a3"/>
+<text x="1820" y="626" font-size="14" fill="#e5e7eb">parked / not pursued (UART0 console-swap</text>
+<text x="1820" y="646" font-size="14" fill="#e5e7eb">universe 5)</text>
 </svg>
