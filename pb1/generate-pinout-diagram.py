@@ -509,7 +509,7 @@ def main():
     draw_labels(p1_outer, "below")
 
     # --- column 2: legend sidebar ---------------------------------------
-    leg_x = DIAGRAM_W + 40
+    leg_x = DIAGRAM_W + 40 + PERIPH_W + COL_GAP   # legend is the 3rd column now, peripherals the 2nd
     leg_y = 44
     put(f'<text x="{leg_x}" y="{leg_y}" font-size="24" font-weight="700" fill="{TEXT_MAIN}">Legend</text>')
     leg_y += 30
@@ -609,7 +609,7 @@ def main():
         svg_body.extend(content)
         return h
 
-    peri_x = leg_x + LEGEND_W + COL_GAP
+    peri_x = DIAGRAM_W + 40
     peri_y = 44
     put(f'<text x="{peri_x}" y="{peri_y}" font-size="24" font-weight="700" fill="{TEXT_MAIN}">Peripherals (schematic)</text>')
     peri_y += 22
