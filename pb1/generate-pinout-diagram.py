@@ -79,8 +79,10 @@ the handful of pins that are power-adjacent but neither a clean 5V nor
 VIN-BAT, BAT-TEMP) get a muted neutral so they don't compete visually
 with the two rails that actually matter for level-shifting decisions.
 
-A "Peripherals (schematic)" section on the right, below the legend,
-draws one small schematic box per connected peripheral (ADS7830 fader
+A "Peripherals (schematic)" section occupies its own third column (at
+the user's request, separate from the Legend column rather than
+stacked below it), and draws one small schematic box per connected
+peripheral (ADS7830 fader
 ADC, one representative DMX UART->RS485 stage - all 4 universes wire
 up identically, so only one is drawn - the buttons, the APA102 strip,
 the rotary encoder), each listing its pins by the same "P1.NN  SIGNAL"
@@ -95,8 +97,8 @@ carry.
 from pathlib import Path
 
 ROW_GAP = 34
-STUB = 46               # straight colored leader-line segment from pin outward (longer = easier to read the color)
-LABEL_GAP = 16          # blank space between the end of the leader line and where the label text starts
+STUB = 64               # straight colored leader-line segment from pin outward (longer = easier to read the color)
+LABEL_GAP = 20          # blank space between the end of the leader line and where the label text starts
 PIN_R_SMALL = 5
 PIN_R_BIG = 9
 
@@ -318,10 +320,10 @@ def label_text(entry):
 
 
 def label_px_len(text):
-    """Rough text-length estimate (Helvetica/Arial, ~13-14px, mixed
+    """Rough text-length estimate (Helvetica/Arial, ~15-16px, mixed
     bold+regular) for sizing how far a *rotated* label needs to run -
     doesn't need to be exact, just consistently a bit generous."""
-    return 7.3 * len(text) + 10
+    return 8.3 * len(text) + 10
 
 
 def power_style(short):
@@ -403,9 +405,11 @@ def main():
         return x, yy
 
     BOARD_H = BOARD_BOTTOM - BOARD_TOP
-    LEGEND_W = 640
+    LEGEND_W = 560
+    PERIPH_W = 560
+    COL_GAP = 50
     DIAGRAM_W = BOARD_RIGHT + 90
-    W = DIAGRAM_W + LEGEND_W
+    W = DIAGRAM_W + LEGEND_W + COL_GAP + PERIPH_W
 
     put(f'<text x="{DIAGRAM_W/2}" y="48" text-anchor="middle" font-size="30" font-weight="700" fill="{TEXT_MAIN}">PocketBeagle 1 – light-desk pinout (component side)</text>')
     put(f'<text x="{DIAGRAM_W/2}" y="78" text-anchor="middle" font-size="16" fill="{TEXT_SUB}">P1/P2 expansion headers – project-committed connections highlighted – see pb1/pinout-reference.md for the full pinmux table</text>')
@@ -483,27 +487,27 @@ def main():
             line_y2 = yy - STUB if flow_up else yy + STUB
             text_y = line_y2 - LABEL_GAP if flow_up else line_y2 + LABEL_GAP
             dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-            put(f'<line x1="{x}" y1="{yy}" x2="{x}" y2="{line_y2}" stroke="{color}" stroke-width="2.2"{dash_attr}/>')
-            put(f'<circle cx="{x}" cy="{line_y2}" r="3.5" fill="{color}"/>')
+            put(f'<line x1="{x}" y1="{yy}" x2="{x}" y2="{line_y2}" stroke="{color}" stroke-width="3"{dash_attr}/>')
+            put(f'<circle cx="{x}" cy="{line_y2}" r="4" fill="{color}"/>')
 
             pin_name = f"{hdr}.{pin:02d}"
             sub = short if not note else f"{short} ({note})"
-            put(f'<text x="{x}" y="{text_y}" transform="rotate({rotate} {x} {text_y})" font-size="14" fill="{TEXT_MAIN}">'
+            put(f'<text x="{x}" y="{text_y}" transform="rotate({rotate} {x} {text_y})" font-size="16" fill="{TEXT_MAIN}">'
                 f'<tspan font-weight="700">{esc(pin_name)}</tspan>'
-                f'<tspan font-size="12" fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sub)}</tspan></text>')
+                f'<tspan font-size="14" fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sub)}</tspan></text>')
 
     draw_labels(p2_outer, "above")
     draw_labels(p2_inner, "inward-down")
     draw_labels(p1_inner, "inward-up")
     draw_labels(p1_outer, "below")
 
-    # --- legend sidebar -------------------------------------------------
+    # --- column 2: legend sidebar ---------------------------------------
     leg_x = DIAGRAM_W + 40
     leg_y = 50
-    put(f'<text x="{leg_x}" y="{leg_y}" font-size="20" font-weight="700" fill="{TEXT_MAIN}">Legend</text>')
-    leg_y += 36
+    put(f'<text x="{leg_x}" y="{leg_y}" font-size="24" font-weight="700" fill="{TEXT_MAIN}">Legend</text>')
+    leg_y += 42
 
-    def wrap(desc, width=44):
+    def wrap(desc, width=40):
         words = desc.split(" ")
         lines, cur = [], ""
         for w in words:
@@ -518,32 +522,32 @@ def main():
         return lines
 
     for cat, desc in LEGEND:
-        put(f'<rect x="{leg_x}" y="{leg_y-15}" width="20" height="20" rx="4" fill="{COLORS[cat]}"/>')
+        put(f'<rect x="{leg_x}" y="{leg_y-17}" width="24" height="24" rx="5" fill="{COLORS[cat]}"/>')
         lines = wrap(desc)
         for li, line in enumerate(lines):
-            put(f'<text x="{leg_x+30}" y="{leg_y+li*20}" font-size="14" fill="{TEXT_MAIN}">{esc(line)}</text>')
-        leg_y += max(1, len(lines)) * 20 + 22
+            put(f'<text x="{leg_x+34}" y="{leg_y+li*23}" font-size="16" fill="{TEXT_MAIN}">{esc(line)}</text>')
+        leg_y += max(1, len(lines)) * 23 + 24
 
     leg_y += 10
-    put(f'<text x="{leg_x}" y="{leg_y}" font-size="15" font-weight="700" fill="{TEXT_MAIN}">power pins (colored by voltage, not just "is power"):</text>')
-    leg_y += 28
+    put(f'<text x="{leg_x}" y="{leg_y}" font-size="17" font-weight="700" fill="{TEXT_MAIN}">power pins (colored by voltage, not just "is power"):</text>')
+    leg_y += 32
     for color, dash, desc in POWER_LEGEND:
         dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-        put(f'<line x1="{leg_x}" y1="{leg_y-5}" x2="{leg_x+30}" y2="{leg_y-5}" stroke="{color}" stroke-width="4"{dash_attr}/>')
-        lines = wrap(desc, width=46)
+        put(f'<line x1="{leg_x}" y1="{leg_y-6}" x2="{leg_x+36}" y2="{leg_y-6}" stroke="{color}" stroke-width="5"{dash_attr}/>')
+        lines = wrap(desc, width=42)
         for li, line in enumerate(lines):
-            put(f'<text x="{leg_x+40}" y="{leg_y+li*20}" font-size="14" fill="{TEXT_MAIN}">{esc(line)}</text>')
-        leg_y += max(1, len(lines)) * 20 + 18
+            put(f'<text x="{leg_x+48}" y="{leg_y+li*23}" font-size="16" fill="{TEXT_MAIN}">{esc(line)}</text>')
+        leg_y += max(1, len(lines)) * 23 + 20
 
     leg_y += 10
-    put(f'<circle cx="{leg_x+10}" cy="{leg_y-5}" r="9" fill="{TEXT_SUB}"/>')
-    put(f'<text x="{leg_x+30}" y="{leg_y}" font-size="14" fill="{TEXT_MAIN}">filled = wired by this project</text>')
-    leg_y += 26
-    put(f'<circle cx="{leg_x+10}" cy="{leg_y-5}" r="9" fill="none" stroke="{TEXT_SUB}" stroke-width="2.5"/>')
-    put(f'<text x="{leg_x+30}" y="{leg_y}" font-size="14" fill="{TEXT_MAIN}">outline = available, not wired</text>')
+    put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" fill="{TEXT_SUB}"/>')
+    put(f'<text x="{leg_x+34}" y="{leg_y}" font-size="16" fill="{TEXT_MAIN}">filled = wired by this project</text>')
+    leg_y += 30
+    put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" fill="none" stroke="{TEXT_SUB}" stroke-width="3"/>')
+    put(f'<text x="{leg_x+34}" y="{leg_y}" font-size="16" fill="{TEXT_MAIN}">outline = available, not wired</text>')
     leg_y += 36
 
-    # --- peripheral schematic boxes --------------------------------------
+    # --- column 3: peripheral schematic boxes -----------------------------
     def draw_peripheral(x, y, peripheral):
         # Content height isn't known until it's laid out, but the box
         # background rect has to be the FIRST element drawn (SVG paints
@@ -551,34 +555,34 @@ def main():
         # so content goes into a local buffer first, the rect gets
         # inserted ahead of it once the height is known, then both are
         # appended to svg_body together.
-        box_w = LEGEND_W - 80
-        row_h = 24
+        box_w = PERIPH_W - 40
+        row_h = 27
         content = []
 
         def cput(s):
             content.append(s)
 
-        title_lines = wrap(peripheral["title"], width=40)
-        chip_lines = wrap(peripheral["chip"], width=44) if peripheral["chip"] else []
+        title_lines = wrap(peripheral["title"], width=36)
+        chip_lines = wrap(peripheral["chip"], width=40) if peripheral["chip"] else []
         extra_lines = []
         for note in peripheral["extra_power"]:
-            extra_lines.extend((note, line) for line in wrap(note, width=42))
+            extra_lines.extend((note, line) for line in wrap(note, width=38))
 
-        yy = y + 22
+        yy = y + 26
         for li, line in enumerate(title_lines):
-            cput(f'<text x="{x+14}" y="{yy+li*18}" font-size="15" font-weight="700" fill="{TEXT_MAIN}">{esc(line)}</text>')
-        yy += (len(title_lines) - 1) * 18 + 14
+            cput(f'<text x="{x+16}" y="{yy+li*21}" font-size="17" font-weight="700" fill="{TEXT_MAIN}">{esc(line)}</text>')
+        yy += (len(title_lines) - 1) * 21 + 16
 
         if chip_lines:
             for li, line in enumerate(chip_lines):
-                cput(f'<text x="{x+14}" y="{yy+li*16}" font-size="12" font-style="italic" fill="#d1a9f7">IC: {esc(line)}</text>')
-            yy += len(chip_lines) * 16 + 10
+                cput(f'<text x="{x+16}" y="{yy+li*18}" font-size="14" font-style="italic" fill="#d1a9f7">IC: {esc(line)}</text>')
+            yy += len(chip_lines) * 18 + 12
 
         for cat, pin_label, sig in peripheral["pins"]:
             color, dash = category_style(cat, sig if cat in ("power", "power_avail") else "")
             dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-            cput(f'<line x1="{x+14}" y1="{yy-5}" x2="{x+34}" y2="{yy-5}" stroke="{color}" stroke-width="4"{dash_attr}/>')
-            cput(f'<text x="{x+44}" y="{yy}" font-size="13" fill="{TEXT_MAIN}"><tspan font-weight="700">{esc(pin_label)}</tspan><tspan fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sig)}</tspan></text>')
+            cput(f'<line x1="{x+16}" y1="{yy-6}" x2="{x+40}" y2="{yy-6}" stroke="{color}" stroke-width="5"{dash_attr}/>')
+            cput(f'<text x="{x+50}" y="{yy}" font-size="15" fill="{TEXT_MAIN}"><tspan font-weight="700">{esc(pin_label)}</tspan><tspan fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sig)}</tspan></text>')
             yy += row_h
 
         if extra_lines:
@@ -588,25 +592,29 @@ def main():
                 if note != prev_note:
                     color, dash = category_style("power", note)
                     dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-                    cput(f'<line x1="{x+14}" y1="{yy-5}" x2="{x+34}" y2="{yy-5}" stroke="{color}" stroke-width="4"{dash_attr}/>')
+                    cput(f'<line x1="{x+16}" y1="{yy-6}" x2="{x+40}" y2="{yy-6}" stroke="{color}" stroke-width="5"{dash_attr}/>')
                     prev_note = note
-                cput(f'<text x="{x+44}" y="{yy}" font-size="12" fill="{TEXT_SUB}">{esc(line)}</text>')
-                yy += 18
+                cput(f'<text x="{x+50}" y="{yy}" font-size="14" fill="{TEXT_SUB}">{esc(line)}</text>')
+                yy += 20
 
-        h = yy - y + 16
+        h = yy - y + 18
         put(f'<rect x="{x}" y="{y}" width="{box_w}" height="{h}" rx="10" fill="{BOARD_FILL}" stroke="{TEXT_FAINT}" stroke-width="1.5"/>')
         svg_body.extend(content)
         return h
 
-    peri_y = leg_y + 10
-    put(f'<text x="{leg_x}" y="{peri_y}" font-size="20" font-weight="700" fill="{TEXT_MAIN}">Peripherals (schematic)</text>')
-    put(f'<text x="{leg_x}" y="{peri_y+20}" font-size="12" fill="{TEXT_SUB}">connected to the header above only via matching pin labels, not a drawn wire – power pins included for soldering</text>')
-    peri_y += 46
+    peri_x = leg_x + LEGEND_W + COL_GAP
+    peri_y = 50
+    put(f'<text x="{peri_x}" y="{peri_y}" font-size="24" font-weight="700" fill="{TEXT_MAIN}">Peripherals (schematic)</text>')
+    peri_y += 26
+    subtitle_lines = wrap("connected to the header at left only via matching pin labels, not a drawn wire – power pins included for soldering", width=70)
+    for li, line in enumerate(subtitle_lines):
+        put(f'<text x="{peri_x}" y="{peri_y+li*18}" font-size="14" fill="{TEXT_SUB}">{esc(line)}</text>')
+    peri_y += len(subtitle_lines) * 18 + 22
     for peripheral in PERIPHERALS:
-        h = draw_peripheral(leg_x, peri_y, peripheral)
-        peri_y += h + 20
+        h = draw_peripheral(peri_x, peri_y, peripheral)
+        peri_y += h + 22
 
-    H = max(bottom_margin_bottom + 30, peri_y + 30, 760)
+    H = max(bottom_margin_bottom + 30, peri_y + 30, leg_y + 30, 760)
 
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="Helvetica, Arial, sans-serif">']
     svg.append(f'<rect x="0" y="0" width="{W}" height="{H}" fill="{BG}"/>')

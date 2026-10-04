@@ -1,369 +1,374 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2390 2022" width="2390" height="2022" font-family="Helvetica, Arial, sans-serif">
-<rect x="0" y="0" width="2390" height="2022" fill="#0b0d12"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2920 1946.7000000000003" width="2920" height="1946.7000000000003" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="2920" height="1946.7000000000003" fill="#0b0d12"/>
 <text x="875.0" y="48" text-anchor="middle" font-size="30" font-weight="700" fill="#e5e7eb">PocketBeagle 1 – light-desk pinout (component side)</text>
 <text x="875.0" y="78" text-anchor="middle" font-size="16" fill="#9aa3b2">P1/P2 expansion headers – project-committed connections highlighted – see pb1/pinout-reference.md for the full pinmux table</text>
-<rect x="130" y="397.2" width="1530" height="1037.9999999999998" rx="26" ry="26" fill="#1f2430" stroke="#05060a" stroke-width="3"/>
-<rect x="96" y="890.1999999999999" width="46" height="52" rx="6" fill="#c7cdd6" stroke="#4b5563" stroke-width="2"/>
-<text x="86" y="976.1999999999999" text-anchor="start" font-size="16" fill="#e5e7eb" font-weight="600">USB micro-B</text>
-<text x="86" y="996.1999999999999" text-anchor="start" font-size="14" fill="#9aa3b2">(X1)</text>
-<text x="240" y="920.8" font-size="19" fill="#f59e0b" font-weight="700">beagleboard.org</text>
-<text x="240" y="950.8" font-size="21" fill="#e5e7eb" font-weight="700">PocketBeagle</text>
-<rect x="856.2" y="830.8" width="200" height="200" rx="8" fill="#111318" stroke="#6b7280" stroke-width="2"/>
-<text x="956.2" y="924.8" text-anchor="middle" font-size="16" fill="#e5e7eb" font-weight="600">AM3358</text>
-<text x="956.2" y="946.8" text-anchor="middle" font-size="12" fill="#9aa3b2">(OSD3358-SM)</text>
-<rect x="1245" y="845.8" width="340" height="170" rx="6" fill="#30343f" stroke="#9ca3af" stroke-width="2"/>
-<text x="1415.0" y="936.8" text-anchor="middle" font-size="15" fill="#e5e7eb">microSD (X2)</text>
-<text x="165" y="1407.1999999999998" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P1</text>
-<text x="165" y="437.2" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P2</text>
-<rect x="169" y="415.2" width="1452" height="66.0" fill="none" stroke="#5b6472" stroke-width="1.5" rx="8"/>
-<rect x="169" y="1351.1999999999998" width="1452" height="66.0" fill="none" stroke="#5b6472" stroke-width="1.5" rx="8"/>
-<circle cx="185.0" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="185.0" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="268.52941176470586" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="268.52941176470586" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="352.05882352941177" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="352.05882352941177" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="435.5882352941177" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="435.5882352941177" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="519.1176470588235" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="519.1176470588235" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="602.6470588235294" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="602.6470588235294" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="686.1764705882354" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="686.1764705882354" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="769.7058823529412" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="769.7058823529412" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="853.2352941176471" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="853.2352941176471" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="936.7647058823529" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="936.7647058823529" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1020.2941176470588" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1020.2941176470588" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1103.8235294117649" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1103.8235294117649" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1187.3529411764707" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1187.3529411764707" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1270.8823529411766" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1270.8823529411766" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1354.4117647058824" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1354.4117647058824" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1437.9411764705883" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1437.9411764705883" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1521.4705882352941" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1521.4705882352941" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1605.0" cy="1401.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="1605.0" cy="1367.1999999999998" r="5" fill="#5b6472"/>
-<circle cx="185.0" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="185.0" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="268.52941176470586" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="268.52941176470586" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="352.05882352941177" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="352.05882352941177" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="435.5882352941177" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="435.5882352941177" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="519.1176470588235" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="519.1176470588235" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="602.6470588235294" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="602.6470588235294" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="686.1764705882354" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="686.1764705882354" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="769.7058823529412" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="769.7058823529412" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="853.2352941176471" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="853.2352941176471" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="936.7647058823529" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="936.7647058823529" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1020.2941176470588" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1020.2941176470588" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1103.8235294117649" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1103.8235294117649" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1187.3529411764707" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1187.3529411764707" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1270.8823529411766" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1270.8823529411766" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1354.4117647058824" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1354.4117647058824" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1437.9411764705883" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1437.9411764705883" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1521.4705882352941" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1521.4705882352941" cy="431.2" r="5" fill="#5b6472"/>
-<circle cx="1605.0" cy="465.2" r="5" fill="#5b6472"/>
-<circle cx="1605.0" cy="431.2" r="5" fill="#5b6472"/>
-<rect x="176.0" y="1392.1999999999998" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
-<rect x="176.0" y="456.2" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
-<text x="185.0" y="383.2" text-anchor="middle" font-size="13" fill="#5b6472">pin 1</text>
-<text x="185.0" y="1459.1999999999998" text-anchor="middle" font-size="13" fill="#5b6472">pin 1</text>
-<text x="1605.0" y="383.2" text-anchor="middle" font-size="13" fill="#5b6472">pin 35/36</text>
-<text x="1605.0" y="1459.1999999999998" text-anchor="middle" font-size="13" fill="#5b6472">pin 35/36</text>
-<circle cx="185.0" cy="431.2" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
-<line x1="185.0" y1="431.2" x2="185.0" y2="385.2" stroke="#fb923c" stroke-width="2.2"/>
-<circle cx="185.0" cy="385.2" r="3.5" fill="#fb923c"/>
-<text x="185.0" y="369.2" transform="rotate(-90 185.0 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.02</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;button 1</tspan></text>
-<circle cx="268.52941176470586" cy="431.2" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
-<line x1="268.52941176470586" y1="431.2" x2="268.52941176470586" y2="385.2" stroke="#fb923c" stroke-width="2.2"/>
-<circle cx="268.52941176470586" cy="385.2" r="3.5" fill="#fb923c"/>
-<text x="268.52941176470586" y="369.2" transform="rotate(-90 268.52941176470586 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.04</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;button 2</tspan></text>
-<circle cx="352.05882352941177" cy="431.2" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
-<line x1="352.05882352941177" y1="431.2" x2="352.05882352941177" y2="385.2" stroke="#fb923c" stroke-width="2.2"/>
-<circle cx="352.05882352941177" cy="385.2" r="3.5" fill="#fb923c"/>
-<text x="352.05882352941177" y="369.2" transform="rotate(-90 352.05882352941177 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.06</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;button 3</tspan></text>
-<circle cx="602.6470588235294" cy="431.2" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
-<line x1="602.6470588235294" y1="431.2" x2="602.6470588235294" y2="385.2" stroke="#9ca3af" stroke-width="2.2"/>
-<circle cx="602.6470588235294" cy="385.2" r="3.5" fill="#9ca3af"/>
-<text x="602.6470588235294" y="369.2" transform="rotate(-90 602.6470588235294 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.12</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;PWR BTN</tspan></text>
-<circle cx="686.1764705882354" cy="431.2" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
-<line x1="686.1764705882354" y1="431.2" x2="686.1764705882354" y2="385.2" stroke="#9ca3af" stroke-width="2.2"/>
-<circle cx="686.1764705882354" cy="385.2" r="3.5" fill="#9ca3af"/>
-<text x="686.1764705882354" y="369.2" transform="rotate(-90 686.1764705882354 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.14</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VIN-BAT</tspan></text>
-<circle cx="769.7058823529412" cy="431.2" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
-<line x1="769.7058823529412" y1="431.2" x2="769.7058823529412" y2="385.2" stroke="#9ca3af" stroke-width="2.2"/>
-<circle cx="769.7058823529412" cy="385.2" r="3.5" fill="#9ca3af"/>
-<text x="769.7058823529412" y="369.2" transform="rotate(-90 769.7058823529412 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.16</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;BAT-TEMP</tspan></text>
-<circle cx="936.7647058823529" cy="431.2" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
-<line x1="936.7647058823529" y1="431.2" x2="936.7647058823529" y2="385.2" stroke="#fb923c" stroke-width="2.2"/>
-<circle cx="936.7647058823529" cy="385.2" r="3.5" fill="#fb923c"/>
-<text x="936.7647058823529" y="369.2" transform="rotate(-90 936.7647058823529 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.20</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;button 6</tspan></text>
-<circle cx="1020.2941176470588" cy="431.2" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1020.2941176470588" y1="431.2" x2="1020.2941176470588" y2="385.2" stroke="#fb923c" stroke-width="2.2"/>
-<circle cx="1020.2941176470588" cy="385.2" r="3.5" fill="#fb923c"/>
-<text x="1020.2941176470588" y="369.2" transform="rotate(-90 1020.2941176470588 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.22</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;button 4</tspan></text>
-<circle cx="1103.8235294117649" cy="431.2" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1103.8235294117649" y1="431.2" x2="1103.8235294117649" y2="385.2" stroke="#fb923c" stroke-width="2.2"/>
-<circle cx="1103.8235294117649" cy="385.2" r="3.5" fill="#fb923c"/>
-<text x="1103.8235294117649" y="369.2" transform="rotate(-90 1103.8235294117649 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.24</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;button 5</tspan></text>
-<circle cx="1354.4117647058824" cy="431.2" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1354.4117647058824" y1="431.2" x2="1354.4117647058824" y2="385.2" stroke="#c084fc" stroke-width="2.2"/>
-<circle cx="1354.4117647058824" cy="385.2" r="3.5" fill="#c084fc"/>
-<text x="1354.4117647058824" y="369.2" transform="rotate(-90 1354.4117647058824 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.30</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;SPI1 CS0 (unused)</tspan></text>
-<circle cx="1437.9411764705883" cy="431.2" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1437.9411764705883" y1="431.2" x2="1437.9411764705883" y2="385.2" stroke="#c084fc" stroke-width="2.2"/>
-<circle cx="1437.9411764705883" cy="385.2" r="3.5" fill="#c084fc"/>
-<text x="1437.9411764705883" y="369.2" transform="rotate(-90 1437.9411764705883 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.32</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;SPI1 MOSI</tspan></text>
-<circle cx="1521.4705882352941" cy="431.2" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1521.4705882352941" y1="431.2" x2="1521.4705882352941" y2="385.2" stroke="#a3e635" stroke-width="2.2"/>
-<circle cx="1521.4705882352941" cy="385.2" r="3.5" fill="#a3e635"/>
-<text x="1521.4705882352941" y="369.2" transform="rotate(-90 1521.4705882352941 369.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.34</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;eQEP0 B</tspan></text>
-<circle cx="352.05882352941177" cy="465.2" r="9" fill="#1d4ed8" stroke="#05060a" stroke-width="1.5"/>
-<line x1="352.05882352941177" y1="465.2" x2="352.05882352941177" y2="511.2" stroke="#1d4ed8" stroke-width="2.2"/>
-<circle cx="352.05882352941177" cy="511.2" r="3.5" fill="#1d4ed8"/>
-<text x="352.05882352941177" y="527.2" transform="rotate(90 352.05882352941177 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.05</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART4 RXD</tspan></text>
-<circle cx="435.5882352941177" cy="465.2" r="9" fill="#1d4ed8" stroke="#05060a" stroke-width="1.5"/>
-<line x1="435.5882352941177" y1="465.2" x2="435.5882352941177" y2="511.2" stroke="#1d4ed8" stroke-width="2.2"/>
-<circle cx="435.5882352941177" cy="511.2" r="3.5" fill="#1d4ed8"/>
-<text x="435.5882352941177" y="527.2" transform="rotate(90 435.5882352941177 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.07</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART4 TXD</tspan></text>
-<circle cx="519.1176470588235" cy="465.2" r="9" fill="#60a5fa" stroke="#05060a" stroke-width="1.5"/>
-<line x1="519.1176470588235" y1="465.2" x2="519.1176470588235" y2="511.2" stroke="#60a5fa" stroke-width="2.2"/>
-<circle cx="519.1176470588235" cy="511.2" r="3.5" fill="#60a5fa"/>
-<text x="519.1176470588235" y="527.2" transform="rotate(90 519.1176470588235 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.09</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART1 TXD</tspan></text>
-<circle cx="602.6470588235294" cy="465.2" r="9" fill="#60a5fa" stroke="#05060a" stroke-width="1.5"/>
-<line x1="602.6470588235294" y1="465.2" x2="602.6470588235294" y2="511.2" stroke="#60a5fa" stroke-width="2.2"/>
-<circle cx="602.6470588235294" cy="511.2" r="3.5" fill="#60a5fa"/>
-<text x="602.6470588235294" y="527.2" transform="rotate(90 602.6470588235294 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.11</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART1 RXD</tspan></text>
-<circle cx="686.1764705882354" cy="465.2" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
-<line x1="686.1764705882354" y1="465.2" x2="686.1764705882354" y2="511.2" stroke="#ec4899" stroke-width="2.2" stroke-dasharray="6,5"/>
-<circle cx="686.1764705882354" cy="511.2" r="3.5" fill="#ec4899"/>
-<text x="686.1764705882354" y="527.2" transform="rotate(90 686.1764705882354 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.13</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VOUT-5V</tspan></text>
-<circle cx="769.7058823529412" cy="465.2" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
-<line x1="769.7058823529412" y1="465.2" x2="769.7058823529412" y2="511.2" stroke="#6b7280" stroke-width="2.2"/>
-<circle cx="769.7058823529412" cy="511.2" r="3.5" fill="#6b7280"/>
-<text x="769.7058823529412" y="527.2" transform="rotate(90 769.7058823529412 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.15</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;GND</tspan></text>
-<circle cx="936.7647058823529" cy="465.2" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
-<line x1="936.7647058823529" y1="465.2" x2="936.7647058823529" y2="511.2" stroke="#a3e635" stroke-width="2.2"/>
-<circle cx="936.7647058823529" cy="511.2" r="3.5" fill="#a3e635"/>
-<text x="936.7647058823529" y="527.2" transform="rotate(90 936.7647058823529 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.19</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;encoder button</tspan></text>
-<circle cx="1020.2941176470588" cy="465.2" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
-<line x1="1020.2941176470588" y1="465.2" x2="1020.2941176470588" y2="511.2" stroke="#6b7280" stroke-width="2.2"/>
-<circle cx="1020.2941176470588" cy="511.2" r="3.5" fill="#6b7280"/>
-<text x="1020.2941176470588" y="527.2" transform="rotate(90 1020.2941176470588 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;GND</tspan></text>
-<circle cx="1103.8235294117649" cy="465.2" r="9" fill="none" stroke="#dc2626" stroke-width="2.5"/>
-<line x1="1103.8235294117649" y1="465.2" x2="1103.8235294117649" y2="511.2" stroke="#dc2626" stroke-width="2.2"/>
-<circle cx="1103.8235294117649" cy="511.2" r="3.5" fill="#dc2626"/>
-<text x="1103.8235294117649" y="527.2" transform="rotate(90 1103.8235294117649 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.23</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VOUT-3.3V</tspan></text>
-<circle cx="1354.4117647058824" cy="465.2" r="9" fill="#2563eb" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1354.4117647058824" y1="465.2" x2="1354.4117647058824" y2="511.2" stroke="#2563eb" stroke-width="2.2"/>
-<circle cx="1354.4117647058824" cy="511.2" r="3.5" fill="#2563eb"/>
-<text x="1354.4117647058824" y="527.2" transform="rotate(90 1354.4117647058824 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.29</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART3 TXD (TX only)</tspan></text>
-<circle cx="1521.4705882352941" cy="465.2" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1521.4705882352941" y1="465.2" x2="1521.4705882352941" y2="511.2" stroke="#fb923c" stroke-width="2.2"/>
-<circle cx="1521.4705882352941" cy="511.2" r="3.5" fill="#fb923c"/>
-<text x="1521.4705882352941" y="527.2" transform="rotate(90 1521.4705882352941 527.2)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P2.33</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;mode toggle (stand-alone)</tspan></text>
-<circle cx="352.05882352941177" cy="1367.1999999999998" r="9" fill="#22d3ee" stroke="#05060a" stroke-width="1.5"/>
-<line x1="352.05882352941177" y1="1367.1999999999998" x2="352.05882352941177" y2="1321.1999999999998" stroke="#22d3ee" stroke-width="2.2"/>
-<circle cx="352.05882352941177" cy="1321.1999999999998" r="3.5" fill="#22d3ee"/>
-<text x="352.05882352941177" y="1305.1999999999998" transform="rotate(-90 352.05882352941177 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.06</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;I2C1_SCL</tspan></text>
-<circle cx="435.5882352941177" cy="1367.1999999999998" r="9" fill="#3b82f6" stroke="#05060a" stroke-width="1.5"/>
-<line x1="435.5882352941177" y1="1367.1999999999998" x2="435.5882352941177" y2="1321.1999999999998" stroke="#3b82f6" stroke-width="2.2"/>
-<circle cx="435.5882352941177" cy="1321.1999999999998" r="3.5" fill="#3b82f6"/>
-<text x="435.5882352941177" y="1305.1999999999998" transform="rotate(-90 435.5882352941177 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.08</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART2 CLK/TXD</tspan></text>
-<circle cx="519.1176470588235" cy="1367.1999999999998" r="9" fill="#3b82f6" stroke="#05060a" stroke-width="1.5"/>
-<line x1="519.1176470588235" y1="1367.1999999999998" x2="519.1176470588235" y2="1321.1999999999998" stroke="#3b82f6" stroke-width="2.2"/>
-<circle cx="519.1176470588235" cy="1321.1999999999998" r="3.5" fill="#3b82f6"/>
-<text x="519.1176470588235" y="1305.1999999999998" transform="rotate(-90 519.1176470588235 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.10</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART2 MISO/RXD</tspan></text>
-<circle cx="602.6470588235294" cy="1367.1999999999998" r="9" fill="#22d3ee" stroke="#05060a" stroke-width="1.5"/>
-<line x1="602.6470588235294" y1="1367.1999999999998" x2="602.6470588235294" y2="1321.1999999999998" stroke="#22d3ee" stroke-width="2.2"/>
-<circle cx="602.6470588235294" cy="1321.1999999999998" r="3.5" fill="#22d3ee"/>
-<text x="602.6470588235294" y="1305.1999999999998" transform="rotate(-90 602.6470588235294 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.12</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;I2C1_SDA</tspan></text>
-<circle cx="686.1764705882354" cy="1367.1999999999998" r="9" fill="#dc2626" stroke="#05060a" stroke-width="1.5"/>
-<line x1="686.1764705882354" y1="1367.1999999999998" x2="686.1764705882354" y2="1321.1999999999998" stroke="#dc2626" stroke-width="2.2"/>
-<circle cx="686.1764705882354" cy="1321.1999999999998" r="3.5" fill="#dc2626"/>
-<text x="686.1764705882354" y="1305.1999999999998" transform="rotate(-90 686.1764705882354 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.14</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VDD_3V3 (ADS7830 VIN)</tspan></text>
-<circle cx="769.7058823529412" cy="1367.1999999999998" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
-<line x1="769.7058823529412" y1="1367.1999999999998" x2="769.7058823529412" y2="1321.1999999999998" stroke="#6b7280" stroke-width="2.2"/>
-<circle cx="769.7058823529412" cy="1321.1999999999998" r="3.5" fill="#6b7280"/>
-<text x="769.7058823529412" y="1305.1999999999998" transform="rotate(-90 769.7058823529412 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.16</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;GND</tspan></text>
-<circle cx="853.2352941176471" cy="1367.1999999999998" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
-<line x1="853.2352941176471" y1="1367.1999999999998" x2="853.2352941176471" y2="1321.1999999999998" stroke="#9ca3af" stroke-width="2.2"/>
-<circle cx="853.2352941176471" cy="1321.1999999999998" r="3.5" fill="#9ca3af"/>
-<text x="853.2352941176471" y="1305.1999999999998" transform="rotate(-90 853.2352941176471 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.18</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VREFP</tspan></text>
-<circle cx="1020.2941176470588" cy="1367.1999999999998" r="9" fill="#6b7280" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1020.2941176470588" y1="1367.1999999999998" x2="1020.2941176470588" y2="1321.1999999999998" stroke="#6b7280" stroke-width="2.2"/>
-<circle cx="1020.2941176470588" cy="1321.1999999999998" r="3.5" fill="#6b7280"/>
-<text x="1020.2941176470588" y="1305.1999999999998" transform="rotate(-90 1020.2941176470588 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.22</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;GND (ADS7830 GND)</tspan></text>
-<circle cx="1103.8235294117649" cy="1367.1999999999998" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
-<line x1="1103.8235294117649" y1="1367.1999999999998" x2="1103.8235294117649" y2="1321.1999999999998" stroke="#ec4899" stroke-width="2.2" stroke-dasharray="6,5"/>
-<circle cx="1103.8235294117649" cy="1321.1999999999998" r="3.5" fill="#ec4899"/>
-<text x="1103.8235294117649" y="1305.1999999999998" transform="rotate(-90 1103.8235294117649 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VOUT-5V</tspan></text>
-<circle cx="1354.4117647058824" cy="1367.1999999999998" r="9" fill="#8b94a3" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1354.4117647058824" y1="1367.1999999999998" x2="1354.4117647058824" y2="1321.1999999999998" stroke="#8b94a3" stroke-width="2.2"/>
-<circle cx="1354.4117647058824" cy="1321.1999999999998" r="3.5" fill="#8b94a3"/>
-<text x="1354.4117647058824" y="1305.1999999999998" transform="rotate(-90 1354.4117647058824 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.30</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART0 TXD (console)</tspan></text>
-<circle cx="1437.9411764705883" cy="1367.1999999999998" r="9" fill="#8b94a3" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1437.9411764705883" y1="1367.1999999999998" x2="1437.9411764705883" y2="1321.1999999999998" stroke="#8b94a3" stroke-width="2.2"/>
-<circle cx="1437.9411764705883" cy="1321.1999999999998" r="3.5" fill="#8b94a3"/>
-<text x="1437.9411764705883" y="1305.1999999999998" transform="rotate(-90 1437.9411764705883 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.32</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;UART0 RXD (console)</tspan></text>
-<circle cx="1605.0" cy="1367.1999999999998" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1605.0" y1="1367.1999999999998" x2="1605.0" y2="1321.1999999999998" stroke="#c084fc" stroke-width="2.2"/>
-<circle cx="1605.0" cy="1321.1999999999998" r="3.5" fill="#c084fc"/>
-<text x="1605.0" y="1305.1999999999998" transform="rotate(-90 1605.0 1305.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.36</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;SPI1 SCLK</tspan></text>
-<circle cx="185.0" cy="1401.1999999999998" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
-<line x1="185.0" y1="1401.1999999999998" x2="185.0" y2="1447.1999999999998" stroke="#ec4899" stroke-width="2.2" stroke-dasharray="6,5"/>
-<circle cx="185.0" cy="1447.1999999999998" r="3.5" fill="#ec4899"/>
-<text x="185.0" y="1463.1999999999998" transform="rotate(90 185.0 1463.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.01</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VIN</tspan></text>
-<circle cx="435.5882352941177" cy="1401.1999999999998" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
-<line x1="435.5882352941177" y1="1401.1999999999998" x2="435.5882352941177" y2="1447.1999999999998" stroke="#ec4899" stroke-width="2.2" stroke-dasharray="6,5"/>
-<circle cx="435.5882352941177" cy="1447.1999999999998" r="3.5" fill="#ec4899"/>
-<text x="435.5882352941177" y="1463.1999999999998" transform="rotate(90 435.5882352941177 1463.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.07</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VIN-USB</tspan></text>
-<circle cx="769.7058823529412" cy="1401.1999999999998" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
-<line x1="769.7058823529412" y1="1401.1999999999998" x2="769.7058823529412" y2="1447.1999999999998" stroke="#6b7280" stroke-width="2.2"/>
-<circle cx="769.7058823529412" cy="1447.1999999999998" r="3.5" fill="#6b7280"/>
-<text x="769.7058823529412" y="1463.1999999999998" transform="rotate(90 769.7058823529412 1463.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.15</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;GND (USB1)</tspan></text>
-<circle cx="853.2352941176471" cy="1401.1999999999998" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
-<line x1="853.2352941176471" y1="1401.1999999999998" x2="853.2352941176471" y2="1447.1999999999998" stroke="#9ca3af" stroke-width="2.2"/>
-<circle cx="853.2352941176471" cy="1447.1999999999998" r="3.5" fill="#9ca3af"/>
-<text x="853.2352941176471" y="1463.1999999999998" transform="rotate(90 853.2352941176471 1463.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.17</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;VREFN</tspan></text>
-<circle cx="1437.9411764705883" cy="1401.1999999999998" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1437.9411764705883" y1="1401.1999999999998" x2="1437.9411764705883" y2="1447.1999999999998" stroke="#a3e635" stroke-width="2.2"/>
-<circle cx="1437.9411764705883" cy="1447.1999999999998" r="3.5" fill="#a3e635"/>
-<text x="1437.9411764705883" y="1463.1999999999998" transform="rotate(90 1437.9411764705883 1463.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.31</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;eQEP0 A</tspan></text>
-<circle cx="1521.4705882352941" cy="1401.1999999999998" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
-<line x1="1521.4705882352941" y1="1401.1999999999998" x2="1521.4705882352941" y2="1447.1999999999998" stroke="#c084fc" stroke-width="2.2"/>
-<circle cx="1521.4705882352941" cy="1447.1999999999998" r="3.5" fill="#c084fc"/>
-<text x="1521.4705882352941" y="1463.1999999999998" transform="rotate(90 1521.4705882352941 1463.1999999999998)" font-size="14" fill="#e5e7eb"><tspan font-weight="700">P1.33</tspan><tspan font-size="12" fill="#9aa3b2">&#160;&#160;SPI1 MISO (unused)</tspan></text>
-<text x="1790" y="50" font-size="20" font-weight="700" fill="#e5e7eb">Legend</text>
-<rect x="1790" y="71" width="20" height="20" rx="4" fill="#22d3ee"/>
-<text x="1820" y="86" font-size="14" fill="#e5e7eb">I2C1 – fader ADC (ADS7830)</text>
-<rect x="1790" y="113" width="20" height="20" rx="4" fill="#60a5fa"/>
-<text x="1820" y="128" font-size="14" fill="#e5e7eb">UART1 – DMX universe 1</text>
-<rect x="1790" y="155" width="20" height="20" rx="4" fill="#3b82f6"/>
-<text x="1820" y="170" font-size="14" fill="#e5e7eb">UART2 – DMX universe 2</text>
-<rect x="1790" y="197" width="20" height="20" rx="4" fill="#2563eb"/>
-<text x="1820" y="212" font-size="14" fill="#e5e7eb">UART3 – DMX universe 3 (custom overlay, TX</text>
-<text x="1820" y="232" font-size="14" fill="#e5e7eb">only)</text>
-<rect x="1790" y="259" width="20" height="20" rx="4" fill="#1d4ed8"/>
-<text x="1820" y="274" font-size="14" fill="#e5e7eb">UART4 – DMX universe 4</text>
-<rect x="1790" y="301" width="20" height="20" rx="4" fill="#fb923c"/>
-<text x="1820" y="316" font-size="14" fill="#e5e7eb">buttons (6 control-desk + 1 stand-alone-mode</text>
-<text x="1820" y="336" font-size="14" fill="#e5e7eb">toggle)</text>
-<rect x="1790" y="363" width="20" height="20" rx="4" fill="#c084fc"/>
-<text x="1820" y="378" font-size="14" fill="#e5e7eb">SPI1 – APA102 pixel strip (OLA SPI plugin)</text>
-<rect x="1790" y="405" width="20" height="20" rx="4" fill="#a3e635"/>
-<text x="1820" y="420" font-size="14" fill="#e5e7eb">eQEP0 – rotary encoder A/B + its push button</text>
-<rect x="1790" y="447" width="20" height="20" rx="4" fill="#8b94a3"/>
-<text x="1820" y="462" font-size="14" fill="#e5e7eb">parked / not pursued (UART0 console-swap</text>
-<text x="1820" y="482" font-size="14" fill="#e5e7eb">universe 5)</text>
-<text x="1790" y="534" font-size="15" font-weight="700" fill="#e5e7eb">power pins (colored by voltage, not just "is power"):</text>
-<line x1="1790" y1="557" x2="1820" y2="557" stroke="#ec4899" stroke-width="4" stroke-dasharray="6,5"/>
-<text x="1830" y="562" font-size="14" fill="#e5e7eb">5V class (VIN / VIN-USB / VOUT-5V) – dashed:</text>
-<text x="1830" y="582" font-size="14" fill="#e5e7eb">check level-shifting before wiring</text>
-<line x1="1790" y1="615" x2="1820" y2="615" stroke="#dc2626" stroke-width="4"/>
-<text x="1830" y="620" font-size="14" fill="#e5e7eb">3.3V class (VDD_3V3 / VOUT-3.3V)</text>
-<line x1="1790" y1="653" x2="1820" y2="653" stroke="#6b7280" stroke-width="4"/>
-<text x="1830" y="658" font-size="14" fill="#e5e7eb">GND</text>
-<line x1="1790" y1="691" x2="1820" y2="691" stroke="#9ca3af" stroke-width="4"/>
-<text x="1830" y="696" font-size="14" fill="#e5e7eb">other (VREF, power button, VIN-BAT, BAT-TEMP)</text>
-<circle cx="1800" cy="739" r="9" fill="#9aa3b2"/>
-<text x="1820" y="744" font-size="14" fill="#e5e7eb">filled = wired by this project</text>
-<circle cx="1800" cy="765" r="9" fill="none" stroke="#9aa3b2" stroke-width="2.5"/>
-<text x="1820" y="770" font-size="14" fill="#e5e7eb">outline = available, not wired</text>
-<text x="1790" y="816" font-size="20" font-weight="700" fill="#e5e7eb">Peripherals (schematic)</text>
-<text x="1790" y="836" font-size="12" fill="#9aa3b2">connected to the header above only via matching pin labels, not a drawn wire – power pins included for soldering</text>
-<rect x="1790" y="862" width="560" height="148" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1804" y="884" font-size="15" font-weight="700" fill="#e5e7eb">ADS7830 fader ADC (I2C1)</text>
-<line x1="1804" y1="893" x2="1824" y2="893" stroke="#22d3ee" stroke-width="4"/>
-<text x="1834" y="898" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.06</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SCL</tspan></text>
-<line x1="1804" y1="917" x2="1824" y2="917" stroke="#22d3ee" stroke-width="4"/>
-<text x="1834" y="922" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.12</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SDA</tspan></text>
-<line x1="1804" y1="941" x2="1824" y2="941" stroke="#dc2626" stroke-width="4"/>
-<text x="1834" y="946" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.14</tspan><tspan fill="#9aa3b2">&#160;&#160;VDD_3V3</tspan></text>
-<line x1="1804" y1="965" x2="1824" y2="965" stroke="#6b7280" stroke-width="4"/>
-<text x="1834" y="970" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.22</tspan><tspan fill="#9aa3b2">&#160;&#160;GND</tspan></text>
-<rect x="1790" y="1030" width="560" height="272" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1804" y="1052" font-size="15" font-weight="700" fill="#e5e7eb">DMX UART -&gt; RS485 (x4, UART1-4 - UART2</text>
-<text x="1804" y="1070" font-size="15" font-weight="700" fill="#e5e7eb">shown)</text>
-<text x="1804" y="1084" font-size="12" font-style="italic" fill="#d1a9f7">IC: TXB0108 – 3.3V&lt;-&gt;5V auto-direction level</text>
-<text x="1804" y="1100" font-size="12" font-style="italic" fill="#d1a9f7">IC: shifter (1 channel/signal: TXD, RXD)</text>
-<line x1="1804" y1="1121" x2="1824" y2="1121" stroke="#3b82f6" stroke-width="4"/>
-<text x="1834" y="1126" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.08</tspan><tspan fill="#9aa3b2">&#160;&#160;TXD</tspan></text>
-<line x1="1804" y1="1145" x2="1824" y2="1145" stroke="#3b82f6" stroke-width="4"/>
-<text x="1834" y="1150" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.10</tspan><tspan fill="#9aa3b2">&#160;&#160;RXD</tspan></text>
-<line x1="1804" y1="1169" x2="1824" y2="1169" stroke="#dc2626" stroke-width="4"/>
-<text x="1834" y="1174" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.23</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-3.3V (TXB0108 VCCA)</tspan></text>
-<line x1="1804" y1="1193" x2="1824" y2="1193" stroke="#ec4899" stroke-width="4" stroke-dasharray="6,5"/>
-<text x="1834" y="1198" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (TXB0108 VCCB)</tspan></text>
-<line x1="1804" y1="1217" x2="1824" y2="1217" stroke="#6b7280" stroke-width="4"/>
-<text x="1834" y="1222" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
-<line x1="1804" y1="1245" x2="1824" y2="1245" stroke="#ec4899" stroke-width="4" stroke-dasharray="6,5"/>
-<text x="1834" y="1250" font-size="12" fill="#9aa3b2">RS485 driver's own 5V + GND (same 5V/GND</text>
-<text x="1834" y="1268" font-size="12" fill="#9aa3b2">rail as VCCB above)</text>
-<rect x="1790" y="1322" width="560" height="220" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1804" y="1344" font-size="15" font-weight="700" fill="#e5e7eb">control-desk buttons (x6) + mode toggle</text>
-<line x1="1804" y1="1353" x2="1824" y2="1353" stroke="#fb923c" stroke-width="4"/>
-<text x="1834" y="1358" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.02</tspan><tspan fill="#9aa3b2">&#160;&#160;button 1</tspan></text>
-<line x1="1804" y1="1377" x2="1824" y2="1377" stroke="#fb923c" stroke-width="4"/>
-<text x="1834" y="1382" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.04</tspan><tspan fill="#9aa3b2">&#160;&#160;button 2</tspan></text>
-<line x1="1804" y1="1401" x2="1824" y2="1401" stroke="#fb923c" stroke-width="4"/>
-<text x="1834" y="1406" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.06</tspan><tspan fill="#9aa3b2">&#160;&#160;button 3</tspan></text>
-<line x1="1804" y1="1425" x2="1824" y2="1425" stroke="#fb923c" stroke-width="4"/>
-<text x="1834" y="1430" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.22</tspan><tspan fill="#9aa3b2">&#160;&#160;button 4</tspan></text>
-<line x1="1804" y1="1449" x2="1824" y2="1449" stroke="#fb923c" stroke-width="4"/>
-<text x="1834" y="1454" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.24</tspan><tspan fill="#9aa3b2">&#160;&#160;button 5</tspan></text>
-<line x1="1804" y1="1473" x2="1824" y2="1473" stroke="#fb923c" stroke-width="4"/>
-<text x="1834" y="1478" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.20</tspan><tspan fill="#9aa3b2">&#160;&#160;button 6</tspan></text>
-<line x1="1804" y1="1497" x2="1824" y2="1497" stroke="#fb923c" stroke-width="4"/>
-<text x="1834" y="1502" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.33</tspan><tspan fill="#9aa3b2">&#160;&#160;mode toggle</tspan></text>
-<rect x="1790" y="1562" width="560" height="266" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1804" y="1584" font-size="15" font-weight="700" fill="#e5e7eb">APA102 pixel strip (SPI1)</text>
-<text x="1804" y="1598" font-size="12" font-style="italic" fill="#d1a9f7">IC: 74HCT125 / 74AHCT125 – 3.3V-&gt;5V buffer (1</text>
-<text x="1804" y="1614" font-size="12" font-style="italic" fill="#d1a9f7">IC: gate/signal: CLK, DATA)</text>
-<line x1="1804" y1="1635" x2="1824" y2="1635" stroke="#c084fc" stroke-width="4"/>
-<text x="1834" y="1640" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.36</tspan><tspan fill="#9aa3b2">&#160;&#160;SCLK</tspan></text>
-<line x1="1804" y1="1659" x2="1824" y2="1659" stroke="#c084fc" stroke-width="4"/>
-<text x="1834" y="1664" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.32</tspan><tspan fill="#9aa3b2">&#160;&#160;MOSI</tspan></text>
-<line x1="1804" y1="1683" x2="1824" y2="1683" stroke="#ec4899" stroke-width="4" stroke-dasharray="6,5"/>
-<text x="1834" y="1688" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (74HCT125 VCC)</tspan></text>
-<line x1="1804" y1="1707" x2="1824" y2="1707" stroke="#6b7280" stroke-width="4"/>
-<text x="1834" y="1712" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
-<line x1="1804" y1="1735" x2="1824" y2="1735" stroke="#ec4899" stroke-width="4" stroke-dasharray="6,5"/>
-<text x="1834" y="1740" font-size="12" fill="#9aa3b2">strip's own 5V + GND injected from an</text>
-<text x="1834" y="1758" font-size="12" fill="#9aa3b2">external supply, not PB1's VOUT-5V – that</text>
-<text x="1834" y="1776" font-size="12" fill="#9aa3b2">pin is logic-only, not rated for LED</text>
-<text x="1834" y="1794" font-size="12" fill="#9aa3b2">current</text>
-<rect x="1790" y="1848" width="560" height="124" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1804" y="1870" font-size="15" font-weight="700" fill="#e5e7eb">rotary encoder (eQEP0)</text>
-<line x1="1804" y1="1879" x2="1824" y2="1879" stroke="#a3e635" stroke-width="4"/>
-<text x="1834" y="1884" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P1.31</tspan><tspan fill="#9aa3b2">&#160;&#160;A</tspan></text>
-<line x1="1804" y1="1903" x2="1824" y2="1903" stroke="#a3e635" stroke-width="4"/>
-<text x="1834" y="1908" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.34</tspan><tspan fill="#9aa3b2">&#160;&#160;B</tspan></text>
-<line x1="1804" y1="1927" x2="1824" y2="1927" stroke="#a3e635" stroke-width="4"/>
-<text x="1834" y="1932" font-size="13" fill="#e5e7eb"><tspan font-weight="700">P2.19</tspan><tspan fill="#9aa3b2">&#160;&#160;button</tspan></text>
+<rect x="130" y="443.20000000000005" width="1530" height="1142.0000000000002" rx="26" ry="26" fill="#1f2430" stroke="#05060a" stroke-width="3"/>
+<rect x="96" y="988.2000000000002" width="46" height="52" rx="6" fill="#c7cdd6" stroke="#4b5563" stroke-width="2"/>
+<text x="86" y="1074.2000000000003" text-anchor="start" font-size="16" fill="#e5e7eb" font-weight="600">USB micro-B</text>
+<text x="86" y="1094.2000000000003" text-anchor="start" font-size="14" fill="#9aa3b2">(X1)</text>
+<text x="240" y="1020.8000000000002" font-size="19" fill="#f59e0b" font-weight="700">beagleboard.org</text>
+<text x="240" y="1050.8000000000002" font-size="21" fill="#e5e7eb" font-weight="700">PocketBeagle</text>
+<rect x="856.2" y="930.8000000000002" width="200" height="200" rx="8" fill="#111318" stroke="#6b7280" stroke-width="2"/>
+<text x="956.2" y="1024.8000000000002" text-anchor="middle" font-size="16" fill="#e5e7eb" font-weight="600">AM3358</text>
+<text x="956.2" y="1046.8000000000002" text-anchor="middle" font-size="12" fill="#9aa3b2">(OSD3358-SM)</text>
+<rect x="1245" y="945.8000000000002" width="340" height="170" rx="6" fill="#30343f" stroke="#9ca3af" stroke-width="2"/>
+<text x="1415.0" y="1036.8000000000002" text-anchor="middle" font-size="15" fill="#e5e7eb">microSD (X2)</text>
+<text x="165" y="1557.2000000000003" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P1</text>
+<text x="165" y="483.20000000000005" text-anchor="end" font-size="20" fill="#e5e7eb" font-weight="700">P2</text>
+<rect x="169" y="461.20000000000005" width="1452" height="66.0" fill="none" stroke="#5b6472" stroke-width="1.5" rx="8"/>
+<rect x="169" y="1501.2000000000003" width="1452" height="66.0" fill="none" stroke="#5b6472" stroke-width="1.5" rx="8"/>
+<circle cx="185.0" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="185.0" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="1551.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="1517.2000000000003" r="5" fill="#5b6472"/>
+<circle cx="185.0" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="185.0" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="268.52941176470586" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="352.05882352941177" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="435.5882352941177" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="519.1176470588235" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="602.6470588235294" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="686.1764705882354" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="769.7058823529412" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="853.2352941176471" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="936.7647058823529" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1020.2941176470588" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1103.8235294117649" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1187.3529411764707" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1270.8823529411766" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1354.4117647058824" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1437.9411764705883" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1521.4705882352941" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="511.20000000000005" r="5" fill="#5b6472"/>
+<circle cx="1605.0" cy="477.20000000000005" r="5" fill="#5b6472"/>
+<rect x="176.0" y="1542.2000000000003" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
+<rect x="176.0" y="502.20000000000005" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>
+<text x="185.0" y="429.20000000000005" text-anchor="middle" font-size="13" fill="#5b6472">pin 1</text>
+<text x="185.0" y="1609.2000000000003" text-anchor="middle" font-size="13" fill="#5b6472">pin 1</text>
+<text x="1605.0" y="429.20000000000005" text-anchor="middle" font-size="13" fill="#5b6472">pin 35/36</text>
+<text x="1605.0" y="1609.2000000000003" text-anchor="middle" font-size="13" fill="#5b6472">pin 35/36</text>
+<circle cx="185.0" cy="477.20000000000005" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="185.0" y1="477.20000000000005" x2="185.0" y2="413.20000000000005" stroke="#fb923c" stroke-width="3"/>
+<circle cx="185.0" cy="413.20000000000005" r="4" fill="#fb923c"/>
+<text x="185.0" y="393.20000000000005" transform="rotate(-90 185.0 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.02</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;button 1</tspan></text>
+<circle cx="268.52941176470586" cy="477.20000000000005" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="268.52941176470586" y1="477.20000000000005" x2="268.52941176470586" y2="413.20000000000005" stroke="#fb923c" stroke-width="3"/>
+<circle cx="268.52941176470586" cy="413.20000000000005" r="4" fill="#fb923c"/>
+<text x="268.52941176470586" y="393.20000000000005" transform="rotate(-90 268.52941176470586 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.04</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;button 2</tspan></text>
+<circle cx="352.05882352941177" cy="477.20000000000005" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="352.05882352941177" y1="477.20000000000005" x2="352.05882352941177" y2="413.20000000000005" stroke="#fb923c" stroke-width="3"/>
+<circle cx="352.05882352941177" cy="413.20000000000005" r="4" fill="#fb923c"/>
+<text x="352.05882352941177" y="393.20000000000005" transform="rotate(-90 352.05882352941177 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.06</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;button 3</tspan></text>
+<circle cx="602.6470588235294" cy="477.20000000000005" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
+<line x1="602.6470588235294" y1="477.20000000000005" x2="602.6470588235294" y2="413.20000000000005" stroke="#9ca3af" stroke-width="3"/>
+<circle cx="602.6470588235294" cy="413.20000000000005" r="4" fill="#9ca3af"/>
+<text x="602.6470588235294" y="393.20000000000005" transform="rotate(-90 602.6470588235294 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.12</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;PWR BTN</tspan></text>
+<circle cx="686.1764705882354" cy="477.20000000000005" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
+<line x1="686.1764705882354" y1="477.20000000000005" x2="686.1764705882354" y2="413.20000000000005" stroke="#9ca3af" stroke-width="3"/>
+<circle cx="686.1764705882354" cy="413.20000000000005" r="4" fill="#9ca3af"/>
+<text x="686.1764705882354" y="393.20000000000005" transform="rotate(-90 686.1764705882354 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.14</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VIN-BAT</tspan></text>
+<circle cx="769.7058823529412" cy="477.20000000000005" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="477.20000000000005" x2="769.7058823529412" y2="413.20000000000005" stroke="#9ca3af" stroke-width="3"/>
+<circle cx="769.7058823529412" cy="413.20000000000005" r="4" fill="#9ca3af"/>
+<text x="769.7058823529412" y="393.20000000000005" transform="rotate(-90 769.7058823529412 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.16</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;BAT-TEMP</tspan></text>
+<circle cx="936.7647058823529" cy="477.20000000000005" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="936.7647058823529" y1="477.20000000000005" x2="936.7647058823529" y2="413.20000000000005" stroke="#fb923c" stroke-width="3"/>
+<circle cx="936.7647058823529" cy="413.20000000000005" r="4" fill="#fb923c"/>
+<text x="936.7647058823529" y="393.20000000000005" transform="rotate(-90 936.7647058823529 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.20</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;button 6</tspan></text>
+<circle cx="1020.2941176470588" cy="477.20000000000005" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1020.2941176470588" y1="477.20000000000005" x2="1020.2941176470588" y2="413.20000000000005" stroke="#fb923c" stroke-width="3"/>
+<circle cx="1020.2941176470588" cy="413.20000000000005" r="4" fill="#fb923c"/>
+<text x="1020.2941176470588" y="393.20000000000005" transform="rotate(-90 1020.2941176470588 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.22</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;button 4</tspan></text>
+<circle cx="1103.8235294117649" cy="477.20000000000005" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1103.8235294117649" y1="477.20000000000005" x2="1103.8235294117649" y2="413.20000000000005" stroke="#fb923c" stroke-width="3"/>
+<circle cx="1103.8235294117649" cy="413.20000000000005" r="4" fill="#fb923c"/>
+<text x="1103.8235294117649" y="393.20000000000005" transform="rotate(-90 1103.8235294117649 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.24</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;button 5</tspan></text>
+<circle cx="1354.4117647058824" cy="477.20000000000005" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1354.4117647058824" y1="477.20000000000005" x2="1354.4117647058824" y2="413.20000000000005" stroke="#c084fc" stroke-width="3"/>
+<circle cx="1354.4117647058824" cy="413.20000000000005" r="4" fill="#c084fc"/>
+<text x="1354.4117647058824" y="393.20000000000005" transform="rotate(-90 1354.4117647058824 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.30</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;SPI1 CS0 (unused)</tspan></text>
+<circle cx="1437.9411764705883" cy="477.20000000000005" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1437.9411764705883" y1="477.20000000000005" x2="1437.9411764705883" y2="413.20000000000005" stroke="#c084fc" stroke-width="3"/>
+<circle cx="1437.9411764705883" cy="413.20000000000005" r="4" fill="#c084fc"/>
+<text x="1437.9411764705883" y="393.20000000000005" transform="rotate(-90 1437.9411764705883 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.32</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;SPI1 MOSI</tspan></text>
+<circle cx="1521.4705882352941" cy="477.20000000000005" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1521.4705882352941" y1="477.20000000000005" x2="1521.4705882352941" y2="413.20000000000005" stroke="#a3e635" stroke-width="3"/>
+<circle cx="1521.4705882352941" cy="413.20000000000005" r="4" fill="#a3e635"/>
+<text x="1521.4705882352941" y="393.20000000000005" transform="rotate(-90 1521.4705882352941 393.20000000000005)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.34</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;eQEP0 B</tspan></text>
+<circle cx="352.05882352941177" cy="511.20000000000005" r="9" fill="#1d4ed8" stroke="#05060a" stroke-width="1.5"/>
+<line x1="352.05882352941177" y1="511.20000000000005" x2="352.05882352941177" y2="575.2" stroke="#1d4ed8" stroke-width="3"/>
+<circle cx="352.05882352941177" cy="575.2" r="4" fill="#1d4ed8"/>
+<text x="352.05882352941177" y="595.2" transform="rotate(90 352.05882352941177 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.05</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART4 RXD</tspan></text>
+<circle cx="435.5882352941177" cy="511.20000000000005" r="9" fill="#1d4ed8" stroke="#05060a" stroke-width="1.5"/>
+<line x1="435.5882352941177" y1="511.20000000000005" x2="435.5882352941177" y2="575.2" stroke="#1d4ed8" stroke-width="3"/>
+<circle cx="435.5882352941177" cy="575.2" r="4" fill="#1d4ed8"/>
+<text x="435.5882352941177" y="595.2" transform="rotate(90 435.5882352941177 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.07</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART4 TXD</tspan></text>
+<circle cx="519.1176470588235" cy="511.20000000000005" r="9" fill="#60a5fa" stroke="#05060a" stroke-width="1.5"/>
+<line x1="519.1176470588235" y1="511.20000000000005" x2="519.1176470588235" y2="575.2" stroke="#60a5fa" stroke-width="3"/>
+<circle cx="519.1176470588235" cy="575.2" r="4" fill="#60a5fa"/>
+<text x="519.1176470588235" y="595.2" transform="rotate(90 519.1176470588235 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.09</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART1 TXD</tspan></text>
+<circle cx="602.6470588235294" cy="511.20000000000005" r="9" fill="#60a5fa" stroke="#05060a" stroke-width="1.5"/>
+<line x1="602.6470588235294" y1="511.20000000000005" x2="602.6470588235294" y2="575.2" stroke="#60a5fa" stroke-width="3"/>
+<circle cx="602.6470588235294" cy="575.2" r="4" fill="#60a5fa"/>
+<text x="602.6470588235294" y="595.2" transform="rotate(90 602.6470588235294 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.11</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART1 RXD</tspan></text>
+<circle cx="686.1764705882354" cy="511.20000000000005" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+<line x1="686.1764705882354" y1="511.20000000000005" x2="686.1764705882354" y2="575.2" stroke="#ec4899" stroke-width="3" stroke-dasharray="6,5"/>
+<circle cx="686.1764705882354" cy="575.2" r="4" fill="#ec4899"/>
+<text x="686.1764705882354" y="595.2" transform="rotate(90 686.1764705882354 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.13</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VOUT-5V</tspan></text>
+<circle cx="769.7058823529412" cy="511.20000000000005" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="511.20000000000005" x2="769.7058823529412" y2="575.2" stroke="#6b7280" stroke-width="3"/>
+<circle cx="769.7058823529412" cy="575.2" r="4" fill="#6b7280"/>
+<text x="769.7058823529412" y="595.2" transform="rotate(90 769.7058823529412 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.15</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;GND</tspan></text>
+<circle cx="936.7647058823529" cy="511.20000000000005" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
+<line x1="936.7647058823529" y1="511.20000000000005" x2="936.7647058823529" y2="575.2" stroke="#a3e635" stroke-width="3"/>
+<circle cx="936.7647058823529" cy="575.2" r="4" fill="#a3e635"/>
+<text x="936.7647058823529" y="595.2" transform="rotate(90 936.7647058823529 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.19</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;encoder button</tspan></text>
+<circle cx="1020.2941176470588" cy="511.20000000000005" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
+<line x1="1020.2941176470588" y1="511.20000000000005" x2="1020.2941176470588" y2="575.2" stroke="#6b7280" stroke-width="3"/>
+<circle cx="1020.2941176470588" cy="575.2" r="4" fill="#6b7280"/>
+<text x="1020.2941176470588" y="595.2" transform="rotate(90 1020.2941176470588 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;GND</tspan></text>
+<circle cx="1103.8235294117649" cy="511.20000000000005" r="9" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+<line x1="1103.8235294117649" y1="511.20000000000005" x2="1103.8235294117649" y2="575.2" stroke="#dc2626" stroke-width="3"/>
+<circle cx="1103.8235294117649" cy="575.2" r="4" fill="#dc2626"/>
+<text x="1103.8235294117649" y="595.2" transform="rotate(90 1103.8235294117649 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.23</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VOUT-3.3V</tspan></text>
+<circle cx="1354.4117647058824" cy="511.20000000000005" r="9" fill="#2563eb" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1354.4117647058824" y1="511.20000000000005" x2="1354.4117647058824" y2="575.2" stroke="#2563eb" stroke-width="3"/>
+<circle cx="1354.4117647058824" cy="575.2" r="4" fill="#2563eb"/>
+<text x="1354.4117647058824" y="595.2" transform="rotate(90 1354.4117647058824 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.29</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART3 TXD (TX only)</tspan></text>
+<circle cx="1521.4705882352941" cy="511.20000000000005" r="9" fill="#fb923c" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1521.4705882352941" y1="511.20000000000005" x2="1521.4705882352941" y2="575.2" stroke="#fb923c" stroke-width="3"/>
+<circle cx="1521.4705882352941" cy="575.2" r="4" fill="#fb923c"/>
+<text x="1521.4705882352941" y="595.2" transform="rotate(90 1521.4705882352941 595.2)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P2.33</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;mode toggle (stand-alone)</tspan></text>
+<circle cx="352.05882352941177" cy="1517.2000000000003" r="9" fill="#22d3ee" stroke="#05060a" stroke-width="1.5"/>
+<line x1="352.05882352941177" y1="1517.2000000000003" x2="352.05882352941177" y2="1453.2000000000003" stroke="#22d3ee" stroke-width="3"/>
+<circle cx="352.05882352941177" cy="1453.2000000000003" r="4" fill="#22d3ee"/>
+<text x="352.05882352941177" y="1433.2000000000003" transform="rotate(-90 352.05882352941177 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.06</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;I2C1_SCL</tspan></text>
+<circle cx="435.5882352941177" cy="1517.2000000000003" r="9" fill="#3b82f6" stroke="#05060a" stroke-width="1.5"/>
+<line x1="435.5882352941177" y1="1517.2000000000003" x2="435.5882352941177" y2="1453.2000000000003" stroke="#3b82f6" stroke-width="3"/>
+<circle cx="435.5882352941177" cy="1453.2000000000003" r="4" fill="#3b82f6"/>
+<text x="435.5882352941177" y="1433.2000000000003" transform="rotate(-90 435.5882352941177 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.08</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART2 CLK/TXD</tspan></text>
+<circle cx="519.1176470588235" cy="1517.2000000000003" r="9" fill="#3b82f6" stroke="#05060a" stroke-width="1.5"/>
+<line x1="519.1176470588235" y1="1517.2000000000003" x2="519.1176470588235" y2="1453.2000000000003" stroke="#3b82f6" stroke-width="3"/>
+<circle cx="519.1176470588235" cy="1453.2000000000003" r="4" fill="#3b82f6"/>
+<text x="519.1176470588235" y="1433.2000000000003" transform="rotate(-90 519.1176470588235 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.10</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART2 MISO/RXD</tspan></text>
+<circle cx="602.6470588235294" cy="1517.2000000000003" r="9" fill="#22d3ee" stroke="#05060a" stroke-width="1.5"/>
+<line x1="602.6470588235294" y1="1517.2000000000003" x2="602.6470588235294" y2="1453.2000000000003" stroke="#22d3ee" stroke-width="3"/>
+<circle cx="602.6470588235294" cy="1453.2000000000003" r="4" fill="#22d3ee"/>
+<text x="602.6470588235294" y="1433.2000000000003" transform="rotate(-90 602.6470588235294 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.12</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;I2C1_SDA</tspan></text>
+<circle cx="686.1764705882354" cy="1517.2000000000003" r="9" fill="#dc2626" stroke="#05060a" stroke-width="1.5"/>
+<line x1="686.1764705882354" y1="1517.2000000000003" x2="686.1764705882354" y2="1453.2000000000003" stroke="#dc2626" stroke-width="3"/>
+<circle cx="686.1764705882354" cy="1453.2000000000003" r="4" fill="#dc2626"/>
+<text x="686.1764705882354" y="1433.2000000000003" transform="rotate(-90 686.1764705882354 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.14</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VDD_3V3 (ADS7830 VIN)</tspan></text>
+<circle cx="769.7058823529412" cy="1517.2000000000003" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="1517.2000000000003" x2="769.7058823529412" y2="1453.2000000000003" stroke="#6b7280" stroke-width="3"/>
+<circle cx="769.7058823529412" cy="1453.2000000000003" r="4" fill="#6b7280"/>
+<text x="769.7058823529412" y="1433.2000000000003" transform="rotate(-90 769.7058823529412 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.16</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;GND</tspan></text>
+<circle cx="853.2352941176471" cy="1517.2000000000003" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
+<line x1="853.2352941176471" y1="1517.2000000000003" x2="853.2352941176471" y2="1453.2000000000003" stroke="#9ca3af" stroke-width="3"/>
+<circle cx="853.2352941176471" cy="1453.2000000000003" r="4" fill="#9ca3af"/>
+<text x="853.2352941176471" y="1433.2000000000003" transform="rotate(-90 853.2352941176471 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.18</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VREFP</tspan></text>
+<circle cx="1020.2941176470588" cy="1517.2000000000003" r="9" fill="#6b7280" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1020.2941176470588" y1="1517.2000000000003" x2="1020.2941176470588" y2="1453.2000000000003" stroke="#6b7280" stroke-width="3"/>
+<circle cx="1020.2941176470588" cy="1453.2000000000003" r="4" fill="#6b7280"/>
+<text x="1020.2941176470588" y="1433.2000000000003" transform="rotate(-90 1020.2941176470588 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.22</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;GND (ADS7830 GND)</tspan></text>
+<circle cx="1103.8235294117649" cy="1517.2000000000003" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+<line x1="1103.8235294117649" y1="1517.2000000000003" x2="1103.8235294117649" y2="1453.2000000000003" stroke="#ec4899" stroke-width="3" stroke-dasharray="6,5"/>
+<circle cx="1103.8235294117649" cy="1453.2000000000003" r="4" fill="#ec4899"/>
+<text x="1103.8235294117649" y="1433.2000000000003" transform="rotate(-90 1103.8235294117649 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VOUT-5V</tspan></text>
+<circle cx="1354.4117647058824" cy="1517.2000000000003" r="9" fill="#8b94a3" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1354.4117647058824" y1="1517.2000000000003" x2="1354.4117647058824" y2="1453.2000000000003" stroke="#8b94a3" stroke-width="3"/>
+<circle cx="1354.4117647058824" cy="1453.2000000000003" r="4" fill="#8b94a3"/>
+<text x="1354.4117647058824" y="1433.2000000000003" transform="rotate(-90 1354.4117647058824 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.30</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART0 TXD (console)</tspan></text>
+<circle cx="1437.9411764705883" cy="1517.2000000000003" r="9" fill="#8b94a3" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1437.9411764705883" y1="1517.2000000000003" x2="1437.9411764705883" y2="1453.2000000000003" stroke="#8b94a3" stroke-width="3"/>
+<circle cx="1437.9411764705883" cy="1453.2000000000003" r="4" fill="#8b94a3"/>
+<text x="1437.9411764705883" y="1433.2000000000003" transform="rotate(-90 1437.9411764705883 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.32</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;UART0 RXD (console)</tspan></text>
+<circle cx="1605.0" cy="1517.2000000000003" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1605.0" y1="1517.2000000000003" x2="1605.0" y2="1453.2000000000003" stroke="#c084fc" stroke-width="3"/>
+<circle cx="1605.0" cy="1453.2000000000003" r="4" fill="#c084fc"/>
+<text x="1605.0" y="1433.2000000000003" transform="rotate(-90 1605.0 1433.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.36</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;SPI1 SCLK</tspan></text>
+<circle cx="185.0" cy="1551.2000000000003" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+<line x1="185.0" y1="1551.2000000000003" x2="185.0" y2="1615.2000000000003" stroke="#ec4899" stroke-width="3" stroke-dasharray="6,5"/>
+<circle cx="185.0" cy="1615.2000000000003" r="4" fill="#ec4899"/>
+<text x="185.0" y="1635.2000000000003" transform="rotate(90 185.0 1635.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.01</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VIN</tspan></text>
+<circle cx="435.5882352941177" cy="1551.2000000000003" r="9" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+<line x1="435.5882352941177" y1="1551.2000000000003" x2="435.5882352941177" y2="1615.2000000000003" stroke="#ec4899" stroke-width="3" stroke-dasharray="6,5"/>
+<circle cx="435.5882352941177" cy="1615.2000000000003" r="4" fill="#ec4899"/>
+<text x="435.5882352941177" y="1635.2000000000003" transform="rotate(90 435.5882352941177 1635.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.07</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VIN-USB</tspan></text>
+<circle cx="769.7058823529412" cy="1551.2000000000003" r="9" fill="none" stroke="#6b7280" stroke-width="2.5"/>
+<line x1="769.7058823529412" y1="1551.2000000000003" x2="769.7058823529412" y2="1615.2000000000003" stroke="#6b7280" stroke-width="3"/>
+<circle cx="769.7058823529412" cy="1615.2000000000003" r="4" fill="#6b7280"/>
+<text x="769.7058823529412" y="1635.2000000000003" transform="rotate(90 769.7058823529412 1635.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.15</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;GND (USB1)</tspan></text>
+<circle cx="853.2352941176471" cy="1551.2000000000003" r="9" fill="none" stroke="#9ca3af" stroke-width="2.5"/>
+<line x1="853.2352941176471" y1="1551.2000000000003" x2="853.2352941176471" y2="1615.2000000000003" stroke="#9ca3af" stroke-width="3"/>
+<circle cx="853.2352941176471" cy="1615.2000000000003" r="4" fill="#9ca3af"/>
+<text x="853.2352941176471" y="1635.2000000000003" transform="rotate(90 853.2352941176471 1635.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.17</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;VREFN</tspan></text>
+<circle cx="1437.9411764705883" cy="1551.2000000000003" r="9" fill="#a3e635" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1437.9411764705883" y1="1551.2000000000003" x2="1437.9411764705883" y2="1615.2000000000003" stroke="#a3e635" stroke-width="3"/>
+<circle cx="1437.9411764705883" cy="1615.2000000000003" r="4" fill="#a3e635"/>
+<text x="1437.9411764705883" y="1635.2000000000003" transform="rotate(90 1437.9411764705883 1635.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.31</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;eQEP0 A</tspan></text>
+<circle cx="1521.4705882352941" cy="1551.2000000000003" r="9" fill="#c084fc" stroke="#05060a" stroke-width="1.5"/>
+<line x1="1521.4705882352941" y1="1551.2000000000003" x2="1521.4705882352941" y2="1615.2000000000003" stroke="#c084fc" stroke-width="3"/>
+<circle cx="1521.4705882352941" cy="1615.2000000000003" r="4" fill="#c084fc"/>
+<text x="1521.4705882352941" y="1635.2000000000003" transform="rotate(90 1521.4705882352941 1635.2000000000003)" font-size="16" fill="#e5e7eb"><tspan font-weight="700">P1.33</tspan><tspan font-size="14" fill="#9aa3b2">&#160;&#160;SPI1 MISO (unused)</tspan></text>
+<text x="1790" y="50" font-size="24" font-weight="700" fill="#e5e7eb">Legend</text>
+<rect x="1790" y="75" width="24" height="24" rx="5" fill="#22d3ee"/>
+<text x="1824" y="92" font-size="16" fill="#e5e7eb">I2C1 – fader ADC (ADS7830)</text>
+<rect x="1790" y="122" width="24" height="24" rx="5" fill="#60a5fa"/>
+<text x="1824" y="139" font-size="16" fill="#e5e7eb">UART1 – DMX universe 1</text>
+<rect x="1790" y="169" width="24" height="24" rx="5" fill="#3b82f6"/>
+<text x="1824" y="186" font-size="16" fill="#e5e7eb">UART2 – DMX universe 2</text>
+<rect x="1790" y="216" width="24" height="24" rx="5" fill="#2563eb"/>
+<text x="1824" y="233" font-size="16" fill="#e5e7eb">UART3 – DMX universe 3 (custom overlay,</text>
+<text x="1824" y="256" font-size="16" fill="#e5e7eb">TX only)</text>
+<rect x="1790" y="286" width="24" height="24" rx="5" fill="#1d4ed8"/>
+<text x="1824" y="303" font-size="16" fill="#e5e7eb">UART4 – DMX universe 4</text>
+<rect x="1790" y="333" width="24" height="24" rx="5" fill="#fb923c"/>
+<text x="1824" y="350" font-size="16" fill="#e5e7eb">buttons (6 control-desk + 1</text>
+<text x="1824" y="373" font-size="16" fill="#e5e7eb">stand-alone-mode toggle)</text>
+<rect x="1790" y="403" width="24" height="24" rx="5" fill="#c084fc"/>
+<text x="1824" y="420" font-size="16" fill="#e5e7eb">SPI1 – APA102 pixel strip (OLA SPI</text>
+<text x="1824" y="443" font-size="16" fill="#e5e7eb">plugin)</text>
+<rect x="1790" y="473" width="24" height="24" rx="5" fill="#a3e635"/>
+<text x="1824" y="490" font-size="16" fill="#e5e7eb">eQEP0 – rotary encoder A/B + its push</text>
+<text x="1824" y="513" font-size="16" fill="#e5e7eb">button</text>
+<rect x="1790" y="543" width="24" height="24" rx="5" fill="#8b94a3"/>
+<text x="1824" y="560" font-size="16" fill="#e5e7eb">parked / not pursued (UART0 console-swap</text>
+<text x="1824" y="583" font-size="16" fill="#e5e7eb">universe 5)</text>
+<text x="1790" y="640" font-size="17" font-weight="700" fill="#e5e7eb">power pins (colored by voltage, not just "is power"):</text>
+<line x1="1790" y1="666" x2="1826" y2="666" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="1838" y="672" font-size="16" fill="#e5e7eb">5V class (VIN / VIN-USB / VOUT-5V) –</text>
+<text x="1838" y="695" font-size="16" fill="#e5e7eb">dashed: check level-shifting before wiring</text>
+<line x1="1790" y1="732" x2="1826" y2="732" stroke="#dc2626" stroke-width="5"/>
+<text x="1838" y="738" font-size="16" fill="#e5e7eb">3.3V class (VDD_3V3 / VOUT-3.3V)</text>
+<line x1="1790" y1="775" x2="1826" y2="775" stroke="#6b7280" stroke-width="5"/>
+<text x="1838" y="781" font-size="16" fill="#e5e7eb">GND</text>
+<line x1="1790" y1="818" x2="1826" y2="818" stroke="#9ca3af" stroke-width="5"/>
+<text x="1838" y="824" font-size="16" fill="#e5e7eb">other (VREF, power button, VIN-BAT,</text>
+<text x="1838" y="847" font-size="16" fill="#e5e7eb">BAT-TEMP)</text>
+<circle cx="1801" cy="894" r="10" fill="#9aa3b2"/>
+<text x="1824" y="900" font-size="16" fill="#e5e7eb">filled = wired by this project</text>
+<circle cx="1801" cy="924" r="10" fill="none" stroke="#9aa3b2" stroke-width="3"/>
+<text x="1824" y="930" font-size="16" fill="#e5e7eb">outline = available, not wired</text>
+<text x="2400" y="50" font-size="24" font-weight="700" fill="#e5e7eb">Peripherals (schematic)</text>
+<text x="2400" y="76" font-size="14" fill="#9aa3b2">connected to the header at left only via matching pin labels, not a</text>
+<text x="2400" y="94" font-size="14" fill="#9aa3b2">drawn wire – power pins included for soldering</text>
+<rect x="2400" y="134" width="520" height="168" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="2416" y="160" font-size="17" font-weight="700" fill="#e5e7eb">ADS7830 fader ADC (I2C1)</text>
+<line x1="2416" y1="170" x2="2440" y2="170" stroke="#22d3ee" stroke-width="5"/>
+<text x="2450" y="176" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.06</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SCL</tspan></text>
+<line x1="2416" y1="197" x2="2440" y2="197" stroke="#22d3ee" stroke-width="5"/>
+<text x="2450" y="203" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.12</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SDA</tspan></text>
+<line x1="2416" y1="224" x2="2440" y2="224" stroke="#dc2626" stroke-width="5"/>
+<text x="2450" y="230" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.14</tspan><tspan fill="#9aa3b2">&#160;&#160;VDD_3V3</tspan></text>
+<line x1="2416" y1="251" x2="2440" y2="251" stroke="#6b7280" stroke-width="5"/>
+<text x="2450" y="257" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.22</tspan><tspan fill="#9aa3b2">&#160;&#160;GND</tspan></text>
+<rect x="2400" y="324" width="520" height="308" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="2416" y="350" font-size="17" font-weight="700" fill="#e5e7eb">DMX UART -&gt; RS485 (x4, UART1-4 -</text>
+<text x="2416" y="371" font-size="17" font-weight="700" fill="#e5e7eb">UART2 shown)</text>
+<text x="2416" y="387" font-size="14" font-style="italic" fill="#d1a9f7">IC: TXB0108 – 3.3V&lt;-&gt;5V auto-direction level</text>
+<text x="2416" y="405" font-size="14" font-style="italic" fill="#d1a9f7">IC: shifter (1 channel/signal: TXD, RXD)</text>
+<line x1="2416" y1="429" x2="2440" y2="429" stroke="#3b82f6" stroke-width="5"/>
+<text x="2450" y="435" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.08</tspan><tspan fill="#9aa3b2">&#160;&#160;TXD</tspan></text>
+<line x1="2416" y1="456" x2="2440" y2="456" stroke="#3b82f6" stroke-width="5"/>
+<text x="2450" y="462" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.10</tspan><tspan fill="#9aa3b2">&#160;&#160;RXD</tspan></text>
+<line x1="2416" y1="483" x2="2440" y2="483" stroke="#dc2626" stroke-width="5"/>
+<text x="2450" y="489" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.23</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-3.3V (TXB0108 VCCA)</tspan></text>
+<line x1="2416" y1="510" x2="2440" y2="510" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="2450" y="516" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (TXB0108 VCCB)</tspan></text>
+<line x1="2416" y1="537" x2="2440" y2="537" stroke="#6b7280" stroke-width="5"/>
+<text x="2450" y="543" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
+<line x1="2416" y1="568" x2="2440" y2="568" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="2450" y="574" font-size="14" fill="#9aa3b2">RS485 driver's own 5V + GND (same</text>
+<text x="2450" y="594" font-size="14" fill="#9aa3b2">5V/GND rail as VCCB above)</text>
+<rect x="2400" y="654" width="520" height="270" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="2416" y="680" font-size="17" font-weight="700" fill="#e5e7eb">control-desk buttons (x6) + mode</text>
+<text x="2416" y="701" font-size="17" font-weight="700" fill="#e5e7eb">toggle</text>
+<line x1="2416" y1="711" x2="2440" y2="711" stroke="#fb923c" stroke-width="5"/>
+<text x="2450" y="717" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.02</tspan><tspan fill="#9aa3b2">&#160;&#160;button 1</tspan></text>
+<line x1="2416" y1="738" x2="2440" y2="738" stroke="#fb923c" stroke-width="5"/>
+<text x="2450" y="744" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.04</tspan><tspan fill="#9aa3b2">&#160;&#160;button 2</tspan></text>
+<line x1="2416" y1="765" x2="2440" y2="765" stroke="#fb923c" stroke-width="5"/>
+<text x="2450" y="771" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.06</tspan><tspan fill="#9aa3b2">&#160;&#160;button 3</tspan></text>
+<line x1="2416" y1="792" x2="2440" y2="792" stroke="#fb923c" stroke-width="5"/>
+<text x="2450" y="798" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.22</tspan><tspan fill="#9aa3b2">&#160;&#160;button 4</tspan></text>
+<line x1="2416" y1="819" x2="2440" y2="819" stroke="#fb923c" stroke-width="5"/>
+<text x="2450" y="825" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.24</tspan><tspan fill="#9aa3b2">&#160;&#160;button 5</tspan></text>
+<line x1="2416" y1="846" x2="2440" y2="846" stroke="#fb923c" stroke-width="5"/>
+<text x="2450" y="852" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.20</tspan><tspan fill="#9aa3b2">&#160;&#160;button 6</tspan></text>
+<line x1="2416" y1="873" x2="2440" y2="873" stroke="#fb923c" stroke-width="5"/>
+<text x="2450" y="879" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.33</tspan><tspan fill="#9aa3b2">&#160;&#160;mode toggle</tspan></text>
+<rect x="2400" y="946" width="520" height="300" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="2416" y="972" font-size="17" font-weight="700" fill="#e5e7eb">APA102 pixel strip (SPI1)</text>
+<text x="2416" y="988" font-size="14" font-style="italic" fill="#d1a9f7">IC: 74HCT125 / 74AHCT125 – 3.3V-&gt;5V buffer</text>
+<text x="2416" y="1006" font-size="14" font-style="italic" fill="#d1a9f7">IC: (1 gate/signal: CLK, DATA)</text>
+<line x1="2416" y1="1030" x2="2440" y2="1030" stroke="#c084fc" stroke-width="5"/>
+<text x="2450" y="1036" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.36</tspan><tspan fill="#9aa3b2">&#160;&#160;SCLK</tspan></text>
+<line x1="2416" y1="1057" x2="2440" y2="1057" stroke="#c084fc" stroke-width="5"/>
+<text x="2450" y="1063" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.32</tspan><tspan fill="#9aa3b2">&#160;&#160;MOSI</tspan></text>
+<line x1="2416" y1="1084" x2="2440" y2="1084" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="2450" y="1090" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (74HCT125 VCC)</tspan></text>
+<line x1="2416" y1="1111" x2="2440" y2="1111" stroke="#6b7280" stroke-width="5"/>
+<text x="2450" y="1117" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
+<line x1="2416" y1="1142" x2="2440" y2="1142" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="2450" y="1148" font-size="14" fill="#9aa3b2">strip's own 5V + GND injected from an</text>
+<text x="2450" y="1168" font-size="14" fill="#9aa3b2">external supply, not PB1's VOUT-5V –</text>
+<text x="2450" y="1188" font-size="14" fill="#9aa3b2">that pin is logic-only, not rated for</text>
+<text x="2450" y="1208" font-size="14" fill="#9aa3b2">LED current</text>
+<rect x="2400" y="1268" width="520" height="141" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="2416" y="1294" font-size="17" font-weight="700" fill="#e5e7eb">rotary encoder (eQEP0)</text>
+<line x1="2416" y1="1304" x2="2440" y2="1304" stroke="#a3e635" stroke-width="5"/>
+<text x="2450" y="1310" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.31</tspan><tspan fill="#9aa3b2">&#160;&#160;A</tspan></text>
+<line x1="2416" y1="1331" x2="2440" y2="1331" stroke="#a3e635" stroke-width="5"/>
+<text x="2450" y="1337" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.34</tspan><tspan fill="#9aa3b2">&#160;&#160;B</tspan></text>
+<line x1="2416" y1="1358" x2="2440" y2="1358" stroke="#a3e635" stroke-width="5"/>
+<text x="2450" y="1364" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.19</tspan><tspan fill="#9aa3b2">&#160;&#160;button</tspan></text>
 </svg>
