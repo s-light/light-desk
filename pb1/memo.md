@@ -982,3 +982,126 @@ Next priorities, in order:
       *between* two `<tspan>` elements gets collapsed/dropped by the
       renderer, so the pin-name/description gap needed an explicit
       `&#160;` (non-breaking space) *inside* the second tspan instead.
+    - **Rotated labels 90° (2026-10-03, same day) per user feedback**
+      ("labels are crossing the colored lines"): the per-label-width
+      tiering fix above still let a tier's horizontal text overhang
+      sideways far enough to cross a *different* pin's straight
+      leader line - a different collision class than the one that fix
+      targeted. Root fix: rotate every label 90° so it runs straight
+      out from its own pin's column instead of sideways across
+      others' - `assign_tiers()`/`label_width()`/`TIER_H` all deleted,
+      no tiering needed at all once a label can't leave its own
+      column. Leader lines made longer and the line-to-text gap
+      widened in the same pass (`STUB`/`LABEL_GAP`) per further
+      feedback, so the colored line itself reads clearly before the
+      text starts.
+    - **Color scheme revised**: UART1-4 collapsed to one blue family
+      (darkening by universe number, since they're "the same kind of
+      thing") instead of 4 unrelated hues; other categories
+      (buttons/SPI1/encoder/I2C1) kept high-contrast distinct hues.
+      Power pins recolored **by actual voltage** instead of just "is
+      power": 5V-class (VIN/VIN-USB/VOUT-5V) gets a saturated
+      pink-red *dashed* line (deliberately the most alarming-looking,
+      since wiring 5V into 3.3V-only parts is the easy way to let the
+      smoke out), 3.3V-class gets solid red, GND gets dark gray, and
+      the remaining power-adjacent pins (VREF/PWR-BTN/VIN-BAT/
+      BAT-TEMP) get a muted neutral.
+    - **Added a "Peripherals (schematic)" section**: one small box per
+      connected peripheral (ADS7830, one representative DMX
+      UART->RS485 stage - all 4 universes wire up identically so only
+      one is drawn, buttons, APA102, rotary encoder), listing each
+      peripheral's pins via the same label text used on the header -
+      at the user's request, connected only by that shared text, no
+      wire drawn across the page. Later extended, at the user's
+      request, to also show the level-shifter IC each analog-signal
+      peripheral needs (TXB0108 for the DMX UART stage, 74HCT125/
+      74AHCT125 for the APA102 strip) plus the power pins needed to
+      wire that IC up - this is meant as real soldering-reference
+      information, not just a block diagram.
+    - **Legend split into its own third column** (was stacked below
+      Peripherals in one sidebar, at the user's request it's now a
+      separate column beside it) and most fonts/line weights sized up
+      per feedback ("make the lines and fonts a bit bigger").
+    - **Vertical margins tightened** (2026-10-03) per user feedback
+      ("fit it in my browser window without scrolling... about
+      4k-wide and height 4k-screen minus a bit"): the title-to-board
+      gap and the Legend/Peripherals heading-to-first-item gaps had
+      more padding than the content needed. Canvas went from
+      2920x1947 to 2920x1795 by trimming the padding constants
+      (`BAND_PAD`, `TITLE_H`, the various `leg_y`/`peri_y` increments)
+      rather than shrinking the (just-enlarged) fonts/lines back down.
+
+19. **OLED display bring-up (2026-10-03)**: an Adafruit SSD1306
+    0.96" 128x64 monochrome SPI OLED (PCB v2.1), user-wired per
+    Adafruit's CircuitPython wiring guide: VIN->3V, GND->GND,
+    SCK->Clk, MOSI->Data, D5->CS, D6->DC, D9->Rst (display "half way
+    prepared" as of this session, not yet fully wired/tested).
+    - **Pin selection**: 5 control signals (CLK, DATA/MOSI, CS, DC,
+      RST) assigned to P1.26/P1.28/P1.29/P1.34/P1.35 - plain GPIO
+      outputs, not a real hardware SPI bus (see below for why), so any
+      free pins would do; picked from pins not already committed
+      elsewhere in this project.
+    - **Devicetree overlay bug, caught before deploying, not by the
+      user**: first draft put the OLED's 5 pins in a brand-new
+      standalone overlay file with its own `&gpio0`/`&gpio2`/`&gpio3`
+      fragments. Realized before compiling that this would silently
+      overwrite `BB-GPIO-buttons-light-desk-00A0.dts`'s *existing*
+      `&gpio0`/`&gpio2` `pinctrl-0` settings - the devicetree overlay
+      system REPLACES a target node's property when two separate
+      overlays both set it, it doesn't merge the phandle lists. Fixed
+      by merging the OLED's pins into the buttons overlay's existing
+      per-bank fragments instead (now documented at the top of that
+      file as a standing warning - check which bank a new pin lands
+      on against that file before adding yet another GPIO overlay).
+      Compiled clean on real PB1 hardware (`dtc -@`, rc=0, fixups
+      resolved correctly) but **not yet installed/booted** - needs
+      `setup_pb1.py overlays` + a reboot, left for the user.
+    - **Blinka architectural blocker, found and resolved**: Blinka's
+      `digitalio`/`bitbangio` can't be used on this board at all for
+      the OLED. `adafruit_platformdetect` correctly IDs the SoC as
+      AM33XX, which routes `digitalio.DigitalInOut` through
+      `adafruit_blinka.microcontroller.am335x.pin`, which hard-requires
+      the `Adafruit_BBIO` package - a *different* sysfs/BeagleBone-
+      P8-P9-header GPIO library this project has never used, with a
+      pin-naming scheme that doesn't match PocketBeagle's P1/P2
+      headers at all. Checked `adafruit_blinka/
+      microcontroller_imports.json` directly on the board: no
+      `BLINKA_FORCECHIP` value routes AM33XX to a libgpiod-based
+      generic-Linux backend instead - there's no fallback for this
+      chip family. Decision: rather than add `Adafruit_BBIO` as a
+      real dependency (wrong pin-naming scheme, a second GPIO library
+      alongside the libgpiod one this whole project already uses),
+      `scripts/oled_display_test.py` implements the two small
+      interfaces `adafruit_ssd1306`/`adafruit_bus_device` actually
+      need (`GpiodOutputPin`, `BitbangSPI`) directly on `gpiod` -
+      matches this project's established pattern of going around
+      Blinka's board-support gaps straight to libgpiod (ADC, buttons).
+    - **Surprising transitive-dependency finding**: even with the
+      gpiod shims and never calling `Adafruit_BBIO` directly,
+      `adafruit_ssd1306` still transitively imports
+      `adafruit_bus_device.spi_device`, which has its own module-level
+      `try: ... from digitalio import DigitalInOut \n except
+      ImportError: DigitalInOut = None`. That `except` does NOT catch
+      the failure this board actually produces - Blinka's missing-
+      platform-support path raises `RuntimeError` (chained from the
+      underlying `ModuleNotFoundError`), not `ImportError`, so the
+      `try/except` doesn't help; `import digitalio` crashes the whole
+      `adafruit_bus_device.spi_device` import (and therefore
+      `adafruit_ssd1306`'s) unless `digitalio` itself can actually be
+      imported successfully. Confirmed on real hardware: installing
+      `Adafruit_BBIO` (even though nothing in this project's code
+      calls it) is what lets `import digitalio` succeed, which is what
+      keeps this chain from crashing - **`Adafruit_BBIO` currently has
+      to stay installed in the board's venv as a transitive-only
+      dependency**, not because the shim approach needs it directly,
+      but because a library two levels away checks for `digitalio`'s
+      mere importability. Not yet added to `scripts/requirements.txt`
+      (would need a comment explaining why, since it looks redundant
+      with the gpiod-shim approach otherwise) - left for whoever next
+      touches that file to decide given this.
+    - **Verified on real board**: the full import chain (`gpiod`,
+      `gpiod.line`, `adafruit_ssd1306`) succeeds end-to-end with
+      `Adafruit_BBIO` installed. Not yet verified: the overlay isn't
+      installed/booted and no display is physically wired yet, so
+      drawing anything to real hardware is still untested - "imports
+      cleanly" is necessary but not sufficient.

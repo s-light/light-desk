@@ -227,7 +227,49 @@ sudo systemctl stop standalone-plasma.service
 **Not yet installed/boot-tested as a whole system** - the overlay
 change needs a reboot first, see `memo.md` item 15 for what's left.
 
+## OLED display
+
+One Adafruit SSD1306 0.96" 128x64 monochrome SPI OLED (PCB v2.1), to
+the PocketBeagle 1 P1 header:
+
+| OLED signal | PB1 pin | note                          |
+| :---------- | :------ | :----------------------------- |
+| VIN         | 3V      | any 3.3V pin on the header      |
+| GND         | GND     | any GND pin on the header       |
+| Clk (SCK)   | P1.29   | plain GPIO, bit-banged SPI clock |
+| Data (MOSI) | P1.28   | plain GPIO, bit-banged SPI data  |
+| CS          | P1.26   | plain GPIO                       |
+| DC          | P1.34   | plain GPIO                       |
+| Rst         | P1.35   | plain GPIO                       |
+
+Not on PB1's real SPI1 bus (already dedicated to the APA102 strip, and
+AM335x only has 2 SPI controllers total - see the APA102 section
+above) and not a kernel `spi-gpio` overlay either -
+`scripts/oled_display_test.py` bit-bangs the SPI protocol entirely in
+userspace via `gpiod`, going around a real architectural gap in Blinka
+(it can't drive GPIO at all on this chip without the unrelated,
+wrong-pin-naming `Adafruit_BBIO` package - see `memo.md` item 19 for
+the full finding).
+
+Install: `./setup_pb1.py overlays` (builds+wires the 5 OLED control
+pins into `BB-GPIO-buttons-light-desk-00A0.dtbo`, alongside the
+buttons), reboot, then:
+
+```
+python3 scripts/oled_display_test.py
+```
+
+draws a border rectangle and centered text, then exits - the display
+holds the frame in its own RAM.
+
+**Not yet installed/boot-tested** - the overlay compiles clean and the
+full Python import chain (`gpiod`, `adafruit_ssd1306`) was verified
+end-to-end on the board, but the overlay hasn't been installed/booted
+yet and the display isn't fully wired yet either. See `memo.md` item
+19 for the Blinka/`Adafruit_BBIO` finding and why
+`scripts/requirements.txt` doesn't (yet) list `Adafruit_BBIO` despite
+it being required transitively.
+
 See `memo.md` for full bring-up history and remaining open steps
 (button press verification with an actual button, an actual DMX
-fixture on the line, the future `spi-gpio` display, stand-alone mode
-above).
+fixture on the line, stand-alone mode above, the OLED display above).

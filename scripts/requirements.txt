@@ -1,5 +1,6 @@
 adafruit-blinka
 adafruit-extended-bus
 adafruit-circuitpython-ads7830
+adafruit-circuitpython-ssd1306
 python-osc
 gpiod

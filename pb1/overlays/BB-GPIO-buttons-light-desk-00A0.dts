@@ -2,29 +2,48 @@
 /plugin/;
 
 /*
- * light-desk: activate internal pull-up input mode for 8 button GPIO
- * pins on PocketBeagle 1 - the 6 control-desk buttons (P2.02, P2.04,
- * P2.06, P2.20, P2.22, P2.24), P2.33 (the stand-alone-mode toggle
- * button, see scripts/standalone_mode_toggle.py and memo.md item 15),
- * and P2.19 (the rotary pulse encoder's own push button - the
- * encoder's A/B quadrature channels are a separate concern, handled
- * by BB-ROTARY-ENCODER-light-desk-00A0.dts's eQEP0 hardware decoder,
- * not GPIO) - read from userspace via libgpiod by
+ * light-desk: activate plain GPIO mode for every "misc GPIO" pin on
+ * PocketBeagle 1 that needs one - the 8 button inputs (internal
+ * pull-up) this file originally covered, PLUS the 5 OLED
+ * display-control outputs added later. Both live in the SAME file
+ * deliberately, not because they're related in purpose, but because
+ * of a real devicetree constraint: a `&gpio0 { pinctrl-0 = <...>; }`
+ * fragment in one overlay file REPLACES that property, it doesn't
+ * merge with the same fragment in another overlay file - so two
+ * separate overlays both touching e.g. &gpio0 would have the second
+ * one silently wipe out the first one's pin mux at boot. Since the
+ * OLED's pins land on gpio0/gpio2/gpio3 and the buttons already
+ * claim gpio0/gpio1/gpio2, they have to share this one file's
+ * fragments per bank. Keep that in mind before adding yet another
+ * "just one more GPIO pin" overlay to this project - check which
+ * bank it's on against this file first.
+ *
+ * Buttons (internal pull-up, read via libgpiod by
  * scripts/buttons_debug_print.py / scripts/ads7830_to_osc.py /
- * scripts/standalone_mode_toggle.py (see pb1/memo.md item 9 for the
- * original 6-pin selection history).
+ * scripts/standalone_mode_toggle.py / scripts/rotary_encoder_test.py,
+ * see pb1/memo.md item 9 for the original 6-pin selection history):
+ * the 6 control-desk buttons (P2.02, P2.04, P2.06, P2.20, P2.22,
+ * P2.24), P2.33 (the stand-alone-mode toggle button), and P2.19 (the
+ * rotary encoder's own push button).
+ *
+ * OLED display control pins (plain outputs, bit-banged SPI driven
+ * entirely from userspace by scripts/oled_display_test.py via a
+ * hand-rolled gpiod-backed shim, NOT Blinka's digitalio/bitbangio -
+ * see that script's own docstring and pb1/memo.md item 19 for why):
+ * P1.26 (CS), P1.28 (DATA/MOSI), P1.29 (CLK), P1.34 (DC), P1.35
+ * (RST), for an Adafruit SSD1306 128x64 SPI OLED.
  *
  * The base am335x-pocketbeagle.dts (see /opt/source/dtb-*.x/src/arm/
  * ti/omap/am335x-pocketbeagle.dts on the board, under &am33xx_pinmux)
- * already defines a ready-made pinctrl-single node per header pin,
- * pre-configured exactly as PIN_INPUT_PULLUP + MUX_MODE7 (GPIO) -
- * P2_02_gpio, P2_04_gpio, P2_06_gpio, P2_20_gpio, P2_22_gpio,
- * P2_24_gpio, P2_33_gpio, P2_19_gpio below - but none of them are
- * referenced by any device's pinctrl-0, so they're never actually
- * applied; the pins sit at whatever mux/bias U-Boot/ROM left them in
- * at boot instead. Confirmed on real hardware: with nothing wired to
- * any of these pins, `gpioget -b pull-up|pull-down|disabled` all
- * returned the exact same fixed value per pin no matter the bias
+ * already defines a ready-made pinctrl-single node per header pin for
+ * the BUTTON pins, pre-configured exactly as PIN_INPUT_PULLUP +
+ * MUX_MODE7 (GPIO) - P2_02_gpio, P2_04_gpio, P2_06_gpio, P2_20_gpio,
+ * P2_22_gpio, P2_24_gpio, P2_33_gpio, P2_19_gpio below - but none of
+ * them are referenced by any device's pinctrl-0, so they're never
+ * actually applied; the pins sit at whatever mux/bias U-Boot/ROM left
+ * them in at boot instead. Confirmed on real hardware: with nothing
+ * wired to any of these pins, `gpioget -b pull-up|pull-down|disabled`
+ * all returned the exact same fixed value per pin no matter the bias
  * flag - i.e. libgpiod's runtime bias request has zero effect here
  * (this reproduced on unrelated pins too, e.g. P2.02/P2.03, so it's
  * not specific to these - AM335x's pinctrl-single driver doesn't
@@ -33,23 +52,52 @@
  * the static pinmux value applied at boot, which is exactly what
  * this overlay does).
  *
- * 6 of the 8 pins (P2.02, P2.04, P2.06, P2.22, P2.24, P2.33) sit on
- * GPIO bank gpio1; P2.20 sits on gpio2; P2.19 sits on gpio0. Three
- * small fragments, one per bank, cover this: any platform device
- * with a bound driver gets pinctrl-0 applied automatically at probe
- * time (generic Linux driver-core behavior, independent of what the
- * driver itself does), and gpio0's/gpio1's/gpio2's own omap-gpio
- * driver instances already probe/bind normally - so adding
- * pinctrl-names/pinctrl-0 here applies the pad config without any
- * device claiming the GPIO lines themselves (unlike e.g. a gpio-keys
- * or gpio-leds node, which would also reserve the lines and block
- * libgpiod from requesting them from userspace - not what we want
- * here, since the existing Python scripts poll these lines directly).
+ * No ready-made label exists for the OLED pins (they're not in the
+ * base dts's small set of pre-defined "_gpio" nodes), so those get
+ * their own raw pinctrl-single entries below instead - same
+ * offset/flags/mode convention as this repo's other custom overlays
+ * (no AM33XX_PADCONF()/AM335X_PIN_* macros, this board's dtc doesn't
+ * preprocess; offsets derived as (AM335X_PIN_<NAME> & 0xffff) -
+ * 0x800 from .../include/dt-bindings/pinctrl/am33xx.h on the board).
+ * Flags 0x08 = PIN_OUTPUT (PULL_DISABLE, no INPUT_EN, no pull) -
+ * unlike the button pins, these 5 are all actively-driven outputs
+ * (SoC -> display, nothing drives back), so there's no pull-up to
+ * configure, matching BB-UART3-light-desk-00A0.dts's TX-only pin.
+ *
+ * Any platform device with a bound driver gets pinctrl-0 applied
+ * automatically at probe time (generic Linux driver-core behavior,
+ * independent of what the driver itself does), and gpio0's/gpio1's/
+ * gpio2's/gpio3's own omap-gpio driver instances already probe/bind
+ * normally - so adding pinctrl-names/pinctrl-0 here applies the pad
+ * config without any device claiming the GPIO lines themselves
+ * (unlike e.g. a gpio-keys/gpio-leds/spi node, which would also
+ * reserve the lines and block libgpiod/bitbangio from requesting
+ * them from userspace - not what we want here).
  */
+
+&am33xx_pinmux {
+	bb_oled_gpio0_pins: pinmux_bb_oled_gpio0_pins {
+		pinctrl-single,pins = <
+			0x178 0x08 0x07 /* P1.26 uart1_ctsn.gpio0_12 - OLED CS */
+			0x17c 0x08 0x07 /* P1.28 uart1_rtsn.gpio0_13 - OLED DATA/MOSI */
+			0x028 0x08 0x07 /* P1.34 gpmc_ad10.gpio0_26 - OLED DC */
+		>;
+	};
+	bb_oled_gpio2_pins: pinmux_bb_oled_gpio2_pins {
+		pinctrl-single,pins = <
+			0x0e8 0x08 0x07 /* P1.35 lcd_pclk.gpio2_24 - OLED RST */
+		>;
+	};
+	bb_oled_gpio3_pins: pinmux_bb_oled_gpio3_pins {
+		pinctrl-single,pins = <
+			0x1ac 0x08 0x07 /* P1.29 mcasp0_ahclkx.gpio3_21 - OLED CLK */
+		>;
+	};
+};
 
 &gpio0 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&P2_19_gpio>;
+	pinctrl-0 = <&P2_19_gpio &bb_oled_gpio0_pins>;
 };
 
 &gpio1 {
@@ -59,5 +107,10 @@
 
 &gpio2 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&P2_20_gpio>;
+	pinctrl-0 = <&P2_20_gpio &bb_oled_gpio2_pins>;
+};
+
+&gpio3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&bb_oled_gpio3_pins>;
 };
