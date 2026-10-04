@@ -369,30 +369,37 @@ def main():
     p1_outer_band = band_h(p1_outer)
 
     # --- geometry (y), built as stacked bands top to bottom -------------
-    TITLE_H = 90
-    y = TITLE_H + 30
+    # Padding constants kept tight (not the generous ~30-60px slack an
+    # earlier version used) - at the user's request the whole diagram
+    # needs to fit a ~4K browser window's height without scrolling, and
+    # the title-to-board gap in particular was bigger than it needed to
+    # be: STUB+LABEL_GAP already reserve the real travel distance a
+    # rotated label needs, so the extra per-band pad only has to absorb
+    # rounding slack, not a second margin.
+    BAND_PAD = 12
+    TITLE_H = 64
+    y = TITLE_H + 16
 
-    top_margin_top = y
-    y += STUB + LABEL_GAP + p2_outer_band + 30         # P2 outer labels (above board, rotated, growing upward)
+    y += STUB + LABEL_GAP + p2_outer_band + BAND_PAD   # P2 outer labels (above board, rotated, growing upward)
 
     BOARD_TOP = y
     p2_outer_y = BOARD_TOP + ROW_GAP
     p2_inner_y = BOARD_TOP + 2 * ROW_GAP
     y = p2_inner_y
 
-    y += STUB + LABEL_GAP + p2_inner_band + 30         # P2 inner labels (inside board, growing downward)
+    y += STUB + LABEL_GAP + p2_inner_band + BAND_PAD   # P2 inner labels (inside board, growing downward)
     graphics_top = y
-    GRAPHICS_H = 260
+    GRAPHICS_H = 220
     y += GRAPHICS_H
     graphics_bottom = y
 
-    y += STUB + LABEL_GAP + p1_inner_band + 30         # P1 inner labels (inside board, growing upward)
+    y += STUB + LABEL_GAP + p1_inner_band + BAND_PAD   # P1 inner labels (inside board, growing upward)
     p1_inner_y = y
     p1_outer_y = p1_inner_y + ROW_GAP
     BOARD_BOTTOM = p1_outer_y + ROW_GAP
     y = BOARD_BOTTOM
 
-    y += STUB + LABEL_GAP + p1_outer_band + 30         # P1 outer labels (below board, growing downward)
+    y += STUB + LABEL_GAP + p1_outer_band + BAND_PAD   # P1 outer labels (below board, growing downward)
     bottom_margin_bottom = y
 
     def pin_xy(header, pin):
@@ -503,9 +510,9 @@ def main():
 
     # --- column 2: legend sidebar ---------------------------------------
     leg_x = DIAGRAM_W + 40
-    leg_y = 50
+    leg_y = 44
     put(f'<text x="{leg_x}" y="{leg_y}" font-size="24" font-weight="700" fill="{TEXT_MAIN}">Legend</text>')
-    leg_y += 42
+    leg_y += 30
 
     def wrap(desc, width=40):
         words = desc.split(" ")
@@ -526,26 +533,26 @@ def main():
         lines = wrap(desc)
         for li, line in enumerate(lines):
             put(f'<text x="{leg_x+34}" y="{leg_y+li*23}" font-size="16" fill="{TEXT_MAIN}">{esc(line)}</text>')
-        leg_y += max(1, len(lines)) * 23 + 24
+        leg_y += max(1, len(lines)) * 23 + 16
 
-    leg_y += 10
+    leg_y += 6
     put(f'<text x="{leg_x}" y="{leg_y}" font-size="17" font-weight="700" fill="{TEXT_MAIN}">power pins (colored by voltage, not just "is power"):</text>')
-    leg_y += 32
+    leg_y += 28
     for color, dash, desc in POWER_LEGEND:
         dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
         put(f'<line x1="{leg_x}" y1="{leg_y-6}" x2="{leg_x+36}" y2="{leg_y-6}" stroke="{color}" stroke-width="5"{dash_attr}/>')
         lines = wrap(desc, width=42)
         for li, line in enumerate(lines):
             put(f'<text x="{leg_x+48}" y="{leg_y+li*23}" font-size="16" fill="{TEXT_MAIN}">{esc(line)}</text>')
-        leg_y += max(1, len(lines)) * 23 + 20
+        leg_y += max(1, len(lines)) * 23 + 14
 
-    leg_y += 10
+    leg_y += 6
     put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" fill="{TEXT_SUB}"/>')
     put(f'<text x="{leg_x+34}" y="{leg_y}" font-size="16" fill="{TEXT_MAIN}">filled = wired by this project</text>')
-    leg_y += 30
+    leg_y += 28
     put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" fill="none" stroke="{TEXT_SUB}" stroke-width="3"/>')
     put(f'<text x="{leg_x+34}" y="{leg_y}" font-size="16" fill="{TEXT_MAIN}">outline = available, not wired</text>')
-    leg_y += 36
+    leg_y += 30
 
     # --- column 3: peripheral schematic boxes -----------------------------
     def draw_peripheral(x, y, peripheral):
@@ -568,15 +575,15 @@ def main():
         for note in peripheral["extra_power"]:
             extra_lines.extend((note, line) for line in wrap(note, width=38))
 
-        yy = y + 26
+        yy = y + 22
         for li, line in enumerate(title_lines):
             cput(f'<text x="{x+16}" y="{yy+li*21}" font-size="17" font-weight="700" fill="{TEXT_MAIN}">{esc(line)}</text>')
-        yy += (len(title_lines) - 1) * 21 + 16
+        yy += (len(title_lines) - 1) * 21 + 12
 
         if chip_lines:
             for li, line in enumerate(chip_lines):
                 cput(f'<text x="{x+16}" y="{yy+li*18}" font-size="14" font-style="italic" fill="#d1a9f7">IC: {esc(line)}</text>')
-            yy += len(chip_lines) * 18 + 12
+            yy += len(chip_lines) * 18 + 8
 
         for cat, pin_label, sig in peripheral["pins"]:
             color, dash = category_style(cat, sig if cat in ("power", "power_avail") else "")
@@ -597,22 +604,22 @@ def main():
                 cput(f'<text x="{x+50}" y="{yy}" font-size="14" fill="{TEXT_SUB}">{esc(line)}</text>')
                 yy += 20
 
-        h = yy - y + 18
+        h = yy - y + 14
         put(f'<rect x="{x}" y="{y}" width="{box_w}" height="{h}" rx="10" fill="{BOARD_FILL}" stroke="{TEXT_FAINT}" stroke-width="1.5"/>')
         svg_body.extend(content)
         return h
 
     peri_x = leg_x + LEGEND_W + COL_GAP
-    peri_y = 50
+    peri_y = 44
     put(f'<text x="{peri_x}" y="{peri_y}" font-size="24" font-weight="700" fill="{TEXT_MAIN}">Peripherals (schematic)</text>')
-    peri_y += 26
+    peri_y += 22
     subtitle_lines = wrap("connected to the header at left only via matching pin labels, not a drawn wire – power pins included for soldering", width=70)
     for li, line in enumerate(subtitle_lines):
         put(f'<text x="{peri_x}" y="{peri_y+li*18}" font-size="14" fill="{TEXT_SUB}">{esc(line)}</text>')
-    peri_y += len(subtitle_lines) * 18 + 22
+    peri_y += len(subtitle_lines) * 18 + 14
     for peripheral in PERIPHERALS:
         h = draw_peripheral(peri_x, peri_y, peripheral)
-        peri_y += h + 22
+        peri_y += h + 16
 
     H = max(bottom_margin_bottom + 30, peri_y + 30, leg_y + 30, 760)
 
