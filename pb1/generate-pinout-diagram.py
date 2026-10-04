@@ -110,12 +110,16 @@ TEXT_SUB = "#9aa3b2"
 TEXT_FAINT = "#5b6472"
 PIN_DOT = "#5b6472"
 
-# Voltage-class colors for power-ish pins (see module docstring).
-V5_COLOR = "#ec4899"       # saturated pink-red, dashed leader line
+# Voltage-class colors for power-ish pins (see module docstring), keyed
+# by the CSS class-name suffix each one gets (".fill-v5"/".stroke-v5",
+# etc - see the generated <style> block in main()).
 V5_DASH = "6,5"
-V3V3_COLOR = "#dc2626"     # solid red
-GND_COLOR = "#6b7280"      # dark gray
-PWR_MISC_COLOR = "#9ca3af"  # neutral (VREF/PWR BTN/VIN-BAT/BAT-TEMP)
+VOLTAGE_COLORS = {
+    "v5": "#ec4899",      # saturated pink-red, dashed leader line
+    "v3v3": "#dc2626",    # solid red
+    "gnd": "#6b7280",     # dark gray
+    "pwrmisc": "#9ca3af",  # neutral (VREF/PWR BTN/VIN-BAT/BAT-TEMP)
+}
 
 COLORS = {
     "i2c1":    "#22d3ee",
@@ -144,10 +148,10 @@ LEGEND = [
 # Separate legend block for power pins, drawn as leader-line swatches
 # (so the dash pattern itself is visible) rather than solid rects.
 POWER_LEGEND = [
-    (V5_COLOR, V5_DASH, "5V class (VIN / VIN-USB / VOUT-5V) – dashed: check level-shifting before wiring"),
-    (V3V3_COLOR, None, "3.3V class (VDD_3V3 / VOUT-3.3V)"),
-    (GND_COLOR, None, "GND"),
-    (PWR_MISC_COLOR, None, "other (VREF, power button, VIN-BAT, BAT-TEMP)"),
+    ("v5", V5_DASH, "5V class (VIN / VIN-USB / VOUT-5V) – dashed: check level-shifting before wiring"),
+    ("v3v3", None, "3.3V class (VDD_3V3 / VOUT-3.3V)"),
+    ("gnd", None, "GND"),
+    ("pwrmisc", None, "other (VREF, power button, VIN-BAT, BAT-TEMP)"),
 ]
 
 # (header, pin, category, short_label, note_or_None) - kept in sync
@@ -328,22 +332,26 @@ def label_px_len(text):
 
 
 def power_style(short):
-    """Color + dash pattern for a power-ish pin, chosen by actual
-    voltage class rather than just "is this power" - see module
-    docstring."""
+    """CSS color-class name + dash pattern for a power-ish pin, chosen
+    by actual voltage class rather than just "is this power" - see
+    module docstring. The returned name is a key into VOLTAGE_COLORS,
+    used as the ".fill-<name>"/".stroke-<name>" class suffix."""
     if "3.3V" in short or "3V3" in short:
-        return V3V3_COLOR, None
+        return "v3v3", None
     if short in ("VIN", "VIN-USB", "VOUT-5V") or "5V" in short:
-        return V5_COLOR, V5_DASH
+        return "v5", V5_DASH
     if "GND" in short:
-        return GND_COLOR, None
-    return PWR_MISC_COLOR, None
+        return "gnd", None
+    return "pwrmisc", None
 
 
 def category_style(cat, short):
+    """Returns (css_color_class_name, dash_pattern_or_None) - the name
+    is a key into COLORS (signal categories) or VOLTAGE_COLORS (power
+    pins), used as the ".fill-<name>"/".stroke-<name>" class suffix."""
     if cat in ("power", "power_avail"):
         return power_style(short)
-    return COLORS[cat], None
+    return cat, None
 
 
 def main():
@@ -419,37 +427,37 @@ def main():
     DIAGRAM_W = BOARD_RIGHT + 90
     W = DIAGRAM_W + LEGEND_W + COL_GAP + PERIPH_W
 
-    put(f'<text x="{DIAGRAM_W/2}" y="48" text-anchor="middle" class="title" fill="{TEXT_MAIN}">PocketBeagle 1 – light-desk pinout (component side)</text>')
-    put(f'<text x="{DIAGRAM_W/2}" y="78" text-anchor="middle" class="subtitle" fill="{TEXT_SUB}">P1/P2 expansion headers – project-committed connections highlighted – see pb1/pinout-reference.md for the full pinmux table</text>')
+    put(f'<text x="{DIAGRAM_W/2}" y="48" text-anchor="middle" class="title fill-text-main">PocketBeagle 1 – light-desk pinout (component side)</text>')
+    put(f'<text x="{DIAGRAM_W/2}" y="78" text-anchor="middle" class="subtitle fill-text-sub">P1/P2 expansion headers – project-committed connections highlighted – see pb1/pinout-reference.md for the full pinmux table</text>')
 
-    put(f'<rect x="{BOARD_LEFT}" y="{BOARD_TOP}" width="{BOARD_RIGHT-BOARD_LEFT}" height="{BOARD_H}" rx="26" ry="26" fill="{BOARD_FILL}" stroke="{BOARD_STROKE}" stroke-width="3"/>')
+    put(f'<rect x="{BOARD_LEFT}" y="{BOARD_TOP}" width="{BOARD_RIGHT-BOARD_LEFT}" height="{BOARD_H}" rx="26" ry="26" class="fill-board stroke-board" stroke-width="3"/>')
 
     usb_y = (BOARD_TOP + BOARD_BOTTOM) / 2
-    put(f'<rect x="{BOARD_LEFT-34}" y="{usb_y-26}" width="46" height="52" rx="6" fill="#c7cdd6" stroke="#4b5563" stroke-width="2"/>')
-    put(f'<text x="{BOARD_LEFT-44}" y="{usb_y+60}" text-anchor="start" class="usb-label" fill="{TEXT_MAIN}">USB micro-B</text>')
-    put(f'<text x="{BOARD_LEFT-44}" y="{usb_y+80}" text-anchor="start" class="usb-sub" fill="{TEXT_SUB}">(X1)</text>')
+    put(f'<rect x="{BOARD_LEFT-34}" y="{usb_y-26}" width="46" height="52" rx="6" class="fill-usb stroke-usb" stroke-width="2"/>')
+    put(f'<text x="{BOARD_LEFT-44}" y="{usb_y+60}" text-anchor="start" class="usb-label fill-text-main">USB micro-B</text>')
+    put(f'<text x="{BOARD_LEFT-44}" y="{usb_y+80}" text-anchor="start" class="usb-sub fill-text-sub">(X1)</text>')
 
     # central graphics strip: logo (left) - processor (center) - microSD (right)
     gy_mid = (graphics_top + graphics_bottom) / 2
     logo_x = BOARD_LEFT + 110
-    put(f'<text x="{logo_x}" y="{gy_mid-10}" class="logo-brand" fill="#f59e0b">beagleboard.org</text>')
-    put(f'<text x="{logo_x}" y="{gy_mid+20}" class="logo-name" fill="{TEXT_MAIN}">PocketBeagle</text>')
+    put(f'<text x="{logo_x}" y="{gy_mid-10}" class="logo-brand fill-accent">beagleboard.org</text>')
+    put(f'<text x="{logo_x}" y="{gy_mid+20}" class="logo-name fill-text-main">PocketBeagle</text>')
 
     proc_size = min(GRAPHICS_H - 20, 200)
     proc_cx = BOARD_LEFT + (BOARD_RIGHT - BOARD_LEFT) * 0.54
     proc_x, proc_y = proc_cx - proc_size / 2, gy_mid - proc_size / 2
-    put(f'<rect x="{proc_x}" y="{proc_y}" width="{proc_size}" height="{proc_size}" rx="8" fill="#111318" stroke="#6b7280" stroke-width="2"/>')
-    put(f'<text x="{proc_cx}" y="{gy_mid-6}" text-anchor="middle" class="proc-label" fill="{TEXT_MAIN}">AM3358</text>')
-    put(f'<text x="{proc_cx}" y="{gy_mid+16}" text-anchor="middle" class="proc-sub" fill="{TEXT_SUB}">(OSD3358-SM)</text>')
+    put(f'<rect x="{proc_x}" y="{proc_y}" width="{proc_size}" height="{proc_size}" rx="8" class="fill-proc stroke-proc" stroke-width="2"/>')
+    put(f'<text x="{proc_cx}" y="{gy_mid-6}" text-anchor="middle" class="proc-label fill-text-main">AM3358</text>')
+    put(f'<text x="{proc_cx}" y="{gy_mid+16}" text-anchor="middle" class="proc-sub fill-text-sub">(OSD3358-SM)</text>')
 
     sd_w, sd_h = 340, min(GRAPHICS_H - 30, 170)
     sd_x = BOARD_RIGHT - HEADER_MARGIN - sd_w - 20
     sd_y = gy_mid - sd_h / 2
-    put(f'<rect x="{sd_x}" y="{sd_y}" width="{sd_w}" height="{sd_h}" rx="6" fill="#30343f" stroke="#9ca3af" stroke-width="2"/>')
-    put(f'<text x="{sd_x+sd_w/2}" y="{sd_y+sd_h/2+6}" text-anchor="middle" class="sd-label" fill="{TEXT_MAIN}">microSD (X2)</text>')
+    put(f'<rect x="{sd_x}" y="{sd_y}" width="{sd_w}" height="{sd_h}" rx="6" class="fill-sd stroke-sd" stroke-width="2"/>')
+    put(f'<text x="{sd_x+sd_w/2}" y="{sd_y+sd_h/2+6}" text-anchor="middle" class="sd-label fill-text-main">microSD (X2)</text>')
 
-    put(f'<text x="{HEADER_LEFT-20}" y="{p1_outer_y+6}" text-anchor="end" class="board-label" fill="{TEXT_MAIN}">P1</text>')
-    put(f'<text x="{HEADER_LEFT-20}" y="{p2_outer_y+6}" text-anchor="end" class="board-label" fill="{TEXT_MAIN}">P2</text>')
+    put(f'<text x="{HEADER_LEFT-20}" y="{p1_outer_y+6}" text-anchor="end" class="board-label fill-text-main">P1</text>')
+    put(f'<text x="{HEADER_LEFT-20}" y="{p2_outer_y+6}" text-anchor="end" class="board-label fill-text-main">P2</text>')
 
     # outline box around each header's pin grid (both rows), separate
     # from the overall board outline, so the header itself reads as
@@ -457,23 +465,23 @@ def main():
     header_box_pad = 16
     put(f'<rect x="{HEADER_LEFT-header_box_pad}" y="{p2_outer_y-header_box_pad}" '
         f'width="{HEADER_RIGHT-HEADER_LEFT+2*header_box_pad}" height="{p2_inner_y-p2_outer_y+2*header_box_pad}" '
-        f'fill="none" stroke="{TEXT_FAINT}" stroke-width="1.5" rx="8"/>')
+        f'fill="none" class="stroke-text-faint" stroke-width="1.5" rx="8"/>')
     put(f'<rect x="{HEADER_LEFT-header_box_pad}" y="{p1_inner_y-header_box_pad}" '
         f'width="{HEADER_RIGHT-HEADER_LEFT+2*header_box_pad}" height="{p1_outer_y-p1_inner_y+2*header_box_pad}" '
-        f'fill="none" stroke="{TEXT_FAINT}" stroke-width="1.5" rx="8"/>')
+        f'fill="none" class="stroke-text-faint" stroke-width="1.5" rx="8"/>')
 
     for header in ("P1", "P2"):
         for pin in range(1, 37):
             x, yy = pin_xy(header, pin)
-            put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_SMALL}" fill="{PIN_DOT}"/>')
+            put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_SMALL}" class="fill-pin-dot"/>')
     for header in ("P1", "P2"):
         x, yy = pin_xy(header, 1)
-        put(f'<rect x="{x-9}" y="{yy-9}" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2"/>')
+        put(f'<rect x="{x-9}" y="{yy-9}" width="18" height="18" fill="none" class="stroke-accent" stroke-width="2"/>')
 
-    put(f'<text x="{colx(1)}" y="{BOARD_TOP-14}" text-anchor="middle" class="pin-corner" fill="{TEXT_FAINT}">pin 1</text>')
-    put(f'<text x="{colx(1)}" y="{BOARD_BOTTOM+24}" text-anchor="middle" class="pin-corner" fill="{TEXT_FAINT}">pin 1</text>')
-    put(f'<text x="{colx(35)}" y="{BOARD_TOP-14}" text-anchor="middle" class="pin-corner" fill="{TEXT_FAINT}">pin 35/36</text>')
-    put(f'<text x="{colx(35)}" y="{BOARD_BOTTOM+24}" text-anchor="middle" class="pin-corner" fill="{TEXT_FAINT}">pin 35/36</text>')
+    put(f'<text x="{colx(1)}" y="{BOARD_TOP-14}" text-anchor="middle" class="pin-corner fill-text-faint">pin 1</text>')
+    put(f'<text x="{colx(1)}" y="{BOARD_BOTTOM+24}" text-anchor="middle" class="pin-corner fill-text-faint">pin 1</text>')
+    put(f'<text x="{colx(35)}" y="{BOARD_TOP-14}" text-anchor="middle" class="pin-corner fill-text-faint">pin 35/36</text>')
+    put(f'<text x="{colx(35)}" y="{BOARD_BOTTOM+24}" text-anchor="middle" class="pin-corner fill-text-faint">pin 35/36</text>')
 
     def draw_labels(entries, placement):
         """placement: 'above' (outside, above P2), 'below' (outside,
@@ -486,23 +494,23 @@ def main():
         rotate = -90 if flow_up else 90
         for (hdr, pin, cat, short, note) in entries:
             x, yy = pin_xy(hdr, pin)
-            color, dash = category_style(cat, short)
+            cls, dash = category_style(cat, short)
             if cat == "power_avail":
-                put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_BIG}" fill="none" stroke="{color}" stroke-width="2.5"/>')
+                put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_BIG}" fill="none" class="stroke-{cls}" stroke-width="2.5"/>')
             else:
-                put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_BIG}" fill="{color}" stroke="#05060a" stroke-width="1.5"/>')
+                put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_BIG}" class="fill-{cls} stroke-outline-dark" stroke-width="1.5"/>')
 
             line_y2 = yy - STUB if flow_up else yy + STUB
             text_y = line_y2 - LABEL_GAP if flow_up else line_y2 + LABEL_GAP
             dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-            put(f'<line x1="{x}" y1="{yy}" x2="{x}" y2="{line_y2}" stroke="{color}" stroke-width="3"{dash_attr}/>')
-            put(f'<circle cx="{x}" cy="{line_y2}" r="4" fill="{color}"/>')
+            put(f'<line x1="{x}" y1="{yy}" x2="{x}" y2="{line_y2}" class="stroke-{cls}" stroke-width="3"{dash_attr}/>')
+            put(f'<circle cx="{x}" cy="{line_y2}" r="4" class="fill-{cls}"/>')
 
             pin_name = f"{hdr}.{pin:02d}"
             sub = short if not note else f"{short} ({note})"
-            put(f'<text x="{x}" y="{text_y}" transform="rotate({rotate} {x} {text_y})" fill="{TEXT_MAIN}">'
+            put(f'<text x="{x}" y="{text_y}" transform="rotate({rotate} {x} {text_y})" class="fill-text-main">'
                 f'<tspan class="pin-main">{esc(pin_name)}</tspan>'
-                f'<tspan class="pin-sub" fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sub)}</tspan></text>')
+                f'<tspan class="pin-sub fill-text-sub">{"&#160;&#160;"}{esc(sub)}</tspan></text>')
 
     draw_labels(p2_outer, "above")
     draw_labels(p2_inner, "inward-down")
@@ -512,7 +520,7 @@ def main():
     # --- column 2: legend sidebar ---------------------------------------
     leg_x = DIAGRAM_W + 40 + PERIPH_W + COL_GAP   # legend is the 3rd column now, peripherals the 2nd
     leg_y = 44
-    put(f'<text x="{leg_x}" y="{leg_y}" class="section-heading" fill="{TEXT_MAIN}">Legend</text>')
+    put(f'<text x="{leg_x}" y="{leg_y}" class="section-heading fill-text-main">Legend</text>')
     leg_y += 30
 
     def wrap(desc, width=40):
@@ -530,29 +538,29 @@ def main():
         return lines
 
     for cat, desc in LEGEND:
-        put(f'<rect x="{leg_x}" y="{leg_y-17}" width="24" height="24" rx="5" fill="{COLORS[cat]}"/>')
+        put(f'<rect x="{leg_x}" y="{leg_y-17}" width="24" height="24" rx="5" class="fill-{cat}"/>')
         lines = wrap(desc)
         for li, line in enumerate(lines):
-            put(f'<text x="{leg_x+34}" y="{leg_y+li*23}" class="legend-text" fill="{TEXT_MAIN}">{esc(line)}</text>')
+            put(f'<text x="{leg_x+34}" y="{leg_y+li*23}" class="legend-text fill-text-main">{esc(line)}</text>')
         leg_y += max(1, len(lines)) * 23 + 16
 
     leg_y += 6
-    put(f'<text x="{leg_x}" y="{leg_y}" class="legend-subheading" fill="{TEXT_MAIN}">power pins (colored by voltage, not just "is power"):</text>')
+    put(f'<text x="{leg_x}" y="{leg_y}" class="legend-subheading fill-text-main">power pins (colored by voltage, not just "is power"):</text>')
     leg_y += 28
-    for color, dash, desc in POWER_LEGEND:
+    for cls, dash, desc in POWER_LEGEND:
         dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-        put(f'<line x1="{leg_x}" y1="{leg_y-6}" x2="{leg_x+36}" y2="{leg_y-6}" stroke="{color}" stroke-width="5"{dash_attr}/>')
+        put(f'<line x1="{leg_x}" y1="{leg_y-6}" x2="{leg_x+36}" y2="{leg_y-6}" class="stroke-{cls}" stroke-width="5"{dash_attr}/>')
         lines = wrap(desc, width=42)
         for li, line in enumerate(lines):
-            put(f'<text x="{leg_x+48}" y="{leg_y+li*23}" class="legend-text" fill="{TEXT_MAIN}">{esc(line)}</text>')
+            put(f'<text x="{leg_x+48}" y="{leg_y+li*23}" class="legend-text fill-text-main">{esc(line)}</text>')
         leg_y += max(1, len(lines)) * 23 + 14
 
     leg_y += 6
-    put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" fill="{TEXT_SUB}"/>')
-    put(f'<text x="{leg_x+34}" y="{leg_y}" class="legend-text" fill="{TEXT_MAIN}">filled = wired by this project</text>')
+    put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" class="fill-text-sub"/>')
+    put(f'<text x="{leg_x+34}" y="{leg_y}" class="legend-text fill-text-main">filled = wired by this project</text>')
     leg_y += 28
-    put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" fill="none" stroke="{TEXT_SUB}" stroke-width="3"/>')
-    put(f'<text x="{leg_x+34}" y="{leg_y}" class="legend-text" fill="{TEXT_MAIN}">outline = available, not wired</text>')
+    put(f'<circle cx="{leg_x+11}" cy="{leg_y-6}" r="10" fill="none" class="stroke-text-sub" stroke-width="3"/>')
+    put(f'<text x="{leg_x+34}" y="{leg_y}" class="legend-text fill-text-main">outline = available, not wired</text>')
     leg_y += 30
 
     # --- column 3: peripheral schematic boxes -----------------------------
@@ -578,19 +586,19 @@ def main():
 
         yy = y + 22
         for li, line in enumerate(title_lines):
-            cput(f'<text x="{x+16}" y="{yy+li*21}" class="peripheral-title" fill="{TEXT_MAIN}">{esc(line)}</text>')
+            cput(f'<text x="{x+16}" y="{yy+li*21}" class="peripheral-title fill-text-main">{esc(line)}</text>')
         yy += (len(title_lines) - 1) * 21 + 24
 
         if chip_lines:
             for li, line in enumerate(chip_lines):
-                cput(f'<text x="{x+16}" y="{yy+li*18}" class="ic-note" fill="#d1a9f7">IC: {esc(line)}</text>')
+                cput(f'<text x="{x+16}" y="{yy+li*18}" class="ic-note fill-ic">IC: {esc(line)}</text>')
             yy += len(chip_lines) * 18 + 8
 
         for cat, pin_label, sig in peripheral["pins"]:
-            color, dash = category_style(cat, sig if cat in ("power", "power_avail") else "")
+            cls, dash = category_style(cat, sig if cat in ("power", "power_avail") else "")
             dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-            cput(f'<line x1="{x+16}" y1="{yy-6}" x2="{x+40}" y2="{yy-6}" stroke="{color}" stroke-width="5"{dash_attr}/>')
-            cput(f'<text x="{x+50}" y="{yy}" fill="{TEXT_MAIN}"><tspan class="periph-pin-main">{esc(pin_label)}</tspan><tspan class="periph-pin-sub" fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sig)}</tspan></text>')
+            cput(f'<line x1="{x+16}" y1="{yy-6}" x2="{x+40}" y2="{yy-6}" class="stroke-{cls}" stroke-width="5"{dash_attr}/>')
+            cput(f'<text x="{x+50}" y="{yy}" class="fill-text-main"><tspan class="periph-pin-main">{esc(pin_label)}</tspan><tspan class="periph-pin-sub fill-text-sub">{"&#160;&#160;"}{esc(sig)}</tspan></text>')
             yy += row_h
 
         if extra_lines:
@@ -598,25 +606,25 @@ def main():
             prev_note = None
             for note, line in extra_lines:
                 if note != prev_note:
-                    color, dash = category_style("power", note)
+                    cls, dash = category_style("power", note)
                     dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
-                    cput(f'<line x1="{x+16}" y1="{yy-6}" x2="{x+40}" y2="{yy-6}" stroke="{color}" stroke-width="5"{dash_attr}/>')
+                    cput(f'<line x1="{x+16}" y1="{yy-6}" x2="{x+40}" y2="{yy-6}" class="stroke-{cls}" stroke-width="5"{dash_attr}/>')
                     prev_note = note
-                cput(f'<text x="{x+50}" y="{yy}" class="periph-note" fill="{TEXT_SUB}">{esc(line)}</text>')
+                cput(f'<text x="{x+50}" y="{yy}" class="periph-note fill-text-sub">{esc(line)}</text>')
                 yy += 20
 
         h = yy - y + 14
-        put(f'<rect x="{x}" y="{y}" width="{box_w}" height="{h}" rx="10" fill="{BOARD_FILL}" stroke="{TEXT_FAINT}" stroke-width="1.5"/>')
+        put(f'<rect x="{x}" y="{y}" width="{box_w}" height="{h}" rx="10" class="fill-board stroke-text-faint" stroke-width="1.5"/>')
         svg_body.extend(content)
         return h
 
     peri_x = DIAGRAM_W + 40
     peri_y = 44
-    put(f'<text x="{peri_x}" y="{peri_y}" class="section-heading" fill="{TEXT_MAIN}">Peripherals (schematic)</text>')
+    put(f'<text x="{peri_x}" y="{peri_y}" class="section-heading fill-text-main">Peripherals (schematic)</text>')
     peri_y += 22
     subtitle_lines = wrap("connected to the header at left only via matching pin labels, not a drawn wire – power pins included for soldering", width=70)
     for li, line in enumerate(subtitle_lines):
-        put(f'<text x="{peri_x}" y="{peri_y+li*18}" class="peripheral-subtitle" fill="{TEXT_SUB}">{esc(line)}</text>')
+        put(f'<text x="{peri_x}" y="{peri_y+li*18}" class="peripheral-subtitle fill-text-sub">{esc(line)}</text>')
     peri_y += len(subtitle_lines) * 18 + 14
     for peripheral in PERIPHERALS:
         h = draw_peripheral(peri_x, peri_y, peripheral)
@@ -630,18 +638,25 @@ def main():
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="{font_family}" style="{style}">'
     ]
 
-    # Text sizing lives here as CSS classes (one per semantic role, not
-    # just per pixel value - e.g. legend text and peripheral-note text
-    # happen to both be 14px today, but keeping them separate classes
-    # means either can be tuned without affecting the other) instead of
-    # as scattered inline font-size="N" attributes, so tweaking a size
-    # is a one-line edit in this block rather than a hunt through the
-    # f-strings below. `fill` deliberately stays OUT of these classes
-    # and inline on each element instead: SVG/CSS gives a stylesheet
-    # rule priority over a presentation attribute, so a class-level
-    # `fill` would silently override the per-pin/per-category colors
-    # that get set dynamically via `fill="{color}"` on the same element.
-    svg.append('''<style>
+    # Text sizing AND coloring both live here as CSS classes (one per
+    # semantic role, not just per pixel/hex value - e.g. legend text and
+    # peripheral-note text happen to both be 14px today, and the
+    # processor outline happens to match GND's gray, but keeping them
+    # separate classes means any one of them can be tuned without
+    # affecting the other) instead of scattered inline font-size="N"/
+    # fill="#hex" attributes, so tweaking a size or color is a one-line
+    # edit in this block rather than a hunt through the f-strings below.
+    #
+    # The per-pin/per-category color classes (.fill-i2c1, .stroke-v5,
+    # etc.) are generated from COLORS/VOLTAGE_COLORS below rather than
+    # hand-written twice, so the <style> block can't drift out of sync
+    # with the dicts the drawing code actually looks colors up from.
+    category_color_css = []
+    for name, hexval in {**COLORS, **VOLTAGE_COLORS}.items():
+        category_color_css.append(f'.fill-{name} {{ fill: {hexval}; }}')
+        category_color_css.append(f'.stroke-{name} {{ stroke: {hexval}; }}')
+
+    size_css = '''
 .title { font-size: 30px; font-weight: 700; }
 .subtitle { font-size: 16px; }
 .usb-label { font-size: 16px; font-weight: 600; }
@@ -664,7 +679,31 @@ def main():
 .periph-pin-main { font-size: 15px; font-weight: 700; }
 .periph-pin-sub { font-size: 14px; }
 .periph-note { font-size: 14px; }
-</style>''')
+'''
+
+    ui_color_css = f'''
+.fill-text-main {{ fill: {TEXT_MAIN}; }}
+.stroke-text-main {{ stroke: {TEXT_MAIN}; }}
+.fill-text-sub {{ fill: {TEXT_SUB}; }}
+.stroke-text-sub {{ stroke: {TEXT_SUB}; }}
+.fill-text-faint {{ fill: {TEXT_FAINT}; }}
+.stroke-text-faint {{ stroke: {TEXT_FAINT}; }}
+.fill-pin-dot {{ fill: {PIN_DOT}; }}
+.fill-board {{ fill: {BOARD_FILL}; }}
+.stroke-board {{ stroke: {BOARD_STROKE}; }}
+.stroke-outline-dark {{ stroke: #05060a; }}
+.fill-usb {{ fill: #c7cdd6; }}
+.stroke-usb {{ stroke: #4b5563; }}
+.fill-accent {{ fill: #f59e0b; }}
+.stroke-accent {{ stroke: #f59e0b; }}
+.fill-proc {{ fill: #111318; }}
+.stroke-proc {{ stroke: #6b7280; }}
+.fill-sd {{ fill: #30343f; }}
+.stroke-sd {{ stroke: #9ca3af; }}
+.fill-ic {{ fill: #d1a9f7; }}
+'''
+
+    svg.append('<style>' + size_css + ui_color_css + "\n".join(category_color_css) + '</style>')
 
     # we do not need the *page background rect* anymore. as we now have the svg itself set to black background.
     # svg.append(f'<rect x="0" y="0" width="{W}" height="{H}" fill="{BG}"/>')
