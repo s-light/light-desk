@@ -578,7 +578,7 @@ def main():
         yy = y + 22
         for li, line in enumerate(title_lines):
             cput(f'<text x="{x+16}" y="{yy+li*21}" font-size="17" font-weight="700" fill="{TEXT_MAIN}">{esc(line)}</text>')
-        yy += (len(title_lines) - 1) * 21 + 12
+        yy += (len(title_lines) - 1) * 21 + 24
 
         if chip_lines:
             for li, line in enumerate(chip_lines):

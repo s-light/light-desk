@@ -301,74 +301,74 @@
 <text x="1790" y="44" font-size="24" font-weight="700" fill="#e5e7eb">Peripherals (schematic)</text>
 <text x="1790" y="66" font-size="14" fill="#9aa3b2">connected to the header at left only via matching pin labels, not a</text>
 <text x="1790" y="84" font-size="14" fill="#9aa3b2">drawn wire – power pins included for soldering</text>
-<rect x="1790" y="116" width="520" height="156" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<rect x="1790" y="116" width="520" height="168" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
 <text x="1806" y="138" font-size="17" font-weight="700" fill="#e5e7eb">ADS7830 fader ADC (I2C1)</text>
-<line x1="1806" y1="144" x2="1830" y2="144" stroke="#22d3ee" stroke-width="5"/>
-<text x="1840" y="150" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.06</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SCL</tspan></text>
-<line x1="1806" y1="171" x2="1830" y2="171" stroke="#22d3ee" stroke-width="5"/>
-<text x="1840" y="177" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.12</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SDA</tspan></text>
-<line x1="1806" y1="198" x2="1830" y2="198" stroke="#dc2626" stroke-width="5"/>
-<text x="1840" y="204" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.14</tspan><tspan fill="#9aa3b2">&#160;&#160;VDD_3V3</tspan></text>
-<line x1="1806" y1="225" x2="1830" y2="225" stroke="#6b7280" stroke-width="5"/>
-<text x="1840" y="231" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.22</tspan><tspan fill="#9aa3b2">&#160;&#160;GND</tspan></text>
-<rect x="1790" y="288" width="520" height="292" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1806" y="310" font-size="17" font-weight="700" fill="#e5e7eb">DMX UART -&gt; RS485 (x4, UART1-4 -</text>
-<text x="1806" y="331" font-size="17" font-weight="700" fill="#e5e7eb">UART2 shown)</text>
-<text x="1806" y="343" font-size="14" font-style="italic" fill="#d1a9f7">IC: TXB0108 – 3.3V&lt;-&gt;5V auto-direction level</text>
-<text x="1806" y="361" font-size="14" font-style="italic" fill="#d1a9f7">IC: shifter (1 channel/signal: TXD, RXD)</text>
-<line x1="1806" y1="381" x2="1830" y2="381" stroke="#3b82f6" stroke-width="5"/>
-<text x="1840" y="387" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.08</tspan><tspan fill="#9aa3b2">&#160;&#160;TXD</tspan></text>
-<line x1="1806" y1="408" x2="1830" y2="408" stroke="#3b82f6" stroke-width="5"/>
-<text x="1840" y="414" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.10</tspan><tspan fill="#9aa3b2">&#160;&#160;RXD</tspan></text>
-<line x1="1806" y1="435" x2="1830" y2="435" stroke="#dc2626" stroke-width="5"/>
-<text x="1840" y="441" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.23</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-3.3V (TXB0108 VCCA)</tspan></text>
-<line x1="1806" y1="462" x2="1830" y2="462" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
-<text x="1840" y="468" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (TXB0108 VCCB)</tspan></text>
-<line x1="1806" y1="489" x2="1830" y2="489" stroke="#6b7280" stroke-width="5"/>
-<text x="1840" y="495" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
-<line x1="1806" y1="520" x2="1830" y2="520" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
-<text x="1840" y="526" font-size="14" fill="#9aa3b2">RS485 driver's own 5V + GND (same</text>
-<text x="1840" y="546" font-size="14" fill="#9aa3b2">5V/GND rail as VCCB above)</text>
-<rect x="1790" y="596" width="520" height="258" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1806" y="618" font-size="17" font-weight="700" fill="#e5e7eb">control-desk buttons (x6) + mode</text>
-<text x="1806" y="639" font-size="17" font-weight="700" fill="#e5e7eb">toggle</text>
-<line x1="1806" y1="645" x2="1830" y2="645" stroke="#fb923c" stroke-width="5"/>
-<text x="1840" y="651" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.02</tspan><tspan fill="#9aa3b2">&#160;&#160;button 1</tspan></text>
-<line x1="1806" y1="672" x2="1830" y2="672" stroke="#fb923c" stroke-width="5"/>
-<text x="1840" y="678" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.04</tspan><tspan fill="#9aa3b2">&#160;&#160;button 2</tspan></text>
-<line x1="1806" y1="699" x2="1830" y2="699" stroke="#fb923c" stroke-width="5"/>
-<text x="1840" y="705" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.06</tspan><tspan fill="#9aa3b2">&#160;&#160;button 3</tspan></text>
-<line x1="1806" y1="726" x2="1830" y2="726" stroke="#fb923c" stroke-width="5"/>
-<text x="1840" y="732" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.22</tspan><tspan fill="#9aa3b2">&#160;&#160;button 4</tspan></text>
-<line x1="1806" y1="753" x2="1830" y2="753" stroke="#fb923c" stroke-width="5"/>
-<text x="1840" y="759" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.24</tspan><tspan fill="#9aa3b2">&#160;&#160;button 5</tspan></text>
-<line x1="1806" y1="780" x2="1830" y2="780" stroke="#fb923c" stroke-width="5"/>
-<text x="1840" y="786" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.20</tspan><tspan fill="#9aa3b2">&#160;&#160;button 6</tspan></text>
-<line x1="1806" y1="807" x2="1830" y2="807" stroke="#fb923c" stroke-width="5"/>
-<text x="1840" y="813" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.33</tspan><tspan fill="#9aa3b2">&#160;&#160;mode toggle</tspan></text>
-<rect x="1790" y="870" width="520" height="284" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1806" y="892" font-size="17" font-weight="700" fill="#e5e7eb">APA102 pixel strip (SPI1)</text>
-<text x="1806" y="904" font-size="14" font-style="italic" fill="#d1a9f7">IC: 74HCT125 / 74AHCT125 – 3.3V-&gt;5V buffer</text>
-<text x="1806" y="922" font-size="14" font-style="italic" fill="#d1a9f7">IC: (1 gate/signal: CLK, DATA)</text>
-<line x1="1806" y1="942" x2="1830" y2="942" stroke="#c084fc" stroke-width="5"/>
-<text x="1840" y="948" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.36</tspan><tspan fill="#9aa3b2">&#160;&#160;SCLK</tspan></text>
-<line x1="1806" y1="969" x2="1830" y2="969" stroke="#c084fc" stroke-width="5"/>
-<text x="1840" y="975" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.32</tspan><tspan fill="#9aa3b2">&#160;&#160;MOSI</tspan></text>
-<line x1="1806" y1="996" x2="1830" y2="996" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
-<text x="1840" y="1002" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (74HCT125 VCC)</tspan></text>
-<line x1="1806" y1="1023" x2="1830" y2="1023" stroke="#6b7280" stroke-width="5"/>
-<text x="1840" y="1029" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
-<line x1="1806" y1="1054" x2="1830" y2="1054" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
-<text x="1840" y="1060" font-size="14" fill="#9aa3b2">strip's own 5V + GND injected from an</text>
-<text x="1840" y="1080" font-size="14" fill="#9aa3b2">external supply, not PB1's VOUT-5V –</text>
-<text x="1840" y="1100" font-size="14" fill="#9aa3b2">that pin is logic-only, not rated for</text>
-<text x="1840" y="1120" font-size="14" fill="#9aa3b2">LED current</text>
-<rect x="1790" y="1170" width="520" height="129" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
-<text x="1806" y="1192" font-size="17" font-weight="700" fill="#e5e7eb">rotary encoder (eQEP0)</text>
-<line x1="1806" y1="1198" x2="1830" y2="1198" stroke="#a3e635" stroke-width="5"/>
-<text x="1840" y="1204" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.31</tspan><tspan fill="#9aa3b2">&#160;&#160;A</tspan></text>
-<line x1="1806" y1="1225" x2="1830" y2="1225" stroke="#a3e635" stroke-width="5"/>
-<text x="1840" y="1231" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.34</tspan><tspan fill="#9aa3b2">&#160;&#160;B</tspan></text>
-<line x1="1806" y1="1252" x2="1830" y2="1252" stroke="#a3e635" stroke-width="5"/>
-<text x="1840" y="1258" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.19</tspan><tspan fill="#9aa3b2">&#160;&#160;button</tspan></text>
+<line x1="1806" y1="156" x2="1830" y2="156" stroke="#22d3ee" stroke-width="5"/>
+<text x="1840" y="162" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.06</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SCL</tspan></text>
+<line x1="1806" y1="183" x2="1830" y2="183" stroke="#22d3ee" stroke-width="5"/>
+<text x="1840" y="189" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.12</tspan><tspan fill="#9aa3b2">&#160;&#160;I2C1_SDA</tspan></text>
+<line x1="1806" y1="210" x2="1830" y2="210" stroke="#dc2626" stroke-width="5"/>
+<text x="1840" y="216" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.14</tspan><tspan fill="#9aa3b2">&#160;&#160;VDD_3V3</tspan></text>
+<line x1="1806" y1="237" x2="1830" y2="237" stroke="#6b7280" stroke-width="5"/>
+<text x="1840" y="243" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.22</tspan><tspan fill="#9aa3b2">&#160;&#160;GND</tspan></text>
+<rect x="1790" y="300" width="520" height="304" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="1806" y="322" font-size="17" font-weight="700" fill="#e5e7eb">DMX UART -&gt; RS485 (x4, UART1-4 -</text>
+<text x="1806" y="343" font-size="17" font-weight="700" fill="#e5e7eb">UART2 shown)</text>
+<text x="1806" y="367" font-size="14" font-style="italic" fill="#d1a9f7">IC: TXB0108 – 3.3V&lt;-&gt;5V auto-direction level</text>
+<text x="1806" y="385" font-size="14" font-style="italic" fill="#d1a9f7">IC: shifter (1 channel/signal: TXD, RXD)</text>
+<line x1="1806" y1="405" x2="1830" y2="405" stroke="#3b82f6" stroke-width="5"/>
+<text x="1840" y="411" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.08</tspan><tspan fill="#9aa3b2">&#160;&#160;TXD</tspan></text>
+<line x1="1806" y1="432" x2="1830" y2="432" stroke="#3b82f6" stroke-width="5"/>
+<text x="1840" y="438" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.10</tspan><tspan fill="#9aa3b2">&#160;&#160;RXD</tspan></text>
+<line x1="1806" y1="459" x2="1830" y2="459" stroke="#dc2626" stroke-width="5"/>
+<text x="1840" y="465" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.23</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-3.3V (TXB0108 VCCA)</tspan></text>
+<line x1="1806" y1="486" x2="1830" y2="486" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="1840" y="492" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (TXB0108 VCCB)</tspan></text>
+<line x1="1806" y1="513" x2="1830" y2="513" stroke="#6b7280" stroke-width="5"/>
+<text x="1840" y="519" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
+<line x1="1806" y1="544" x2="1830" y2="544" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="1840" y="550" font-size="14" fill="#9aa3b2">RS485 driver's own 5V + GND (same</text>
+<text x="1840" y="570" font-size="14" fill="#9aa3b2">5V/GND rail as VCCB above)</text>
+<rect x="1790" y="620" width="520" height="270" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="1806" y="642" font-size="17" font-weight="700" fill="#e5e7eb">control-desk buttons (x6) + mode</text>
+<text x="1806" y="663" font-size="17" font-weight="700" fill="#e5e7eb">toggle</text>
+<line x1="1806" y1="681" x2="1830" y2="681" stroke="#fb923c" stroke-width="5"/>
+<text x="1840" y="687" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.02</tspan><tspan fill="#9aa3b2">&#160;&#160;button 1</tspan></text>
+<line x1="1806" y1="708" x2="1830" y2="708" stroke="#fb923c" stroke-width="5"/>
+<text x="1840" y="714" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.04</tspan><tspan fill="#9aa3b2">&#160;&#160;button 2</tspan></text>
+<line x1="1806" y1="735" x2="1830" y2="735" stroke="#fb923c" stroke-width="5"/>
+<text x="1840" y="741" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.06</tspan><tspan fill="#9aa3b2">&#160;&#160;button 3</tspan></text>
+<line x1="1806" y1="762" x2="1830" y2="762" stroke="#fb923c" stroke-width="5"/>
+<text x="1840" y="768" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.22</tspan><tspan fill="#9aa3b2">&#160;&#160;button 4</tspan></text>
+<line x1="1806" y1="789" x2="1830" y2="789" stroke="#fb923c" stroke-width="5"/>
+<text x="1840" y="795" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.24</tspan><tspan fill="#9aa3b2">&#160;&#160;button 5</tspan></text>
+<line x1="1806" y1="816" x2="1830" y2="816" stroke="#fb923c" stroke-width="5"/>
+<text x="1840" y="822" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.20</tspan><tspan fill="#9aa3b2">&#160;&#160;button 6</tspan></text>
+<line x1="1806" y1="843" x2="1830" y2="843" stroke="#fb923c" stroke-width="5"/>
+<text x="1840" y="849" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.33</tspan><tspan fill="#9aa3b2">&#160;&#160;mode toggle</tspan></text>
+<rect x="1790" y="906" width="520" height="296" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="1806" y="928" font-size="17" font-weight="700" fill="#e5e7eb">APA102 pixel strip (SPI1)</text>
+<text x="1806" y="952" font-size="14" font-style="italic" fill="#d1a9f7">IC: 74HCT125 / 74AHCT125 – 3.3V-&gt;5V buffer</text>
+<text x="1806" y="970" font-size="14" font-style="italic" fill="#d1a9f7">IC: (1 gate/signal: CLK, DATA)</text>
+<line x1="1806" y1="990" x2="1830" y2="990" stroke="#c084fc" stroke-width="5"/>
+<text x="1840" y="996" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.36</tspan><tspan fill="#9aa3b2">&#160;&#160;SCLK</tspan></text>
+<line x1="1806" y1="1017" x2="1830" y2="1017" stroke="#c084fc" stroke-width="5"/>
+<text x="1840" y="1023" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.32</tspan><tspan fill="#9aa3b2">&#160;&#160;MOSI</tspan></text>
+<line x1="1806" y1="1044" x2="1830" y2="1044" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="1840" y="1050" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.24</tspan><tspan fill="#9aa3b2">&#160;&#160;VOUT-5V (74HCT125 VCC)</tspan></text>
+<line x1="1806" y1="1071" x2="1830" y2="1071" stroke="#6b7280" stroke-width="5"/>
+<text x="1840" y="1077" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.21</tspan><tspan fill="#9aa3b2">&#160;&#160;GND (common)</tspan></text>
+<line x1="1806" y1="1102" x2="1830" y2="1102" stroke="#ec4899" stroke-width="5" stroke-dasharray="6,5"/>
+<text x="1840" y="1108" font-size="14" fill="#9aa3b2">strip's own 5V + GND injected from an</text>
+<text x="1840" y="1128" font-size="14" fill="#9aa3b2">external supply, not PB1's VOUT-5V –</text>
+<text x="1840" y="1148" font-size="14" fill="#9aa3b2">that pin is logic-only, not rated for</text>
+<text x="1840" y="1168" font-size="14" fill="#9aa3b2">LED current</text>
+<rect x="1790" y="1218" width="520" height="141" rx="10" fill="#1f2430" stroke="#5b6472" stroke-width="1.5"/>
+<text x="1806" y="1240" font-size="17" font-weight="700" fill="#e5e7eb">rotary encoder (eQEP0)</text>
+<line x1="1806" y1="1258" x2="1830" y2="1258" stroke="#a3e635" stroke-width="5"/>
+<text x="1840" y="1264" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P1.31</tspan><tspan fill="#9aa3b2">&#160;&#160;A</tspan></text>
+<line x1="1806" y1="1285" x2="1830" y2="1285" stroke="#a3e635" stroke-width="5"/>
+<text x="1840" y="1291" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.34</tspan><tspan fill="#9aa3b2">&#160;&#160;B</tspan></text>
+<line x1="1806" y1="1312" x2="1830" y2="1312" stroke="#a3e635" stroke-width="5"/>
+<text x="1840" y="1318" font-size="15" fill="#e5e7eb"><tspan font-weight="700">P2.19</tspan><tspan fill="#9aa3b2">&#160;&#160;button</tspan></text>
 </svg>
