@@ -14,9 +14,8 @@ Usage:
 
 Layout, at the user's request: landscape canvas, dark page background,
 legend as a right-hand sidebar, P1/P2 headers spanning the full board
-width (centered, evenly spaced - not squeezed into part of it like the
-first draft). Board proportions here are schematic (stretched
-vertically for label room), not to true mm scale.
+width (centered, evenly spaced). Board proportions here are schematic
+(stretched vertically for label room), not to true mm scale.
 
 Board geometry (header edges, pin-1 corners, USB/microSD/processor
 placement) is derived from BeagleBoard.org's official PocketBeagle
@@ -35,16 +34,24 @@ at high resolution, not assumed:
     independently - don't assume symmetry if this ever needs
     re-deriving.
 
-Label placement: OUTER-row pins (the row nearer the board edge on
-whichever header) get their leader-line label outside the board (above
-P2, below P1) - same side labels have always been on. INNER-row pins
-(nearer board center) get their label INSIDE the board instead, in a
-dedicated band between that header's inner row and the central
-processor/microSD/logo strip - otherwise their leader lines would have
-to cross the outer row and collide with those labels. A greedy
-left-to-right tiering algorithm (assign_tiers()) stacks same-side
-labels into enough vertical tiers that none overlap horizontally,
-rather than hand-placing each one.
+Label placement: labels are rotated 90 degrees (reading bottom-to-top
+for labels pointing "up"/"inward-up", top-to-bottom for labels pointing
+"down"/"inward-down") and run straight out from their own pin's column,
+one label per column. This replaced an earlier horizontal-tiering
+scheme (stacking same-side labels into vertical tiers, each a
+horizontal text line) that, at the user's observation, let a tier's
+label text overhang sideways far enough to visually cross a
+*different* pin's straight leader line. A vertical label never needs
+to leave its own pin's column, so that collision class can't happen
+at all - the column spacing (COL_SPACING, ~83px) comfortably exceeds a
+rotated label's on-screen width (just the font size), and each column's
+label simply grows outward only as far as its own text needs, with no
+coordination needed between neighboring columns.
+OUTER-row pins (the row nearer the board edge on whichever header) get
+their label outside the board (above P2, below P1). INNER-row pins
+(nearer board center) get their label INSIDE the board, in a band
+between that header's inner row and the central processor/microSD/logo
+strip - otherwise their leader lines would have to cross the outer row.
 
 Pin function/signal data (which pin carries what) comes from
 pinout-reference.md, already cross-checked against the base
@@ -54,12 +61,42 @@ ground/reference pins (drawn as hollow rings, vs. filled dots for
 pins this project actually uses) are every other VIN/VOUT/GND/VREF/
 battery/power-button pin on the header, included for reference even
 though nothing here wires them up.
+
+Color scheme, at the user's request: all four UART categories (DMX
+universes 1-4) share one hue family (blue, darkening by universe
+number) since they're "the same kind of thing" - everything else
+(buttons, SPI1/APA102, the rotary encoder, I2C1) gets a visually
+distinct, high-contrast hue so it doesn't get lost among the UARTs.
+Power pins are colored by actual voltage rather than by "is this a
+power pin": 5V-class pins (VIN, VIN-USB, VOUT-5V) get a fully
+saturated pink-red *dashed* leader line (dashes read as "look closer,
+this isn't like the others" - deliberately the most alarming-looking
+one, since wiring 5V into something expecting 3.3V is the easiest way
+to let the smoke out), 3.3V-class pins (VDD_3V3, VOUT-3.3V) get a
+solid, slightly less saturated red, GND gets a neutral dark gray, and
+the handful of pins that are power-adjacent but neither a clean 5V nor
+3.3V rail (VREFN/VREFP analog reference, the power-button pin,
+VIN-BAT, BAT-TEMP) get a muted neutral so they don't compete visually
+with the two rails that actually matter for level-shifting decisions.
+
+A "Peripherals (schematic)" section on the right, below the legend,
+draws one small schematic box per connected peripheral (ADS7830 fader
+ADC, one representative DMX UART->RS485 stage - all 4 universes wire
+up identically, so only one is drawn - the buttons, the APA102 strip,
+the rotary encoder), each listing its pins by the same "P1.NN  SIGNAL"
+label used on the header, colored the same way. At the user's request
+these are connected to the main header only by that shared label text,
+not by a drawn wire running across the page - tracing a long path
+across a diagram that already spans the full page width would add
+visual clutter without adding information the label doesn't already
+carry.
 """
 
 from pathlib import Path
 
 ROW_GAP = 34
-TIER_H = 44           # vertical spacing between stacked label tiers (one text line each now)
+STUB = 46               # straight colored leader-line segment from pin outward (longer = easier to read the color)
+LABEL_GAP = 16          # blank space between the end of the leader line and where the label text starts
 PIN_R_SMALL = 5
 PIN_R_BIG = 9
 
@@ -71,17 +108,22 @@ TEXT_SUB = "#9aa3b2"
 TEXT_FAINT = "#5b6472"
 PIN_DOT = "#5b6472"
 
+# Voltage-class colors for power-ish pins (see module docstring).
+V5_COLOR = "#ec4899"       # saturated pink-red, dashed leader line
+V5_DASH = "6,5"
+V3V3_COLOR = "#dc2626"     # solid red
+GND_COLOR = "#6b7280"      # dark gray
+PWR_MISC_COLOR = "#9ca3af"  # neutral (VREF/PWR BTN/VIN-BAT/BAT-TEMP)
+
 COLORS = {
     "i2c1":    "#22d3ee",
     "uart1":   "#60a5fa",
-    "uart2":   "#818cf8",
-    "uart3":   "#f472b6",
-    "uart4":   "#34d399",
+    "uart2":   "#3b82f6",
+    "uart3":   "#2563eb",
+    "uart4":   "#1d4ed8",
     "buttons": "#fb923c",
     "spi1":    "#c084fc",
     "encoder": "#a3e635",
-    "power":   "#f87171",
-    "power_avail": "#f87171",
     "unused":  "#8b94a3",
 }
 
@@ -94,9 +136,16 @@ LEGEND = [
     ("buttons", "buttons (6 control-desk + 1 stand-alone-mode toggle)"),
     ("spi1", "SPI1 – APA102 pixel strip (OLA SPI plugin)"),
     ("encoder", "eQEP0 – rotary encoder A/B + its push button"),
-    ("power", "ADS7830 power (VDD_3V3 / GND) – wired"),
-    ("power_avail", "other power/GND/VREF pins – available, not wired"),
     ("unused", "parked / not pursued (UART0 console-swap universe 5)"),
+]
+
+# Separate legend block for power pins, drawn as leader-line swatches
+# (so the dash pattern itself is visible) rather than solid rects.
+POWER_LEGEND = [
+    (V5_COLOR, V5_DASH, "5V class (VIN / VIN-USB / VOUT-5V) – dashed: check level-shifting before wiring"),
+    (V3V3_COLOR, None, "3.3V class (VDD_3V3 / VOUT-3.3V)"),
+    (GND_COLOR, None, "GND"),
+    (PWR_MISC_COLOR, None, "other (VREF, power button, VIN-BAT, BAT-TEMP)"),
 ]
 
 # (header, pin, category, short_label, note_or_None) - kept in sync
@@ -153,6 +202,85 @@ PINS = [
     ("P2", 23, "power_avail", "VOUT-3.3V", None),
 ]
 
+# Peripheral schematic boxes drawn in the right-hand sidebar, below the
+# legend - see module docstring. Pin tuples are (category, "P1.NN"
+# header-pin label, signal name) - the label text is deliberately the
+# same text used on the main header drawing, since that shared text is
+# the only "connection" drawn between a peripheral box and the header
+# (no wire traced across the page - see module docstring).
+# Each peripheral: title, optional level-shifter chip note, the PB1
+# header pins it uses (signal + power - real "P1.NN"/"P2.NN" pins,
+# colored/labeled the same as the main header drawing), and
+# "extra_power" - power connections the peripheral/chip needs that are
+# NOT PB1 header pins (e.g. a strip's own 5V injection from an external
+# supply) - these get a voltage-colored swatch too (via power_style()
+# matching on the note text) but no pin-name, so they don't read as if
+# they were a header pin.
+PERIPHERALS = [
+    {
+        "title": "ADS7830 fader ADC (I2C1)",
+        "chip": None,
+        "pins": [
+            ("i2c1", "P1.06", "I2C1_SCL"),
+            ("i2c1", "P1.12", "I2C1_SDA"),
+            ("power", "P1.14", "VDD_3V3"),
+            ("power", "P1.22", "GND"),
+        ],
+        "extra_power": [],
+    },
+    {
+        "title": "DMX UART -> RS485 (x4, UART1-4 - UART2 shown)",
+        "chip": "TXB0108 – 3.3V<->5V auto-direction level shifter (1 channel/signal: TXD, RXD)",
+        "pins": [
+            ("uart2", "P1.08", "TXD"),
+            ("uart2", "P1.10", "RXD"),
+            ("power_avail", "P2.23", "VOUT-3.3V (TXB0108 VCCA)"),
+            ("power_avail", "P1.24", "VOUT-5V (TXB0108 VCCB)"),
+            ("power_avail", "P2.21", "GND (common)"),
+        ],
+        "extra_power": [
+            "RS485 driver's own 5V + GND (same 5V/GND rail as VCCB above)",
+        ],
+    },
+    {
+        "title": "control-desk buttons (x6) + mode toggle",
+        "chip": None,
+        "pins": [
+            ("buttons", "P2.02", "button 1"),
+            ("buttons", "P2.04", "button 2"),
+            ("buttons", "P2.06", "button 3"),
+            ("buttons", "P2.22", "button 4"),
+            ("buttons", "P2.24", "button 5"),
+            ("buttons", "P2.20", "button 6"),
+            ("buttons", "P2.33", "mode toggle"),
+        ],
+        "extra_power": [],
+    },
+    {
+        "title": "APA102 pixel strip (SPI1)",
+        "chip": "74HCT125 / 74AHCT125 – 3.3V->5V buffer (1 gate/signal: CLK, DATA)",
+        "pins": [
+            ("spi1", "P1.36", "SCLK"),
+            ("spi1", "P2.32", "MOSI"),
+            ("power_avail", "P1.24", "VOUT-5V (74HCT125 VCC)"),
+            ("power_avail", "P2.21", "GND (common)"),
+        ],
+        "extra_power": [
+            "strip's own 5V + GND injected from an external supply, not PB1's VOUT-5V – that pin is logic-only, not rated for LED current",
+        ],
+    },
+    {
+        "title": "rotary encoder (eQEP0)",
+        "chip": None,
+        "pins": [
+            ("encoder", "P1.31", "A"),
+            ("encoder", "P2.34", "B"),
+            ("encoder", "P2.19", "button"),
+        ],
+        "extra_power": [],
+    },
+]
+
 # --- geometry (x): headers span the full board width, centered -------
 BOARD_LEFT = 130
 BOARD_RIGHT = 1660
@@ -189,38 +317,30 @@ def label_text(entry):
     return f"{pin_name}  {sub}"
 
 
-def label_width(text):
-    """Rough text-width estimate (Helvetica/Arial, ~13px, mixed
-    bold+regular) - good enough to decide tier placement; doesn't need
-    to be exact, just consistently a bit generous."""
-    return 7.3 * len(text) + 24
+def label_px_len(text):
+    """Rough text-length estimate (Helvetica/Arial, ~13-14px, mixed
+    bold+regular) for sizing how far a *rotated* label needs to run -
+    doesn't need to be exact, just consistently a bit generous."""
+    return 7.3 * len(text) + 10
 
 
-def assign_tiers(entries):
-    """Greedy label placement: put each label (processed left to
-    right) in the first vertical tier whose most-recently-placed
-    label's own estimated width doesn't reach this one - so two short
-    labels can share a tier much closer together than two long ones,
-    instead of every label reserving the same worst-case gap
-    regardless of its actual text length. Avoids hand-placing ~40
-    leader lines."""
-    tier_last_x = []
-    tier_last_w = []
-    assignment = []
-    for entry in entries:
-        x = colx(entry[1])
-        w = label_width(label_text(entry))
-        for t, (last_x, last_w) in enumerate(zip(tier_last_x, tier_last_w)):
-            if x - last_x >= last_w:
-                tier_last_x[t] = x
-                tier_last_w[t] = w
-                assignment.append(t)
-                break
-        else:
-            tier_last_x.append(x)
-            tier_last_w.append(w)
-            assignment.append(len(tier_last_x) - 1)
-    return assignment
+def power_style(short):
+    """Color + dash pattern for a power-ish pin, chosen by actual
+    voltage class rather than just "is this power" - see module
+    docstring."""
+    if "3.3V" in short or "3V3" in short:
+        return V3V3_COLOR, None
+    if short in ("VIN", "VIN-USB", "VOUT-5V") or "5V" in short:
+        return V5_COLOR, V5_DASH
+    if "GND" in short:
+        return GND_COLOR, None
+    return PWR_MISC_COLOR, None
+
+
+def category_style(cat, short):
+    if cat in ("power", "power_avail"):
+        return power_style(short)
+    return COLORS[cat], None
 
 
 def main():
@@ -236,50 +356,41 @@ def main():
     p2_outer = sorted((p for p in p2 if is_outer("P2", p[1])), key=lambda p: colx(p[1]))
     p2_inner = sorted((p for p in p2 if not is_outer("P2", p[1])), key=lambda p: colx(p[1]))
 
-    p1_outer_tiers = assign_tiers(p1_outer)
-    p1_inner_tiers = assign_tiers(p1_inner)
-    p2_outer_tiers = assign_tiers(p2_outer)
-    p2_inner_tiers = assign_tiers(p2_inner)
+    def band_h(entries):
+        if not entries:
+            return 0
+        return max(label_px_len(label_text(e)) for e in entries)
 
-    n_p1_outer = (max(p1_outer_tiers) + 1) if p1_outer_tiers else 0
-    n_p1_inner = (max(p1_inner_tiers) + 1) if p1_inner_tiers else 0
-    n_p2_outer = (max(p2_outer_tiers) + 1) if p2_outer_tiers else 0
-    n_p2_inner = (max(p2_inner_tiers) + 1) if p2_inner_tiers else 0
+    p2_outer_band = band_h(p2_outer)
+    p2_inner_band = band_h(p2_inner)
+    p1_inner_band = band_h(p1_inner)
+    p1_outer_band = band_h(p1_outer)
 
     # --- geometry (y), built as stacked bands top to bottom -------------
     TITLE_H = 90
     y = TITLE_H + 30
 
     top_margin_top = y
-    y += n_p2_outer * TIER_H + 50          # P2 outer labels (above board)
+    y += STUB + LABEL_GAP + p2_outer_band + 30         # P2 outer labels (above board, rotated, growing upward)
 
     BOARD_TOP = y
     p2_outer_y = BOARD_TOP + ROW_GAP
     p2_inner_y = BOARD_TOP + 2 * ROW_GAP
     y = p2_inner_y
 
-    y += 55
-    p2_inner_band_top = y
-    y += n_p2_inner * TIER_H               # P2 inner labels (inside board, below P2 inner row)
-
-    y += 40
+    y += STUB + LABEL_GAP + p2_inner_band + 30         # P2 inner labels (inside board, growing downward)
     graphics_top = y
     GRAPHICS_H = 260
     y += GRAPHICS_H
     graphics_bottom = y
 
-    y += 40
-    p1_inner_band_top = y
-    y += n_p1_inner * TIER_H               # P1 inner labels (inside board, above P1 inner row)
-    y += 55
-
+    y += STUB + LABEL_GAP + p1_inner_band + 30         # P1 inner labels (inside board, growing upward)
     p1_inner_y = y
     p1_outer_y = p1_inner_y + ROW_GAP
     BOARD_BOTTOM = p1_outer_y + ROW_GAP
     y = BOARD_BOTTOM
 
-    y += 50
-    y += n_p1_outer * TIER_H + 20          # P1 outer labels (below board)
+    y += STUB + LABEL_GAP + p1_outer_band + 30         # P1 outer labels (below board, growing downward)
     bottom_margin_bottom = y
 
     def pin_xy(header, pin):
@@ -292,12 +403,9 @@ def main():
         return x, yy
 
     BOARD_H = BOARD_BOTTOM - BOARD_TOP
-    LEGEND_W = 620
+    LEGEND_W = 640
     DIAGRAM_W = BOARD_RIGHT + 90
     W = DIAGRAM_W + LEGEND_W
-    H = max(bottom_margin_bottom + 30, 760)
-
-    put(f'<rect x="0" y="0" width="{W}" height="{H}" fill="{BG}"/>')
 
     put(f'<text x="{DIAGRAM_W/2}" y="48" text-anchor="middle" font-size="30" font-weight="700" fill="{TEXT_MAIN}">PocketBeagle 1 – light-desk pinout (component side)</text>')
     put(f'<text x="{DIAGRAM_W/2}" y="78" text-anchor="middle" font-size="16" fill="{TEXT_SUB}">P1/P2 expansion headers – project-committed connections highlighted – see pb1/pinout-reference.md for the full pinmux table</text>')
@@ -355,76 +463,153 @@ def main():
     put(f'<text x="{colx(35)}" y="{BOARD_TOP-14}" text-anchor="middle" font-size="13" fill="{TEXT_FAINT}">pin 35/36</text>')
     put(f'<text x="{colx(35)}" y="{BOARD_BOTTOM+24}" text-anchor="middle" font-size="13" fill="{TEXT_FAINT}">pin 35/36</text>')
 
-    def draw_labels(entries, tiers, header, placement):
-        """placement: 'above' (outside, label above pin), 'below'
-        (outside, label below pin), 'inward-down' (inside band below
-        a top-edge inner row), 'inward-up' (inside band above a
-        bottom-edge inner row)."""
-        for (hdr, pin, cat, short, note), tier in zip(entries, tiers):
+    def draw_labels(entries, placement):
+        """placement: 'above' (outside, above P2), 'below' (outside,
+        below P1), 'inward-down' (inside band below P2 inner row,
+        toward board center), 'inward-up' (inside band above P1 inner
+        row, toward board center). Labels are rotated 90 degrees and
+        run straight out from their own pin's column - see module
+        docstring for why this replaced the old horizontal tiering."""
+        flow_up = placement in ("above", "inward-up")
+        rotate = -90 if flow_up else 90
+        for (hdr, pin, cat, short, note) in entries:
             x, yy = pin_xy(hdr, pin)
-            color = COLORS[cat]
+            color, dash = category_style(cat, short)
             if cat == "power_avail":
                 put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_BIG}" fill="none" stroke="{color}" stroke-width="2.5"/>')
             else:
                 put(f'<circle cx="{x}" cy="{yy}" r="{PIN_R_BIG}" fill="{color}" stroke="#05060a" stroke-width="1.5"/>')
 
-            # each tier holds one line of text now (labels are single-
-            # line "P1.06  I2C1_SCL", not stacked pin-name/description).
-            # line_y2 sits just to the pin-ward side of the text (the
-            # leader line continues from there on to the pin itself).
-            if placement == "above":
-                text_y = top_margin_top + tier * TIER_H + 14
-                line_y2 = text_y + 8
-            elif placement == "below":
-                text_y = bottom_margin_bottom - (n_p1_outer - tier) * TIER_H + 14
-                line_y2 = text_y - 8
-            elif placement == "inward-down":
-                text_y = p2_inner_band_top + tier * TIER_H + 14
-                line_y2 = text_y - 8
-            else:  # inward-up
-                text_y = p1_inner_band_top + tier * TIER_H + 14
-                line_y2 = text_y + 8
-
-            put(f'<line x1="{x}" y1="{yy}" x2="{x}" y2="{line_y2}" stroke="{color}" stroke-width="1.5"/>')
+            line_y2 = yy - STUB if flow_up else yy + STUB
+            text_y = line_y2 - LABEL_GAP if flow_up else line_y2 + LABEL_GAP
+            dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+            put(f'<line x1="{x}" y1="{yy}" x2="{x}" y2="{line_y2}" stroke="{color}" stroke-width="2.2"{dash_attr}/>')
             put(f'<circle cx="{x}" cy="{line_y2}" r="3.5" fill="{color}"/>')
 
             pin_name = f"{hdr}.{pin:02d}"
             sub = short if not note else f"{short} ({note})"
-            put(f'<text x="{x+9}" y="{text_y}" font-size="14" fill="{TEXT_MAIN}">'
+            put(f'<text x="{x}" y="{text_y}" transform="rotate({rotate} {x} {text_y})" font-size="14" fill="{TEXT_MAIN}">'
                 f'<tspan font-weight="700">{esc(pin_name)}</tspan>'
                 f'<tspan font-size="12" fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sub)}</tspan></text>')
 
-    draw_labels(p2_outer, p2_outer_tiers, "P2", "above")
-    draw_labels(p2_inner, p2_inner_tiers, "P2", "inward-down")
-    draw_labels(p1_inner, p1_inner_tiers, "P1", "inward-up")
-    draw_labels(p1_outer, p1_outer_tiers, "P1", "below")
+    draw_labels(p2_outer, "above")
+    draw_labels(p2_inner, "inward-down")
+    draw_labels(p1_inner, "inward-up")
+    draw_labels(p1_outer, "below")
 
     # --- legend sidebar -------------------------------------------------
     leg_x = DIAGRAM_W + 40
-    leg_y = 110
+    leg_y = 50
     put(f'<text x="{leg_x}" y="{leg_y}" font-size="20" font-weight="700" fill="{TEXT_MAIN}">Legend</text>')
     leg_y += 36
-    for cat, desc in LEGEND:
-        if cat == "power_avail":
-            put(f'<rect x="{leg_x}" y="{leg_y-15}" width="20" height="20" rx="4" fill="none" stroke="{COLORS[cat]}" stroke-width="2.5"/>')
-        else:
-            put(f'<rect x="{leg_x}" y="{leg_y-15}" width="20" height="20" rx="4" fill="{COLORS[cat]}"/>')
+
+    def wrap(desc, width=44):
         words = desc.split(" ")
         lines, cur = [], ""
         for w in words:
             trial = (cur + " " + w).strip()
-            if len(trial) > 44:
+            if len(trial) > width:
                 lines.append(cur)
                 cur = w
             else:
                 cur = trial
         if cur:
             lines.append(cur)
+        return lines
+
+    for cat, desc in LEGEND:
+        put(f'<rect x="{leg_x}" y="{leg_y-15}" width="20" height="20" rx="4" fill="{COLORS[cat]}"/>')
+        lines = wrap(desc)
         for li, line in enumerate(lines):
             put(f'<text x="{leg_x+30}" y="{leg_y+li*20}" font-size="14" fill="{TEXT_MAIN}">{esc(line)}</text>')
         leg_y += max(1, len(lines)) * 20 + 22
 
+    leg_y += 10
+    put(f'<text x="{leg_x}" y="{leg_y}" font-size="15" font-weight="700" fill="{TEXT_MAIN}">power pins (colored by voltage, not just "is power"):</text>')
+    leg_y += 28
+    for color, dash, desc in POWER_LEGEND:
+        dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+        put(f'<line x1="{leg_x}" y1="{leg_y-5}" x2="{leg_x+30}" y2="{leg_y-5}" stroke="{color}" stroke-width="4"{dash_attr}/>')
+        lines = wrap(desc, width=46)
+        for li, line in enumerate(lines):
+            put(f'<text x="{leg_x+40}" y="{leg_y+li*20}" font-size="14" fill="{TEXT_MAIN}">{esc(line)}</text>')
+        leg_y += max(1, len(lines)) * 20 + 18
+
+    leg_y += 10
+    put(f'<circle cx="{leg_x+10}" cy="{leg_y-5}" r="9" fill="{TEXT_SUB}"/>')
+    put(f'<text x="{leg_x+30}" y="{leg_y}" font-size="14" fill="{TEXT_MAIN}">filled = wired by this project</text>')
+    leg_y += 26
+    put(f'<circle cx="{leg_x+10}" cy="{leg_y-5}" r="9" fill="none" stroke="{TEXT_SUB}" stroke-width="2.5"/>')
+    put(f'<text x="{leg_x+30}" y="{leg_y}" font-size="14" fill="{TEXT_MAIN}">outline = available, not wired</text>')
+    leg_y += 36
+
+    # --- peripheral schematic boxes --------------------------------------
+    def draw_peripheral(x, y, peripheral):
+        # Content height isn't known until it's laid out, but the box
+        # background rect has to be the FIRST element drawn (SVG paints
+        # in document order) or it would paint over its own content -
+        # so content goes into a local buffer first, the rect gets
+        # inserted ahead of it once the height is known, then both are
+        # appended to svg_body together.
+        box_w = LEGEND_W - 80
+        row_h = 24
+        content = []
+
+        def cput(s):
+            content.append(s)
+
+        title_lines = wrap(peripheral["title"], width=40)
+        chip_lines = wrap(peripheral["chip"], width=44) if peripheral["chip"] else []
+        extra_lines = []
+        for note in peripheral["extra_power"]:
+            extra_lines.extend((note, line) for line in wrap(note, width=42))
+
+        yy = y + 22
+        for li, line in enumerate(title_lines):
+            cput(f'<text x="{x+14}" y="{yy+li*18}" font-size="15" font-weight="700" fill="{TEXT_MAIN}">{esc(line)}</text>')
+        yy += (len(title_lines) - 1) * 18 + 14
+
+        if chip_lines:
+            for li, line in enumerate(chip_lines):
+                cput(f'<text x="{x+14}" y="{yy+li*16}" font-size="12" font-style="italic" fill="#d1a9f7">IC: {esc(line)}</text>')
+            yy += len(chip_lines) * 16 + 10
+
+        for cat, pin_label, sig in peripheral["pins"]:
+            color, dash = category_style(cat, sig if cat in ("power", "power_avail") else "")
+            dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+            cput(f'<line x1="{x+14}" y1="{yy-5}" x2="{x+34}" y2="{yy-5}" stroke="{color}" stroke-width="4"{dash_attr}/>')
+            cput(f'<text x="{x+44}" y="{yy}" font-size="13" fill="{TEXT_MAIN}"><tspan font-weight="700">{esc(pin_label)}</tspan><tspan fill="{TEXT_SUB}">{"&#160;&#160;"}{esc(sig)}</tspan></text>')
+            yy += row_h
+
+        if extra_lines:
+            yy += 4
+            prev_note = None
+            for note, line in extra_lines:
+                if note != prev_note:
+                    color, dash = category_style("power", note)
+                    dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+                    cput(f'<line x1="{x+14}" y1="{yy-5}" x2="{x+34}" y2="{yy-5}" stroke="{color}" stroke-width="4"{dash_attr}/>')
+                    prev_note = note
+                cput(f'<text x="{x+44}" y="{yy}" font-size="12" fill="{TEXT_SUB}">{esc(line)}</text>')
+                yy += 18
+
+        h = yy - y + 16
+        put(f'<rect x="{x}" y="{y}" width="{box_w}" height="{h}" rx="10" fill="{BOARD_FILL}" stroke="{TEXT_FAINT}" stroke-width="1.5"/>')
+        svg_body.extend(content)
+        return h
+
+    peri_y = leg_y + 10
+    put(f'<text x="{leg_x}" y="{peri_y}" font-size="20" font-weight="700" fill="{TEXT_MAIN}">Peripherals (schematic)</text>')
+    put(f'<text x="{leg_x}" y="{peri_y+20}" font-size="12" fill="{TEXT_SUB}">connected to the header above only via matching pin labels, not a drawn wire – power pins included for soldering</text>')
+    peri_y += 46
+    for peripheral in PERIPHERALS:
+        h = draw_peripheral(leg_x, peri_y, peripheral)
+        peri_y += h + 20
+
+    H = max(bottom_margin_bottom + 30, peri_y + 30, 760)
+
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="Helvetica, Arial, sans-serif">']
+    svg.append(f'<rect x="0" y="0" width="{W}" height="{H}" fill="{BG}"/>')
     svg += svg_body
     svg.append("</svg>")
 
