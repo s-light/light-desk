@@ -72,6 +72,9 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   to live in a `patch-sacn-to-uart.sh` here are now
   `lightdesk_setup.patch_sacn_to_uart()`, called from `setup_pb2.py`'s
   "ola" step.
+- `generate-pinout-diagram.py` → `pinout-diagram.svg` — PB2 header pinout
+  diagram (PB2 counterpart of `pb1/generate-pinout-diagram.py`); re-run the
+  script after changing any pin assignment (pin list is hand-maintained)
 - `pb1/` — PocketBeagle 1 port of this project (different board, own
   pin map, own `setup_pb1.py` entry point) - see `pb1/setup.md`/
   `pb1/memo.md` for its own repo map and bring-up history; it's the
