@@ -98,7 +98,7 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   you olad is actually alive; check `ola_dev_info`/`ola_plugin_info` or
   `ps -ef | grep olad`. `setup_pb2.py`'s "ola" step fixes this via
   `/etc/default/ola`'s `DAEMON_ARGS` (`--http-port 9091`).
-- The board (hostname `lightdeskniilo`) is reachable as `ssh pb_lightdesk`;
+- The board (hostname `lightdesk`) is reachable as `ssh pb_lightdesk`;
   login user `light` needs a password for `sudo` unless `setup_pb2.py`'s
   "sudoers" step has been run.
 - **This board's U-Boot/extlinux setup cannot load an initrd correctly.**
