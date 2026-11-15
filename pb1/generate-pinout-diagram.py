@@ -117,7 +117,7 @@ V5_DASH = "6,5"
 VOLTAGE_COLORS = {
     "v5": "#ec4899",      # saturated pink-red, dashed leader line
     "v3v3": "#dc2626",    # solid red
-    "gnd": "#6b7280",     # dark gray
+    "gnd": "#506080",     # dark gray
     "pwrmisc": "#9ca3af",  # neutral (VREF/PWR BTN/VIN-BAT/BAT-TEMP)
 }
 

@@ -64,8 +64,8 @@
 .stroke-v5 { stroke: #ec4899; }
 .fill-v3v3 { fill: #dc2626; }
 .stroke-v3v3 { stroke: #dc2626; }
-.fill-gnd { fill: #6b7280; }
-.stroke-gnd { stroke: #6b7280; }
+.fill-gnd { fill: #506080; }
+.stroke-gnd { stroke: #506080; }
 .fill-pwrmisc { fill: #9ca3af; }
 .stroke-pwrmisc { stroke: #9ca3af; }</style>
 <text x="875.0" y="48" text-anchor="middle" class="title fill-text-main">PocketBeagle 1 – light-desk pinout (component side)</text>
