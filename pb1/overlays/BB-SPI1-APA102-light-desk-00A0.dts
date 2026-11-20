@@ -52,6 +52,17 @@
 	};
 };
 
+/*
+ * The base DTS of kernel 6.18.53-bone55 enables ehrpwm0 with P1.36
+ * (0x190, mode 1 = PWM0A) as its output pin, which collides with
+ * spi1_sclk on the same pad: "pin PIN100 already requested by
+ * 48300200.pwm; cannot claim for 481a0000.spi" - SPI1 then fails to
+ * probe and /dev/spidev1.0 never appears. Nothing here uses PWM0A.
+ */
+&ehrpwm0 {
+	status = "disabled";
+};
+
 &spi1 {
 	status = "okay";
 	pinctrl-names = "default";

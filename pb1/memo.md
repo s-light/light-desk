@@ -1150,7 +1150,8 @@ Next priorities, in order:
       requested by 48300200.pwm; cannot claim for 481a0000.spi` -
       the APA102 overlay's P1.36 (spi1_sclk, 0x190) collides with
       ehrpwm0 on this kernel (6.18.53), so `/dev/spidev1.0` is not
-      created. Needs separate investigation.
+      created. Fix (2026-11-21): the base DTB enables ehrpwm0 on that
+      pad; the SPI1 overlay now sets `&ehrpwm0 { status = "disabled"; }`.
     - Recovery from the SD card on another machine: comment out
       `uboot_overlay_addr4=BB-GPIO-buttons-light-desk-00A0.dtbo` in its
       `/boot/uEnv.txt`.
