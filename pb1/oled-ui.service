@@ -1,0 +1,26 @@
+# systemd unit for scripts/oled_ui.py - front-panel UI on the SSD1306
+# OLED, driven by the rotary encoder (turn = page, press = toggle
+# stand-alone mode).
+#
+# Template - placeholders (__USER__, __REPO_DIR__, __VENV_DIR__)
+# filled in by pb1/setup_pb1.py's "oled-ui" step. Needs the
+# BB-GPIO-buttons and BB-ROTARY-ENCODER overlays active (reboot after
+# the "overlays" step).
+#
+# check status / logs:
+#   sudo systemctl status oled-ui.service
+#   sudo journalctl -u oled-ui.service -f
+
+[Unit]
+Description=Front-panel OLED UI (rotary encoder + SSD1306)
+After=multi-user.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__REPO_DIR__
+ExecStart=__VENV_DIR__/bin/python3 -u __REPO_DIR__/scripts/oled_ui.py
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

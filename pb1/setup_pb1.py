@@ -66,7 +66,7 @@ def step_packages():
 def step_i2c():
     """i2c group/udev/lgpio/venv - identical on both boards, see
     lightdesk_setup.setup_i2c_and_venv."""
-    ld.setup_i2c_and_venv(NEW_USER, VENV_DIR, REPO_DIR / "scripts" / "requirements.txt")
+    ld.setup_i2c_and_venv(NEW_USER, VENV_DIR, SCRIPT_DIR / "requirements-pb1.txt")
 
 
 def step_overlays():
@@ -161,6 +161,20 @@ def step_standalone_mode():
     )
 
 
+def step_oled_ui():
+    """Front-panel OLED UI (scripts/oled_ui.py): rotary encoder picks
+    the page, its button toggles stand-alone mode. Needs the overlays
+    reboot (OLED pins, eQEP0). Its stand-alone toggle reuses the sudoers
+    rule from step_standalone_mode, so that step must have run first."""
+    if not (VENV_DIR / "bin" / "python3").exists():
+        raise NeedsReboot("no venv yet - run step_i2c first")
+    ld.install_systemd_unit(
+        SCRIPT_DIR / "oled-ui.service", "oled-ui.service",
+        {"USER": NEW_USER, "REPO_DIR": REPO_DIR, "VENV_DIR": VENV_DIR},
+        enable_now=True,
+    )
+
+
 def step_console_to_usb():
     """NOT run by default (not in STEPS below) - freeing UART0 for a
     5th DMX universe by moving the serial console to USB gadget
@@ -189,6 +203,7 @@ STEPS = [
     ("ola", step_ola),
     ("fader-osc", step_fader_osc),
     ("standalone-mode", step_standalone_mode),
+    ("oled-ui", step_oled_ui),
 ]
 # console-to-usb is intentionally excluded from the default run - see
 # step_console_to_usb's docstring.

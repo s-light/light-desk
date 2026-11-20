@@ -80,7 +80,8 @@ ADC) exposed as OSC via Python/CircuitPython/Blinka.
   `pb1/memo.md` for its own repo map and bring-up history; it's the
   actively-developed board as of this writing, well ahead of PB2
   (sACN->DMX on 4 universes, fader/button->OSC, one APA102 pixel
-  strip via OLA's SPI plugin, a rotary encoder, and a fader-driven
+  strip via OLA's SPI plugin, a rotary encoder + OLED front panel
+  (`scripts/oled_ui.py`, written but not hardware-verified), and a fader-driven
   stand-alone effect mode needing no computer - all confirmed working
   on real hardware).
 - `pb1_internet_share.md`, `pocketbeagle2-internet-sharing.md` — near-duplicate

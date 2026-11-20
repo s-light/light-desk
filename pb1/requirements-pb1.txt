@@ -1,0 +1,11 @@
+# PB1 venv requirements: the shared set plus Adafruit_BBIO.
+#
+# Adafruit_BBIO is a transitive-only dependency: nothing in this repo
+# calls it, but adafruit_ssd1306 -> adafruit_bus_device.spi_device does
+# `import digitalio`, and on AM33XX Blinka's digitalio hard-requires
+# Adafruit_BBIO. Without it that import raises RuntimeError (not
+# ImportError, so the library's own try/except doesn't catch it) and
+# the whole OLED import chain crashes. See pb1/memo.md item 19.
+# PB1-only - PB2 uses scripts/requirements.txt directly.
+-r ../scripts/requirements.txt
+Adafruit_BBIO

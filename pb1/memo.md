@@ -1105,3 +1105,31 @@ Next priorities, in order:
       installed/booted and no display is physically wired yet, so
       drawing anything to real hardware is still untested - "imports
       cleanly" is necessary but not sufficient.
+
+20. **Finalization pass (2026-11-20)**, at the user's request ("finalize
+    the pb1 light-desk build"; scope chosen: cleanup, encoder + OLED
+    software, final verification, read-only lockdown). Written without
+    access to the board, so nothing below is hardware-verified yet.
+    - `pb1/requirements-pb1.txt` (new): shared requirements plus
+      `Adafruit_BBIO`, with the transitive-dependency explanation from
+      item 19; `setup_pb1.py`'s i2c step now installs from it. PB2
+      keeps using `scripts/requirements.txt` only.
+    - **Encoder + OLED consumer chosen by the assistant, not specified
+      by the user** (item 16 left "what the encoder controls" open):
+      `scripts/oled_ui.py` - encoder turns switch between a status /
+      fader-bar / network page on the OLED, encoder press toggles
+      stand-alone mode (same `sudo -n systemctl` rule as the P2.33
+      button). `pb1/oled-ui.service` + `setup_pb1.py oled-ui` step.
+      Imports the OLED shims and eQEP helpers from the two `*_test.py`
+      scripts rather than copying them. Change the pages/behaviour
+      freely - it is a first pass.
+    - **Open risks to check on hardware**: the Counter sysfs attribute
+      names (item 16's NOTE) are still unconfirmed; bit-banged SPI
+      full-frame redraw speed is unmeasured (UI redraws only on change/
+      per second to cope); `standalone-mode-toggle.service` uses
+      `/usr/bin/python3` while the new unit uses the venv.
+    - `pb1/setup.md` gained "Final verification" (ordered checklist)
+      and "Final lockdown" (read-only root via the existing
+      `setup-readonly-root.sh`, with PB1-specific post-reboot checks).
+      The lockdown itself has NOT been run on PB1.
+

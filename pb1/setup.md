@@ -9,7 +9,7 @@
 
 Once the hardware below is wired, `./setup_pb1.py` runs every step in
 order (user+sudoers, packages, i2c/venv, overlays, olad config,
-fader->OSC, stand-alone mode) - idempotent, safe to re-run any time,
+fader->OSC, stand-alone mode, OLED/encoder UI) - idempotent, safe to re-run any time,
 and it tells you when a reboot is needed instead of failing
 confusingly. Run a single step with `./setup_pb1.py STEP_NAME`, or
 see all step names with `./setup_pb1.py --list-steps`. The sections
@@ -192,9 +192,10 @@ Install: `./setup_pb1.py overlays` (builds+wires both the rotary
 encoder overlay and the buttons overlay, which picked up the push
 button pin), reboot, confirm with `ls /sys/bus/counter/devices/`.
 
-**Not yet installed/boot-tested** - overlays compile clean but the
-reboot hasn't happened yet; no consumer script written either (what
-the encoder should actually do is still open - see memo.md item 16).
+The encoder is consumed by `scripts/oled_ui.py` (turn = switch OLED
+page, press = toggle stand-alone mode) - see "OLED display" below.
+`scripts/rotary_encoder_test.py` is the standalone wiring/direction
+check. Hardware verification status: see "Final verification" below.
 
 ## Stand-alone mode (`hsv-pixel-strip`)
 
@@ -224,8 +225,7 @@ sudo systemctl start standalone-plasma.service
 sudo systemctl stop standalone-plasma.service
 ```
 
-**Not yet installed/boot-tested as a whole system** - the overlay
-change needs a reboot first, see `memo.md` item 15 for what's left.
+Hardware verification status: see "Final verification" below.
 
 ## OLED display
 
@@ -262,13 +262,59 @@ python3 scripts/oled_display_test.py
 draws a border rectangle and centered text, then exits - the display
 holds the frame in its own RAM.
 
-**Not yet installed/boot-tested** - the overlay compiles clean and the
-full Python import chain (`gpiod`, `adafruit_ssd1306`) was verified
-end-to-end on the board, but the overlay hasn't been installed/booted
-yet and the display isn't fully wired yet either. See `memo.md` item
-19 for the Blinka/`Adafruit_BBIO` finding and why
-`scripts/requirements.txt` doesn't (yet) list `Adafruit_BBIO` despite
-it being required transitively.
+`./setup_pb1.py oled-ui` installs `oled-ui.service` (always on):
+`scripts/oled_ui.py` shows a status / faders / network page on the
+OLED; the rotary encoder switches pages, its button toggles stand-alone
+mode. The bit-banged SPI is slow, so the UI only redraws on change /
+once per second (faders page: twice per second).
+
+`Adafruit_BBIO` is listed in `requirements-pb1.txt` (PB1's venv file,
+which includes the shared `scripts/requirements.txt`) as a
+transitive-only dependency - see the comment there and `memo.md`
+item 19. Hardware verification status: see "Final verification" below.
+
+## Final verification
+
+Run after wiring everything, in this order. Check each box on the real
+board; anything that fails goes into `memo.md` item 20.
+
+1. `./setup_pb1.py` - stops at "needs reboot" after the overlays step.
+2. `sudo reboot`, then `./setup_pb1.py` again - every step should now
+   complete (olad config, fader-osc, standalone-mode, oled-ui).
+3. `ls /sys/bus/counter/devices/` shows a counter; the exact attribute
+   names `rotary_encoder_test.py` assumes are unconfirmed - run it and
+   check direction (clockwise = count up) and the push button `*`.
+4. `python3 scripts/oled_display_test.py` draws border + text.
+5. `systemctl status oled-ui.service` is active; turning the encoder
+   changes pages; the faders page follows the faders.
+6. Button press on P2.33 and encoder push both start/stop
+   `standalone-plasma.service`; the strip shows the plasma.
+7. sACN from QLC+ reaches all 4 DMX universes (a fixture on each) and
+   the APA102 strip (universe 5); faders/buttons arrive as OSC in QLC+.
+8. Pull power with everything running, reboot: all services come back
+   by themselves (`systemctl --failed` empty, `ola_dev_info` lists the
+   devices).
+
+## Final lockdown (read-only root)
+
+Only after the verification above passes completely. Everything that
+installs or updates software needs root writable, so this goes last:
+
+```
+./setup-readonly-root.sh   # one-way: docker off, volatile journal, ro in /etc/fstab
+sudo reboot
+mount | grep ' / '         # must show (ro,...)
+systemctl --failed         # must be empty - olad, oled-ui, ads7830-to-osc etc. all up
+```
+
+The script is board-generic (same fstab approach on PB1; PB1 uses
+`/boot/uEnv.txt`, not extlinux, and the script never touches the
+bootloader). Things to check specifically on PB1 after the first
+read-only boot: olad starts (it must not need to write below `/etc/ola`
+at runtime), and `standalone-mode-toggle`/`oled-ui` run (no writes
+expected; they only read sysfs/GPIO). Any later change: `./readwrite.sh`,
+do the change, `./readonly.sh`. Recovery if it doesn't come up: edit
+`/etc/fstab` back via the SD card on another machine.
 
 See `memo.md` for full bring-up history and remaining open steps
 (button press verification with an actual button, an actual DMX
