@@ -69,8 +69,8 @@ CONSUMER = "oled_display_test"
 # role -> P1.NN header pin name (see overlays/BB-GPIO-buttons-light-desk-00A0.dts)
 DEFAULT_PINS = {
     "clk": "P1.29",
-    "mosi": "P1.28",
-    "cs": "P1.26",
+    "mosi": "P1.04",
+    "cs": "P1.20",
     "dc": "P1.34",
     "rst": "P1.35",
 }

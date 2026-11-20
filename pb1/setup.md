@@ -237,8 +237,8 @@ the PocketBeagle 1 P1 header:
 | VIN         | 3V      | any 3.3V pin on the header      |
 | GND         | GND     | any GND pin on the header       |
 | Clk (SCK)   | P1.29   | plain GPIO, bit-banged SPI clock |
-| Data (MOSI) | P1.28   | plain GPIO, bit-banged SPI data  |
-| CS          | P1.26   | plain GPIO                       |
+| Data (MOSI) | P1.04   | plain GPIO, bit-banged SPI data  |
+| CS          | P1.20   | plain GPIO                       |
 | DC          | P1.34   | plain GPIO                       |
 | Rst         | P1.35   | plain GPIO                       |
 

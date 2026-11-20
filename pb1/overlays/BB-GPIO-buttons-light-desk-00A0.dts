@@ -30,8 +30,14 @@
  * entirely from userspace by scripts/oled_display_test.py via a
  * hand-rolled gpiod-backed shim, NOT Blinka's digitalio/bitbangio -
  * see that script's own docstring and pb1/memo.md item 19 for why):
- * P1.26 (CS), P1.28 (DATA/MOSI), P1.29 (CLK), P1.34 (DC), P1.35
+ * P1.20 (CS), P1.04 (DATA/MOSI), P1.29 (CLK), P1.34 (DC), P1.35
  * (RST), for an Adafruit SSD1306 128x64 SPI OLED.
+ *
+ * NOT P1.26/P1.28: those are I2C2_SDA/SCL, which the base DTS keeps
+ * enabled (bus 2, 4819c000.i2c). Claiming them here fails pinctrl
+ * ("pin PIN94 already requested by 4819c000.i2c"), which takes the whole
+ * gpio0 bank down, and with it the SD card (mmc supplier) - the board
+ * then drops to the initramfs shell. Hit on real hardware 2026-11-21.
  *
  * The base am335x-pocketbeagle.dts (see /opt/source/dtb-*.x/src/arm/
  * ti/omap/am335x-pocketbeagle.dts on the board, under &am33xx_pinmux)
@@ -78,14 +84,14 @@
 &am33xx_pinmux {
 	bb_oled_gpio0_pins: pinmux_bb_oled_gpio0_pins {
 		pinctrl-single,pins = <
-			0x178 0x08 0x07 /* P1.26 uart1_ctsn.gpio0_12 - OLED CS */
-			0x17c 0x08 0x07 /* P1.28 uart1_rtsn.gpio0_13 - OLED DATA/MOSI */
+			0x1b4 0x08 0x07 /* P1.20 xdma_event_intr1.gpio0_20 - OLED CS */
 			0x028 0x08 0x07 /* P1.34 gpmc_ad10.gpio0_26 - OLED DC */
 		>;
 	};
 	bb_oled_gpio2_pins: pinmux_bb_oled_gpio2_pins {
 		pinctrl-single,pins = <
 			0x0e8 0x08 0x07 /* P1.35 lcd_pclk.gpio2_24 - OLED RST */
+			0x0ec 0x08 0x07 /* P1.04 lcd_ac_bias_en.gpio2_25 - OLED DATA/MOSI */
 		>;
 	};
 	bb_oled_gpio3_pins: pinmux_bb_oled_gpio3_pins {

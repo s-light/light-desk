@@ -1037,7 +1037,7 @@ Next priorities, in order:
     SCK->Clk, MOSI->Data, D5->CS, D6->DC, D9->Rst (display "half way
     prepared" as of this session, not yet fully wired/tested).
     - **Pin selection**: 5 control signals (CLK, DATA/MOSI, CS, DC,
-      RST) assigned to P1.26/P1.28/P1.29/P1.34/P1.35 - plain GPIO
+      RST) assigned to P1.26/P1.28/P1.29/P1.34/P1.35 (later changed, see item 21) - plain GPIO
       outputs, not a real hardware SPI bus (see below for why), so any
       free pins would do; picked from pins not already committed
       elsewhere in this project.
@@ -1132,4 +1132,26 @@ Next priorities, in order:
       and "Final lockdown" (read-only root via the existing
       `setup-readonly-root.sh`, with PB1-specific post-reboot checks).
       The lockdown itself has NOT been run on PB1.
+
+21. **Boot failure from the OLED pins (2026-11-21)**: after item 20's
+    overlays step + reboot the board dropped to the initramfs shell
+    (`/dev/mmcblk0p3 does not exist`). Cause, from the serial log:
+    `pin PIN94 already requested by 4819c000.i2c; cannot claim for
+    44e07000.gpio ... group pinmux_bb_oled_gpio0_pins` - the OLED's CS
+    (P1.26) and DATA (P1.28) are I2C2_SDA/SCL, which the base DTS keeps
+    enabled. gpio0's pinctrl failed, gpio0 never probed, and the SD
+    card's mmc driver waits on gpio0 ("supplier 44e07000.gpio not
+    ready"). Item 19's "pins not already committed elsewhere" check
+    missed peripherals enabled by the base DTS itself. **Fix**: CS ->
+    P1.20 (gpio0_20, 0x1b4), DATA/MOSI -> P1.04 (gpio2_25, 0x0ec);
+    docs, overlay and `oled_display_test.py` updated. The OLED wires on
+    P1.26/P1.28 must be moved to P1.20/P1.04.
+    - Also in that log, not fatal but new: `pin PIN100 already
+      requested by 48300200.pwm; cannot claim for 481a0000.spi` -
+      the APA102 overlay's P1.36 (spi1_sclk, 0x190) collides with
+      ehrpwm0 on this kernel (6.18.53), so `/dev/spidev1.0` is not
+      created. Needs separate investigation.
+    - Recovery from the SD card on another machine: comment out
+      `uboot_overlay_addr4=BB-GPIO-buttons-light-desk-00A0.dtbo` in its
+      `/boot/uEnv.txt`.
 
