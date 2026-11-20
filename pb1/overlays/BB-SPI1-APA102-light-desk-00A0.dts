@@ -71,7 +71,11 @@
 	#size-cells = <0>;
 
 	apa102@0 {
-		compatible = "spidev";
+		/* "spidev" itself is no longer in the spidev driver's match
+		 * tables on kernel 6.18 (device exists as spi1.0 but never
+		 * binds, no /dev/spidev1.0); this is the conventional
+		 * stand-in the driver does list. */
+		compatible = "rohm,dh2228fv";
 		reg = <0>;
 		spi-max-frequency = <16000000>;
 	};

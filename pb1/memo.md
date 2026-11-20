@@ -1155,4 +1155,8 @@ Next priorities, in order:
     - Recovery from the SD card on another machine: comment out
       `uboot_overlay_addr4=BB-GPIO-buttons-light-desk-00A0.dtbo` in its
       `/boot/uEnv.txt`.
+    - Third SPI1 issue (same day, after the ehrpwm0 fix): `spi1.0`
+      probed but `/dev/spidev1.0` still missing - kernel 6.18's spidev
+      driver no longer matches `compatible = "spidev"`. The overlay now
+      uses `"rohm,dh2228fv"`.
 
