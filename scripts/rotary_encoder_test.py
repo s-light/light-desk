@@ -12,10 +12,8 @@ kernel already does the quadrature decoding; this script just reads
 its running count. Auto-discovers which `counterN` is eqep0 (don't
 assume the index) via each device's `name` file.
 
-NOTE: not yet confirmed against the real sysfs layout on booted
-hardware (this is new as of the same session that added the overlay,
-before its first reboot) - the exact attribute names below
-(`count0/count`, `count0/function`, `count0/functions_available`)
+NOTE: sysfs layout confirmed on real hardware (kernel 6.18.53, 2026-11-21); the exact attribute names below
+(`count0/count`, `count0/function`, `count0/function_available`, `count0/enable`)
 are the Linux Counter subsystem's documented ABI for the `ti-eqep`
 driver as of recent kernels, but double-check with
 `find /sys/bus/counter/devices/ -maxdepth 3` if this errors.
@@ -44,6 +42,7 @@ from gpiod.line import Bias, Direction, Value
 
 COUNTER_SYSFS_ROOT = Path("/sys/bus/counter/devices")
 WRAP = 2 ** 32
+EQEP0_ADDRESS = "48300180"
 CONSUMER = "rotary_encoder_test"
 
 
@@ -52,7 +51,10 @@ def find_eqep_count_path():
     whichever counterN index the kernel assigned it."""
     for device_dir in sorted(COUNTER_SYSFS_ROOT.glob("counter*")):
         name_file = device_dir / "name"
-        if name_file.exists() and "eqep" in name_file.read_text().lower():
+        # the kernel names it by address ("48300180.counter" = eqep0),
+        # not "eqep" - confirmed on real hardware, kernel 6.18
+        name = name_file.read_text().strip().lower() if name_file.exists() else ""
+        if name.startswith(EQEP0_ADDRESS) or "eqep" in name:
             count_path = device_dir / "count0" / "count"
             if count_path.exists():
                 return count_path
@@ -67,8 +69,11 @@ def ensure_quadrature_mode(count_path):
     """Set count0/function to a quadrature mode if it isn't already -
     the eQEP peripheral defaults to a plain pulse-direction mode on
     some kernels, not quadrature decode."""
+    enable_path = count_path.parent / "enable"
+    if enable_path.exists() and enable_path.read_text().strip() == "0":
+        enable_path.write_text("1")  # counter stays idle until enabled
     function_path = count_path.parent / "function"
-    available_path = count_path.parent / "functions_available"
+    available_path = count_path.parent / "function_available"
     if not function_path.exists() or not available_path.exists():
         return
     current = function_path.read_text().strip()
